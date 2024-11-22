@@ -1,0 +1,573 @@
+openapi: 3.0.3
+info:
+  title: OFxPERA API
+  description: Philippines Open Finance API Implementation for PERA
+  version: 0.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.1
+  description: SwaggerHub API Auto Mocking
+- url: https://api.ofxpera.ph/v1
+  description: OFxPERA API server
+security:
+- OAuth2: []
+tags:
+- name: Admin
+  description: Administrative endpoints for organization management
+- name: OAuth
+  description: "Authentication, authorization and consent management"
+- name: Common
+  description: Common APIs used across different industries
+- name: Banking
+  description: Banking-related use cases for OFxPERA
+paths:
+  /admin/organization:
+    get:
+      tags:
+      - Admin
+      summary: Get all organizations
+      description: API for retrieving all registered organization URIs
+      responses:
+        "200":
+          description: Successfully retrieved organizations
+    post:
+      tags:
+      - Admin
+      summary: Register organization URIs
+      description: API for registering a participating organization's URIs
+      responses:
+        "201":
+          description: Organization successfully registered
+  /admin/organization/{id}/certificate:
+    get:
+      tags:
+      - Admin
+      summary: Get organization certificate
+      description: API for retrieving a registered organization's certificate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved certificate
+  /oauth/par:
+    post:
+      tags:
+      - OAuth
+      summary: Push Authorization Request
+      description: OAuth Push Authorization Request
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/oauth_par_body'
+        required: true
+      responses:
+        "200":
+          description: Successfully processed PAR request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+  /oauth/authorize:
+    get:
+      tags:
+      - OAuth
+      summary: Authorization endpoint
+      description: OAuth 2.0 authorization endpoint that initiates the authorization
+        flow
+      parameters:
+      - name: request_uri
+        in: query
+        description: URI containing the authorization request parameters from PAR
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: uri
+      - name: client_id
+        in: query
+        description: Client identifier issued to the client during registration
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: response_type
+        in: query
+        description: Must be set to "code" for authorization code flow
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - code
+      - name: redirect_uri
+        in: query
+        description: URI to return the user to after authorization is complete
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: uri
+      - name: scope
+        in: query
+        description: Space-separated list of requested scope values
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        description: Opaque value to maintain state between request and callback
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        description: Random value used to prevent replay attacks
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Authorization successful
+        "302":
+          description: Redirect to client with authorization code
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Redirect URI with authorization code
+                format: uri
+  /oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Token endpoint
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/oauth_token_body'
+        required: true
+      responses:
+        "200":
+          description: Token successfully issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+  /oauth/introspection:
+    get:
+      tags:
+      - OAuth
+      summary: Token introspection
+      parameters:
+      - name: token
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Token information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+  /oauth/userinfo:
+    get:
+      tags:
+      - OAuth
+      summary: User information
+      responses:
+        "200":
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+      security:
+      - OAuth2: []
+  /common/consent:
+    post:
+      tags:
+      - Common
+      summary: Create consent
+      responses:
+        "201":
+          description: Consent created successfully
+  /common/consent/{id}:
+    get:
+      tags:
+      - Common
+      summary: Get consent information
+      description: API for retrieving the latest consent information
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent information retrieved
+    put:
+      tags:
+      - Common
+      summary: Update consent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent updated successfully
+    delete:
+      tags:
+      - Common
+      summary: Revoke consent
+      description: API for revoking a previously provided consent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent revoked successfully
+  /common/customer:
+    get:
+      tags:
+      - Common
+      summary: Get customer information
+      responses:
+        "200":
+          description: Customer information retrieved
+  /common/customer/{id}/detail:
+    get:
+      tags:
+      - Common
+      summary: Get detailed customer information
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Detailed customer information retrieved
+  /banking/account:
+    get:
+      tags:
+      - Banking
+      summary: Get source account information
+      description: API for retrieving information about the customer's source account
+      responses:
+        "200":
+          description: Account information retrieved
+  /banking/products:
+    get:
+      tags:
+      - Banking
+      summary: Get PERA products
+      description: API for retrieving list of PERA products the customer could subscribe
+        to
+      responses:
+        "200":
+          description: Products list retrieved
+  /banking/accounts:
+    get:
+      tags:
+      - Banking
+      summary: Get banking accounts
+      responses:
+        "200":
+          description: Banking accounts retrieved
+    post:
+      tags:
+      - Banking
+      summary: Create banking account
+      responses:
+        "201":
+          description: Banking account created
+  /banking/accounts/{id}:
+    get:
+      tags:
+      - Banking
+      summary: Get specific banking account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Banking account retrieved
+  /banking/account/{id}/transactions:
+    get:
+      tags:
+      - Banking
+      summary: Get account transactions
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Account transactions retrieved
+  /banking/account/{id}/transactions/{transactionId}:
+    get:
+      tags:
+      - Banking
+      summary: Get specific transaction
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: transactionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Transaction details retrieved
+  /banking/payments:
+    get:
+      tags:
+      - Banking
+      summary: Get payments
+      responses:
+        "200":
+          description: Payments retrieved
+    post:
+      tags:
+      - Banking
+      summary: Initiate payment
+      description: API for initiating a payment (money movement) transaction
+      responses:
+        "201":
+          description: Payment initiated successfully
+  /banking/payments/{id}:
+    get:
+      tags:
+      - Banking
+      summary: Get payment status
+      description: API for retrieving and validating payment status and other details
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment status retrieved
+    delete:
+      tags:
+      - Banking
+      summary: Cancel payment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment cancelled successfully
+components:
+  schemas:
+    oauth_par_body:
+      required:
+      - client_id
+      - redirect_uri
+      - response_type
+      - scope
+      type: object
+      properties:
+        response_type:
+          type: string
+          enum:
+          - code
+        client_id:
+          type: string
+        redirect_uri:
+          type: string
+          format: uri
+        scope:
+          type: string
+        state:
+          type: string
+        nonce:
+          type: string
+    inline_response_200_1:
+      required:
+      - access_token
+      - expires_in
+      - token_type
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Access token for the authenticated user.
+        token_type:
+          type: string
+          description: Type of the token.
+          enum:
+          - Bearer
+        expires_in:
+          type: integer
+          description: Expiration time of the access token in seconds.
+        refresh_token:
+          type: string
+          description: Refresh token for obtaining a new access token.
+        scope:
+          type: string
+          description: Scope of the access token.
+    inline_response_200:
+      required:
+      - expires_in
+      - request_uri
+      type: object
+      properties:
+        request_uri:
+          type: string
+        expires_in:
+          type: integer
+    inline_response_200_2:
+      required:
+      - active
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Indicates whether the token is currently active.
+        client_id:
+          type: string
+          description: Client identifier for the token.
+        username:
+          type: string
+          description: Username associated with the token.
+        scope:
+          type: string
+          description: Scope of the token.
+        exp:
+          type: integer
+          description: Expiration timestamp of the token in seconds since epoch.
+        iat:
+          type: integer
+          description: Issued at timestamp of the token in seconds since epoch.
+    inline_response_200_3:
+      type: object
+      properties:
+        sub:
+          type: string
+          description: Unique identifier for the user from the authentication provider's
+            perspective.
+        name:
+          type: string
+          description: Full name of the user.
+        given_name:
+          type: string
+          description: Given name of the user.
+        family_name:
+          type: string
+          description: Family name of the user.
+        email:
+          type: string
+          description: Email address of the user.
+          format: email
+        email_verified:
+          type: boolean
+          description: Indicates whether the user's email address has been verified.
+        phone_number:
+          type: string
+          description: Phone number of the user.
+        phone_number_verified:
+          type: boolean
+          description: Indicates whether the user's phone number has been verified.
+    oauth_token_body:
+      required:
+      - client_id
+      - code
+      - grant_type
+      - redirect_uri
+      type: object
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - refresh_token
+        code:
+          type: string
+          description: Authorization code received from the authorization server.
+        redirect_uri:
+          type: string
+          description: Redirect URI used in the authorization request.
+          format: uri
+        client_id:
+          type: string
+          description: Client identifier for the token request.
+        client_secret:
+          type: string
+          description: Client secret for the token request.
+        refresh_token:
+          type: string
+          description: Refresh token used to obtain a new access token.
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          scopes: {}
