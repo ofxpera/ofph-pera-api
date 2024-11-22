@@ -195,22 +195,6 @@ paths:
         '200':
           description: Products list retrieved
 
-  /banking/customer:
-    post:
-      tags:
-        - Banking
-      summary: Create banking customer
-      responses:
-        '201':
-          description: Banking customer created
-    get:
-      tags:
-        - Banking
-      summary: Get banking customer
-      responses:
-        '200':
-          description: Banking customer retrieved
-
   /banking/accounts:
     post:
       tags:
