@@ -1,0 +1,324 @@
+openapi: 3.0.3
+info:
+  title: OFxPERA API
+  description: PhilippinesPhilippines Open Finance API Implementation for PERA
+  version: 0.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.1
+  description: SwaggerHub API Auto Mocking
+- url: https://api.ofxpera.ph/v1
+  description: OFxPERA API server
+security:
+- OAuth2: []
+tags:
+- name: Admin
+  description: Administrative endpoints for organization management
+- name: OAuth
+  description: "Authentication, authorization and consent management"
+- name: Common
+  description: Common APIs used across different industries
+- name: Banking
+  description: Banking-related use cases for OFxPERA
+paths:
+  /admin/organization:
+    get:
+      tags:
+      - Admin
+      summary: Get all organizations
+      description: API for retrieving all registered organization URIs
+      responses:
+        "200":
+          description: Successfully retrieved organizations
+    post:
+      tags:
+      - Admin
+      summary: Register organization URIs
+      description: API for registering a participating organization's URIs
+      responses:
+        "201":
+          description: Organization successfully registered
+  /admin/organization/{id}/certificate:
+    get:
+      tags:
+      - Admin
+      summary: Get organization certificate
+      description: API for retrieving a registered organization's certificate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved certificate
+  /oauth/par:
+    post:
+      tags:
+      - OAuth
+      summary: Push Authorization Request
+      description: OAuth Push Authorization Request
+      responses:
+        "200":
+          description: Successfully processed PAR request
+  /oauth/authorize:
+    get:
+      tags:
+      - OAuth
+      summary: Authorization endpoint
+      responses:
+        "200":
+          description: Authorization successful
+  /oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Token endpoint
+      responses:
+        "200":
+          description: Token successfully issued
+  /oauth/introspection:
+    get:
+      tags:
+      - OAuth
+      summary: Token introspection
+      responses:
+        "200":
+          description: Token information retrieved
+  /oauth/userinfo:
+    get:
+      tags:
+      - OAuth
+      summary: User information
+      responses:
+        "200":
+          description: User information retrieved
+  /common/consent:
+    post:
+      tags:
+      - Common
+      summary: Create consent
+      responses:
+        "201":
+          description: Consent created successfully
+  /common/consent/{id}:
+    get:
+      tags:
+      - Common
+      summary: Get consent information
+      description: API for retrieving the latest consent information
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent information retrieved
+    put:
+      tags:
+      - Common
+      summary: Update consent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent updated successfully
+    delete:
+      tags:
+      - Common
+      summary: Revoke consent
+      description: API for revoking a previously provided consent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent revoked successfully
+  /common/customer:
+    get:
+      tags:
+      - Common
+      summary: Get customer information
+      responses:
+        "200":
+          description: Customer information retrieved
+  /common/customer/{id}/detail:
+    get:
+      tags:
+      - Common
+      summary: Get detailed customer information
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Detailed customer information retrieved
+  /banking/account:
+    get:
+      tags:
+      - Banking
+      summary: Get source account information
+      description: API for retrieving information about the customer's source account
+      responses:
+        "200":
+          description: Account information retrieved
+  /banking/products:
+    get:
+      tags:
+      - Banking
+      summary: Get PERA products
+      description: API for retrieving list of PERA products the customer could subscribe
+        to
+      responses:
+        "200":
+          description: Products list retrieved
+  /banking/accounts:
+    get:
+      tags:
+      - Banking
+      summary: Get banking accounts
+      responses:
+        "200":
+          description: Banking accounts retrieved
+    post:
+      tags:
+      - Banking
+      summary: Create banking account
+      responses:
+        "201":
+          description: Banking account created
+  /banking/accounts/{id}:
+    get:
+      tags:
+      - Banking
+      summary: Get specific banking account
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Banking account retrieved
+  /banking/account/{id}/transactions:
+    get:
+      tags:
+      - Banking
+      summary: Get account transactions
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Account transactions retrieved
+  /banking/account/{id}/transactions/{transactionId}:
+    get:
+      tags:
+      - Banking
+      summary: Get specific transaction
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: transactionId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Transaction details retrieved
+  /banking/payments:
+    get:
+      tags:
+      - Banking
+      summary: Get payments
+      responses:
+        "200":
+          description: Payments retrieved
+    post:
+      tags:
+      - Banking
+      summary: Initiate payment
+      description: API for initiating a payment (money movement) transaction
+      responses:
+        "201":
+          description: Payment initiated successfully
+  /banking/payments/{id}:
+    get:
+      tags:
+      - Banking
+      summary: Get payment status
+      description: API for retrieving and validating payment status and other details
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment status retrieved
+    delete:
+      tags:
+      - Banking
+      summary: Cancel payment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment cancelled successfully
+components:
+  schemas: {}
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          scopes: {}
