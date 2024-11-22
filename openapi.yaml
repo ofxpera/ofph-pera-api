@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: OFxPERA API
-  description: Philippines Open Finance API Implementation
+  description: Philippines Open Finance API Implementation for PERA
   version: 0.0.1
   
 servers:
@@ -59,45 +59,256 @@ paths:
         - OAuth
       summary: Push Authorization Request
       description: OAuth Push Authorization Request
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - response_type
+                - client_id
+                - redirect_uri
+                - scope
+              properties:
+                response_type:
+                  type: string
+                  enum: [code]
+                client_id:
+                  type: string
+                redirect_uri:
+                  type: string
+                  format: uri
+                scope:
+                  type: string
+                state:
+                  type: string
+                nonce:
+                  type: string
       responses:
         '200':
           description: Successfully processed PAR request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - request_uri
+                  - expires_in
+                properties:
+                  request_uri:
+                    type: string
+                  expires_in:
+                    type: integer
 
   /oauth/authorize:
     get:
       tags:
         - OAuth
       summary: Authorization endpoint
+      description: OAuth 2.0 authorization endpoint that initiates the authorization flow
+      parameters:
+        - name: request_uri
+          in: query
+          required: true
+          description: URI containing the authorization request parameters from PAR
+          schema:
+            type: string
+            format: uri
+        - name: client_id
+          in: query
+          required: true
+          description: Client identifier issued to the client during registration
+          schema:
+            type: string
+        - name: response_type
+          in: query
+          required: true
+          description: Must be set to "code" for authorization code flow
+          schema:
+            type: string
+            enum: [code]
+        - name: redirect_uri
+          in: query
+          required: true
+          description: URI to return the user to after authorization is complete
+          schema:
+            type: string
+            format: uri
+        - name: scope
+          in: query
+          required: true
+          description: Space-separated list of requested scope values
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          description: Opaque value to maintain state between request and callback
+          schema:
+            type: string
+        - name: nonce
+          in: query
+          required: false
+          description: Random value used to prevent replay attacks
+          schema:
+            type: string
       responses:
         '200':
           description: Authorization successful
+        '302':
+          description: Redirect to client with authorization code
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                description: Redirect URI with authorization code
 
   /oauth/token:
     post:
       tags:
         - OAuth
       summary: Token endpoint
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - grant_type
+                - code
+                - redirect_uri
+                - client_id
+              properties:
+                grant_type:
+                  type: string
+                  enum: [authorization_code, refresh_token]
+                code:
+                  type: string
+                  description: Authorization code received from the authorization server.
+                redirect_uri:
+                  type: string
+                  format: uri
+                  description: Redirect URI used in the authorization request.
+                client_id:
+                  type: string
+                  description: Client identifier for the token request.
+                client_secret:
+                  type: string
+                  description: Client secret for the token request.
+                refresh_token: 
+                  type: string
+                  description: Refresh token used to obtain a new access token.
       responses:
         '200':
           description: Token successfully issued
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - access_token
+                  - token_type
+                  - expires_in
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token for the authenticated user.
+                  token_type:
+                    type: string
+                    enum: [Bearer]
+                    description: Type of the token.
+                  expires_in:
+                    type: integer
+                    description: Expiration time of the access token in seconds.
+                  refresh_token:
+                    type: string
+                    description: Refresh token for obtaining a new access token.
+                  scope:
+                    type: string
+                    description: Scope of the access token.
 
   /oauth/introspection:
     get:
       tags:
         - OAuth
       summary: Token introspection
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Token information retrieved
-
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - active
+                properties:
+                  active:
+                    type: boolean
+                    description: Indicates whether the token is currently active.
+                  client_id:
+                    type: string
+                    description: Client identifier for the token.
+                  username:
+                    type: string
+                    description: Username associated with the token.
+                  scope:
+                    type: string
+                    description: Scope of the token.
+                  exp:
+                    type: integer
+                    description: Expiration timestamp of the token in seconds since epoch.
+                  iat:
+                    type: integer
+                    description: Issued at timestamp of the token in seconds since epoch.
   /oauth/userinfo:
     get:
       tags:
         - OAuth
       summary: User information
+      security:
+        - OAuth2: []
       responses:
         '200':
           description: User information retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sub:
+                    type: string
+                    description: Unique identifier for the user from the authentication provider's perspective.
+                  name:
+                    type: string
+                    description: Full name of the user.
+                  given_name:
+                    type: string
+                    description: Given name of the user.
+                  family_name:
+                    type: string
+                    description: Family name of the user.
+                  email:
+                    type: string
+                    format: email
+                    description: Email address of the user.
+                  email_verified:
+                    type: boolean
+                    description: Indicates whether the user's email address has been verified.
+                  phone_number:
+                    type: string
+                    description: Phone number of the user.
+                  phone_number_verified:
+                    type: boolean
+                    description: Indicates whether the user's phone number has been verified.
 
   /common/consent:
     post:
