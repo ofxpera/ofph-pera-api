@@ -1,5 +1,28 @@
 # OFxPERA API
 
+## 2.11 HTTP Headers
+
+Supported HTTP headers, and their usage, for the standards are as laid out in the following sections.
+
+### 2.11.1 Open Finance Request and Response Headers
+
+| Header Field | Description | Mandatory? |
+|--------------|-------------|------------|
+| participant-id | Field referencing the unique identifier of the requesting participant. | Mandatory |
+| x-v | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | Mandatory |
+| x-fapi-interaction-id | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | Conditional |
+| x-fapi-auth-date | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. | Mandatory |
+| x-fapi-customer-ip-address | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. | Mandatory |
+| x-client-headers | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. | Optional |
+
+### 2.11.2 Industry Standard Headers
+
+| Header Field | Description | Mandatory? |
+|--------------|-------------|------------|
+| ContentType | Standard HTTP Header. Represents the format of the payload provided in the request. The media type must be set to application/json. Mandatory for PUT and POST calls. | Conditional |
+| Retry-After | Field indicating the time (in seconds) that the client should wait before retrying an operation. The response should include this header along with responses with the HTTP status code of 429 Too many requests. | Optional |
+| Accept | If specified, the media type must be set to application/json, unless otherwise specified in the resource endpoint standard. If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (*/*) is provided, the default media type is application/json. | Optional |
+
 ## 4. Endpoints and Sequence Diagrams
 
 ### 4.1 Namespace
