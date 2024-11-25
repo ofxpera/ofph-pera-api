@@ -585,15 +585,6 @@ components:
         type: string
         format: base64
     
-    ContentType:
-      name: Content-Type
-      in: header
-      required: false
-      description: Standard HTTP Header. Represents the format of the payload provided in the request. The media type must be set to application/json. Mandatory for PUT and POST calls.
-      schema:
-        type: string
-        enum: [application/json]
-    
     RetryAfter:
       name: Retry-After
       in: header
@@ -602,16 +593,6 @@ components:
       schema:
         type: integer
         minimum: 0
-    
-    Accept:
-      name: Accept
-      in: header
-      required: false
-      description: If specified, the media type must be set to application/json, unless otherwise specified in the resource endpoint standard. If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (*/*) is provided, the default media type is application/json.
-      schema:
-        type: string
-        default: application/json
-        enum: [application/json, */*]
   
   schemas:
     Address:
@@ -802,6 +783,4 @@ x-global-headers:
   - $ref: '#/components/parameters/FapiAuthDate'
   - $ref: '#/components/parameters/FapiCustomerIpAddress'
   - $ref: '#/components/parameters/ClientHeaders'
-  - $ref: '#/components/parameters/ContentType'
   - $ref: '#/components/parameters/RetryAfter'
-  - $ref: '#/components/parameters/Accept'
