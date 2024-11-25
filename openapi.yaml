@@ -367,7 +367,7 @@ paths:
       tags:
         - Common
       summary: Get customer's Personal Information
-      description: Returns the customer's Personal Information as defined in section 5.2.3
+      description: (deprecate?) Returns the customer's Personal Information as defined in section 5.2.3
       security:
         - OAuth2: []
       responses:
@@ -386,12 +386,17 @@ paths:
       parameters:
         - name: id
           in: path
+          description: Customer ID, this should map to the sub field returned from the /oauth/userinfo endpoint
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Detailed customer information retrieved
+          description: Customer's Personal Information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInformation'
 
   /banking/account:
     get:
