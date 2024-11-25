@@ -366,10 +366,17 @@ paths:
     get:
       tags:
         - Common
-      summary: Get customer information
+      summary: Get customer's Personal Information
+      description: Returns the customer's Personal Information as defined in section 5.2.3
+      security:
+        - OAuth2: []
       responses:
         '200':
-          description: Customer information retrieved
+          description: Customer's Personal Information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInformation'
 
   /common/customer/{id}/detail:
     get:
@@ -519,6 +526,170 @@ paths:
           description: Payment cancelled successfully
 
 components:
+  schemas:
+    Address:
+      type: object
+      required:
+        - region
+        - province
+        - city
+        - country
+        - postal_code
+      properties:
+        region:
+          type: string
+          maxLength: 10
+          description: PSGC Code
+        province:
+          type: string
+          maxLength: 10
+          description: PSGC Code
+        city:
+          type: string
+          maxLength: 10
+          description: PSGC Code
+        barangay:
+          type: string
+          maxLength: 10
+          description: PSGC Code
+        street_address:
+          type: string
+          maxLength: 200
+        country:
+          type: string
+          maxLength: 3
+          description: ISO 3166 Code
+        postal_code:
+          type: string
+          maxLength: 10
+
+    IdType:
+      type: object
+      required:
+        - id_number
+        - id_type
+      properties:
+        id_number:
+          type: string
+          maxLength: 50
+        id_expiry_date:
+          type: string
+          maxLength: 10
+          format: date
+          description: Format is YYYY-MM-DD
+        id_type:
+          type: string
+          maxLength: 100
+          description: ID Type (e.g., "Drivers License", "Passport", etc.)
+
+    PersonalInformation:
+      type: object
+      required:
+        - sub
+        - given_name
+        - last_name
+        - mobile_number
+        - email
+        - birthdate
+        - nationality
+        - presented_ids
+        - pera_admin
+      properties:
+        sub:
+          type: string
+          maxLength: 50
+          description: Subject – FI's unique identifier for the End-User
+        title:
+          type: string
+          maxLength: 50
+        given_name:
+          type: string
+          maxLength: 50
+        middle_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        suffix:
+          type: string
+          maxLength: 10
+        phone_number:
+          type: string
+          maxLength: 15
+          pattern: '^[0-9]{11}$'
+          example: '63287654321'
+        mobile_number:
+          type: string
+          maxLength: 15
+          pattern: '^[0-9]{12}$'
+          example: '639171234567'
+        email:
+          type: string
+          maxLength: 50
+          format: email
+        birthdate:
+          type: string
+          maxLength: 10
+          format: date
+          description: Format YYYY-MM-DD
+        nationality:
+          type: string
+          maxLength: 3
+          description: ISO 3166 Code
+        tin:
+          type: string
+          maxLength: 15
+          pattern: '^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$'
+          description: Format NNN-NNN-NNN-000
+        presented_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdType'
+          description: Array of identification details
+        cdd:
+          $ref: '#/components/schemas/CustomerDueDiligence'
+        pera_admin:
+          type: string
+          maxLength: 50
+          description: Selected PERA Admin by Customer FI Codes of PERA admin
+
+    CustomerDueDiligence:
+      type: object
+      required:
+        - employment_status
+        - pep_indicator
+        - fund_source
+        - cdd_indicator
+      properties:
+        employment_status:
+          type: string
+          maxLength: 50
+        occupation:
+          type: string
+          maxLength: 150
+        nature_of_work:
+          type: string
+          maxLength: 10
+          description: PSIC Code
+        employer_name:
+          type: string
+          maxLength: 255
+        employer_address:
+          $ref: '#/components/schemas/Address'
+        pep_indicator:
+          type: boolean
+          description: Politically Exposed Person 1 - True; 0 - False
+        fund_source:
+          type: string
+          maxLength: 100
+          description: Source of Funds
+        cdd_indicator:
+          type: string
+          maxLength: 6
+          enum: ['Low', 'Normal', 'High']
+          description: Customer Due Diligence Risk Level
+
   securitySchemes:
     OAuth2:
       type: oauth2
