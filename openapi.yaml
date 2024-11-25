@@ -685,18 +685,18 @@ components:
     IdType:
       type: object
       required:
-        - id_number
-        - id_type
+        - idNumber
+        - idType
       properties:
-        id_number:
+        idNumber:
           type: string
           maxLength: 50
-        id_expiry_date:
+        idExpiryDate:
           type: string
           maxLength: 10
           format: date
           description: Format is YYYY-MM-DD
-        id_type:
+        idType:
           type: string
           maxLength: 100
           description: ID Type (e.g., "Drivers License", "Passport", etc.)
@@ -705,14 +705,14 @@ components:
       type: object
       required:
         - sub
-        - given_name
-        - last_name
-        - mobile_number
+        - givenName
+        - lastName
+        - mobileNumber
         - email
         - birthdate
         - nationality
-        - presented_ids
-        - pera_admin
+        - presentedIds
+        - peraAdmin
       properties:
         sub:
           type: string
@@ -721,24 +721,24 @@ components:
         title:
           type: string
           maxLength: 50
-        given_name:
+        givenName:
           type: string
           maxLength: 50
-        middle_name:
+        middleName:
           type: string
           maxLength: 50
-        last_name:
+        lastName:
           type: string
           maxLength: 50
         suffix:
           type: string
           maxLength: 10
-        phone_number:
+        phoneNumber:
           type: string
           maxLength: 15
           pattern: '^[0-9]{11}$'
           example: '63287654321'
-        mobile_number:
+        mobileNumber:
           type: string
           maxLength: 15
           pattern: '^[0-9]{12}$'
@@ -761,14 +761,14 @@ components:
           maxLength: 15
           pattern: '^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$'
           description: Format NNN-NNN-NNN-000
-        presented_ids:
+        presentedIds:
           type: array
           items:
             $ref: '#/components/schemas/IdType'
           description: Array of identification details
         cdd:
           $ref: '#/components/schemas/CustomerDueDiligence'
-        pera_admin:
+        peraAdmin:
           type: string
           maxLength: 50
           description: Selected PERA Admin by Customer FI Codes of PERA admin
@@ -776,34 +776,34 @@ components:
     CustomerDueDiligence:
       type: object
       required:
-        - employment_status
-        - pep_indicator
-        - fund_source
-        - cdd_indicator
+        - employmentStatus
+        - pepIndicator
+        - fundSource
+        - cddIndicator
       properties:
-        employment_status:
+        employmentStatus:
           type: string
           maxLength: 50
         occupation:
           type: string
           maxLength: 150
-        nature_of_work:
+        natureOfWork:
           type: string
           maxLength: 10
           description: PSIC Code
-        employer_name:
+        employerName:
           type: string
           maxLength: 255
-        employer_address:
+        employerAddress:
           $ref: '#/components/schemas/Address'
-        pep_indicator:
+        pepIndicator:
           type: boolean
           description: Politically Exposed Person 1 - True; 0 - False
-        fund_source:
+        fundSource:
           type: string
           maxLength: 100
           description: Source of Funds
-        cdd_indicator:
+        cddIndicator:
           type: string
           maxLength: 6
           enum: ['Low', 'Normal', 'High']
