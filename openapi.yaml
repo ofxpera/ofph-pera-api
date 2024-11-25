@@ -25,6 +25,12 @@ paths:
         - Admin
       summary: Register organization URIs
       description: API for registering a participating organization's URIs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
       responses:
         '201':
           description: Organization successfully registered
@@ -36,22 +42,67 @@ paths:
       responses:
         '200':
           description: Successfully retrieved organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
 
   /admin/organization/{id}/certificate:
     get:
       tags:
         - Admin
       summary: Get organization certificate
-      description: API for retrieving a registered organization's certificate
+      description: API for retrieving a registered organization's mTLS certificate for secure communication
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+          description: The unique identifier of the organization
       responses:
         '200':
           description: Successfully retrieved certificate
+          content:
+            application/x-pem-file:
+              schema:
+                type: string
+                description: PEM-encoded X.509 certificate
+            application/json:
+              schema:
+                type: object
+                properties:
+                  certificate:
+                    type: string
+                    description: PEM-encoded X.509 certificate as a string
+                  validFrom:
+                    type: string
+                    format: date-time
+                    description: Certificate validity start date
+                  validUntil:
+                    type: string
+                    format: date-time
+                    description: Certificate validity end date
+                  subject:
+                    type: object
+                    properties:
+                      commonName:
+                        type: string
+                      organizationName:
+                        type: string
+                      organizationId:
+                        type: string
+                required:
+                  - certificate
+                  - validFrom
+                  - validUntil
+                  - subject
+        '404':
+          description: Organization or certificate not found
+        '400':
+          description: Invalid request
 
   /oauth/par:
     post:
@@ -757,6 +808,70 @@ components:
           maxLength: 6
           enum: ['Low', 'Normal', 'High']
           description: Customer Due Diligence Risk Level
+
+    Organization:
+      type: object
+      required:
+        - organizationId
+        - organizationName
+        - organizationType
+        - registeredName
+        - registeredOfficeAddress
+        - businessAddress
+        - contactDetails
+        - authorizationServers
+      properties:
+        organizationId:
+          type: string
+          description: Unique identifier assigned to the organization
+        organizationName:
+          type: string
+          description: Trading name of the organization
+        organizationType:
+          type: string
+          enum: [PERA_ADMIN, CONTRIBUTOR_INSTITUTION]
+          description: Type of organization in the PERA ecosystem
+        registeredName:
+          type: string
+          description: Legal registered name of the organization
+        registeredOfficeAddress:
+          $ref: '#/components/schemas/Address'
+        businessAddress:
+          $ref: '#/components/schemas/Address'
+        contactDetails:
+          type: object
+          required:
+            - phone
+            - email
+          properties:
+            phone:
+              type: string
+            email:
+              type: string
+              format: email
+        authorizationServers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationServer'
+
+    AuthorizationServer:
+      type: object
+      required:
+        - authorizationServerId
+        - authorizationEndpoint
+        - tokenEndpoint
+      properties:
+        authorizationServerId:
+          type: string
+        authorizationEndpoint:
+          type: string
+          format: uri
+        tokenEndpoint:
+          type: string
+          format: uri
+        registrationEndpoint:
+          type: string
+          format: uri
 
   securitySchemes:
     OAuth2:

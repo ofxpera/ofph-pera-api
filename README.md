@@ -173,3 +173,59 @@ Customer Authentication, Authorization and Consent Management:
 | pep_indicator | Boolean | | Mandatory | Politically Exposed Person 1 - True; 0 - False |
 | fund_source | String | 100 | Mandatory | Source of Funds |
 | cdd_indicator | String | 6 | Mandatory | Need more info on the possible values Low; Normal; High |
+
+### 5.3 Organization
+
+The organization data model represents a participating institution in the PERA ecosystem.
+
+| Data Element | Data Type | Mandatory? | Description |
+|--------------|-----------|------------|-------------|
+| organizationId | String | Mandatory | Unique identifier assigned to the organization |
+| organizationName | String | Mandatory | Trading name of the organization |
+| organizationType | Enum | Mandatory | Type of organization in the PERA ecosystem. Values: `PERA_ADMIN`, `CONTRIBUTOR_INSTITUTION` |
+| registeredName | String | Mandatory | Legal registered name of the organization |
+| registeredOfficeAddress | Address | Mandatory | Registered office address using the Address data type |
+| businessAddress | Address | Mandatory | Primary business address using the Address data type |
+| contactDetails | Object | Mandatory | Organization contact information |
+| contactDetails.email | String | Mandatory | Primary contact email address |
+| contactDetails.phone | String | Mandatory | Primary contact phone number |
+| contactDetails.website | String | Optional | Organization's website URL |
+| authorizationServers | Array | Mandatory | List of authorization server configurations |
+| authorizationServers[].baseUrl | String | Mandatory | Base URL of the authorization server |
+| authorizationServers[].description | String | Optional | Description of the authorization server's purpose |
+
+#### Example Organization Payload
+```json
+{
+  "organizationId": "org123",
+  "organizationName": "Sample Bank",
+  "organizationType": "CONTRIBUTOR_INSTITUTION",
+  "registeredName": "Sample Bank Corporation",
+  "registeredOfficeAddress": {
+    "region": "130000000",
+    "province": "133900000",
+    "city": "133902000",
+    "street_address": "123 Main Street",
+    "country": "PHL",
+    "postal_code": "1234"
+  },
+  "businessAddress": {
+    "region": "130000000",
+    "province": "133900000",
+    "city": "133902000",
+    "street_address": "456 Business Avenue",
+    "country": "PHL",
+    "postal_code": "1234"
+  },
+  "contactDetails": {
+    "email": "contact@samplebank.com",
+    "phone": "6328123456",
+    "website": "https://www.samplebank.com"
+  },
+  "authorizationServers": [
+    {
+      "baseUrl": "https://auth.samplebank.com",
+      "description": "Primary authorization server"
+    }
+  ]
+}
