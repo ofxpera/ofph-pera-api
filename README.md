@@ -1,5 +1,166 @@
 # OFxPERA API
 
+## 1 Introduction
+
+### 1.1 Overview
+
+The OFxPERA API is a comprehensive set of RESTful APIs designed to facilitate the implementation of the Personal Equity and Retirement Account (PERA) ecosystem in the Philippines. This API suite enables seamless integration between PERA Administrators, Contributors, and other participating financial institutions.
+
+Key features of the OFxPERA API include:
+* Secure authentication and authorization using OAuth 2.0
+* Standardized HTTP headers for consistent communication
+* Comprehensive endpoints for account management, payment processing, and customer information
+* Support for admin-initiated account opening and FI-initiated account management
+* Robust data models for user profiles and KYC information
+
+This documentation provides detailed specifications for API endpoints, data models, and integration guidelines to help financial institutions implement PERA services effectively.
+
+### 1.2 URL Conventions
+
+The URI structure for API endpoints in the standards MUST implement the following syntax:
+
+`https://{financial-institution}/OFPH/{version}/<namespace>/<Resource>{?query-parameters}`
+
+Example, the endpoint to get customer information would be:
+
+`GET https://api.anybank.ph/ofph/v1/banking/customers/{customer-id}`
+
+
+## 2 API Design Principles
+
+### 2.1 Authentication and Authorization
+
+The OFxPERA API implements a robust security framework based on OAuth 2.0, OpenID Connect (OIDC), and Financial-grade API (FAPI) standards to ensure secure authentication and authorization.
+
+#### 2.1.1 OAuth 2.0 and OpenID Connect
+
+OAuth 2.0 provides the foundation for secure delegated access, while OpenID Connect adds an identity layer on top of OAuth 2.0. This combination enables:
+
+* **Secure Authentication**: OIDC allows PERA Contributors to authenticate users through their preferred Financial Institution
+* **Delegated Authorization**: OAuth 2.0 enables Contributors to obtain limited access to customer's PERA accounts
+* **Consent Management**: Explicit user consent for data sharing and account access
+* **Token-based Security**: Use of access tokens and refresh tokens for secure API access
+
+#### 2.1.2 Financial-grade API (FAPI)
+
+FAPI extends OAuth 2.0 and OIDC with additional security requirements specifically designed for financial services:
+
+* **Enhanced Security**: 
+  - Mandates TLS 1.2 or higher
+  - Requires stronger encryption algorithms
+  - Implements additional protection against token theft and replay attacks
+
+* **Key Requirements**:
+  - Mutual TLS (mTLS) for client authentication
+  - Signed requests and responses using JWS
+  - Pushed Authorization Requests (PAR)
+  - Strong customer authentication (SCA)
+  - Protection against CSRF attacks
+
+#### 2.1.3 Implementation Flow
+
+1. **Registration**:
+   - Contributors and PERA Administrators must register their OAuth clients
+   - Exchange of certificates for mTLS
+   - Configuration of redirect URIs and scope permissions
+
+2. **Authentication Flow**:
+   ```
+   Customer -> PERA Admin -> FI Authorization Server -> Customer Authentication -> Consent -> PERA Admin
+   ```
+
+3. **API Access**:
+   - Use of access tokens for API calls
+   - Token introspection for validation
+   - Regular token rotation for security
+
+This security framework ensures:
+* Strong customer authentication
+* Secure consent management
+* Protected API access
+* Regulatory compliance
+* Standardized integration patterns
+
+### 2.1 Request and Response Payload Structure
+
+Each API request payload MUST have a JSON object at the root level. This object contains the top-level document and MUST contain at least one of the following top-level members:
+
+* `data`: contains the document's primary data
+* `errors`: an array of error objects
+* `meta`: used to provide additional information such as second factor authorization data, traffic management, and pagination among others
+
+Note that `data` and `errors` MUST NOT coexist in the same document.
+
+A document MAY contain the following additional top-level members:
+
+* `links`: contains a set of URIs referencing the document as a whole
+* `included`: an array of resource objects that are related to the primary data
+
+The top-level `links` object MAY contain the following members:
+
+* `self`: a URI that generated the current response document
+* `describedby`: a URI to a description document such as OpenAPI or JSON schema
+
+### 2.2 Responses Payloads and Error Handling
+
+#### 2.2.1 HTTP Responses
+
+* All endpoints MUST have HTTP Status codes `200`, `400`, `401`, `403`, `404`, and `500` as defined in the data dictionary
+* Relevant endpoints MAY have HTTP status codes `201`, `409` as defined in the data dictionary
+* Each API response payload MUST have a JSON object at the root level known as the root object
+
+#### 2.2.2 Successful Responses
+
+If the response is successful (`200 OK`), the root object must follow the Request and Response Payload Structure as defined in this document.
+
+#### 2.2.3 Unsuccessful Responses
+
+If the response is unsuccessful (not `200 OK`), the root object:
+* MAY contain an `errors` object (as per the specific endpoint definition)
+
+Error responses MUST contain three tiers of information to support error handling:
+
+* HTTP Status Code - Category of the error that has occurred. See Data Dictionary
+* Error Code - Describes the cause of the error. The Data Dictionary defines a standard list of error codes. Where a specific error code MUST be responded, this requirement is stated against the applicable error code or API endpoints
+* Description - Human readable message describing the error
+
+The definition of the contents for the `data` object and `meta` object will be defined separately for each endpoint.
+
+### 2.3 Pagination
+
+Each API endpoint that can return multiple records will stipulate whether pagination is supported for the endpoint or not. For endpoints that will return less than a reasonably sized page of results in the majority of circumstances, support for paging may not be included.
+
+Note that the use of paging for an endpoint does not require or preclude the use of filtering query parameters. It is expected that filtering and paging will be applied independently of each other.
+
+#### 2.3.1 Pagination Links
+
+If the endpoint supports pagination, the following elements MUST be returned by the server in the `links` object:
+
+* `first`: The first page of the data set. Mandatory if this response is not the first page
+* `last`: The last page of the data set. Mandatory if this response is not the last page
+* `prev`: The previous page. Mandatory if this response is not the first page
+* `next`: The following page in the data set. Mandatory if this response is not the last page
+
+The `meta` object MAY contain the following:
+
+* `total-records`: The total number of records in the set
+* `total-pages`: The total number of pages in the set
+* If `total-records` is 0, `total-pages` MUST be 0
+
+For each of these fields, the page size specified in the request should be assumed when calculating values.
+
+#### 2.3.2 Pagination Query Parameters
+
+When pagination is supported, the consumer MAY provide the following query parameters:
+
+* `page`: the page number being requested (with the first page being 1)
+* `page-size`: the number of records to return in each page
+
+If the query parameters are not provided the following defaults will be assumed:
+
+* `page`: a default of 1 (the first page) will be assumed
+* `page-size`: a default of 25 will be assumed
+
 ## 3 HTTP Headers
 
 Supported HTTP headers, and their usage, for the standards are as laid out in the following sections.
@@ -23,7 +184,7 @@ Supported HTTP headers, and their usage, for the standards are as laid out in th
 | Retry-After | Field indicating the time (in seconds) that the client should wait before retrying an operation. The response should include this header along with responses with the HTTP status code of 429 Too many requests. | Optional |
 | Accept | If specified, the media type must be set to application/json, unless otherwise specified in the resource endpoint standard. If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (*/*) is provided, the default media type is application/json. | Optional |
 
-## 4. Endpoints and Sequence Diagrams
+## 4 Endpoints and Sequence Diagrams
 
 ### 4.1 Namespace
 
@@ -39,6 +200,7 @@ The following namespaces will be used for the OFxPERA pilot:
 ### 4.2 OFxPERA APIs
 
 #### 4.2.1 Admin
+
 CORS URI endpoints:
 
 | API | Description |
@@ -48,6 +210,7 @@ CORS URI endpoints:
 | `GET /admin/organization/{id}/certificate` | API for retrieving a registered organization's certificate |
 
 #### 4.2.2 OAuth
+
 Customer Authentication, Authorization and Consent Management:
 
 | API | Description |
@@ -97,7 +260,7 @@ Customer Authentication, Authorization and Consent Management:
 | `DELETE /banking/payments/{id}` | Cancel payment |
 | `GET /banking/payments` | Get payments |
 
-## 5. Data Model
+## 5 Data Model
 
 ### 5.1 User Profile
 
