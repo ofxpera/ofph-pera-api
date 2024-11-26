@@ -5,6 +5,9 @@ info:
   version: 0.0.1
   
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.1
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
