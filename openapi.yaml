@@ -469,7 +469,12 @@ paths:
       summary: Get PERA-compatible products
       description: Retrieve a list of investment products that are compatible with PERA regulations in the Philippines
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
+        - name: participant-id
+          in: query
+          description: Filter products by participant ID
+          required: false
+          schema:
+            type: string
         - name: product-type
           in: query
           description: Filter products by type
