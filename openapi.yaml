@@ -882,8 +882,6 @@ components:
         - organizationName
         - organizationType
         - registeredName
-        - registeredOfficeAddress
-        - businessAddress
         - contactDetails
         - authorizationServers
       properties:
