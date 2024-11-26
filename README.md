@@ -1,10 +1,10 @@
 # OFxPERA API
 
-## 2.11 HTTP Headers
+## 3 HTTP Headers
 
 Supported HTTP headers, and their usage, for the standards are as laid out in the following sections.
 
-### 2.11.1 Open Finance Request and Response Headers
+### 3.1 Open Finance Request and Response Headers
 
 | Header Field | Description | Mandatory? |
 |--------------|-------------|------------|
@@ -15,7 +15,7 @@ Supported HTTP headers, and their usage, for the standards are as laid out in th
 | x-fapi-customer-ip-address | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. | Mandatory |
 | x-client-headers | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. | Optional |
 
-### 2.11.2 Industry Standard Headers
+### 3.2 Industry Standard Headers
 
 | Header Field | Description | Mandatory? |
 |--------------|-------------|------------|
