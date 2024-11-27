@@ -888,7 +888,7 @@ components:
         - organizationType
         - registeredName
         - contactDetails
-        - authorizationServers
+        - endpointURIs
       properties:
         organizationId:
           type: string
@@ -918,27 +918,24 @@ components:
             email:
               type: string
               format: email
-        authorizationServers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AuthorizationServer'
+        endpointURIs:
+          type: object
+          $ref: '#/components/schemas/endpointURIs'
 
-    AuthorizationServer:
+    endpointURIs:
       type: object
       required:
-        - authorizationServerId
         - authorizationEndpoint
         - tokenEndpoint
+        - resourceEndpoint
       properties:
-        authorizationServerId:
-          type: string
         authorizationEndpoint:
           type: string
           format: uri
         tokenEndpoint:
           type: string
           format: uri
-        registrationEndpoint:
+        resourceEndpoint:
           type: string
           format: uri
 
