@@ -11,13 +11,13 @@ Feature: PERA Authorization Flow
 
   Scenario: Successful Authorization Flow with Customer Consent
     Given the PERA Admin prepares an authorization URL with the following parameters:
-      | Parameter     | Value                                    |
-      | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | openid profile accounts.basic accounts.details |
-      | state        | abc123xyz                                |
-      | nonce        | n-0S6_WzA2Mj                            |
+      | Parameter     | Value                                           |
+      | response_type | code                                            |
+      | client_id     | pera_admin_client_123                           |
+      | redirect_uri  | https://peraadmin.com/callback                  |
+      | scope         | openid profile accounts.basic accounts.details  |
+      | state         | abc123xyz                                       |
+      | nonce         | n-0S6_WzA2Mj                                    |
     When the PERA Admin redirects the customer to the FI's authorization endpoint
     Then the FI should display their login page
     
@@ -41,10 +41,10 @@ Feature: PERA Authorization Flow
     Given the PERA Admin prepares an authorization URL with invalid client_id:
       | Parameter     | Value                                    |
       | response_type | code                                     |
-      | client_id    | invalid_client_123                       |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | openid profile                           |
-      | state        | abc123xyz                                |
+      | client_id     | invalid_client_123                       |
+      | redirect_uri  | https://peraadmin.com/callback           |
+      | scope         | openid profile                           |
+      | state         | abc123xyz                                |
     When the PERA Admin redirects the customer to the FI's authorization endpoint
     Then the FI should display an error page
     And the error message should indicate "invalid_client"
@@ -61,10 +61,10 @@ Feature: PERA Authorization Flow
     Given the PERA Admin prepares an authorization URL with invalid scope:
       | Parameter     | Value                                    |
       | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | invalid.scope                            |
-      | state        | abc123xyz                                |
+      | client_id     | pera_admin_client_123                    |
+      | redirect_uri  | https://peraadmin.com/callback           |
+      | scope         | invalid.scope                            |
+      | state         | abc123xyz                                |
     When the PERA Admin redirects the customer to the FI's authorization endpoint
     Then the FI should display an error page
     And the error message should indicate "invalid_scope"
@@ -73,10 +73,10 @@ Feature: PERA Authorization Flow
     Given the PERA Admin prepares an authorization URL with unregistered redirect URI:
       | Parameter     | Value                                    |
       | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://malicious-site.com/callback      |
-      | scope        | openid profile                           |
-      | state        | abc123xyz                                |
+      | client_id     | pera_admin_client_123                    |
+      | redirect_uri  | https://malicious-site.com/callback      |
+      | scope         | openid profile                           |
+      | state         | abc123xyz                                |
     When the PERA Admin redirects the customer to the FI's authorization endpoint
     Then the FI should display an error page
     And the error message should indicate "invalid_redirect_uri"
@@ -93,11 +93,11 @@ Feature: PERA Authorization Flow
     Given the PERA Admin initiates a request requiring step-up authentication:
       | Parameter     | Value                                    |
       | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | openid profile accounts.high_value        |
-      | state        | abc123xyz                                |
-      | acr_values   | urn:openbanking:psd2:sca                 |
+      | client_id     | pera_admin_client_123                    |
+      | redirect_uri  | https://peraadmin.com/callback           |
+      | scope         | openid profile accounts.high_value       |
+      | state         | abc123xyz                                |
+      | acr_values    | urn:openbanking:psd2:sca                 |
     And the customer successfully completes primary authentication
     When the FI requests additional authentication factors
     And the customer successfully provides the required factors

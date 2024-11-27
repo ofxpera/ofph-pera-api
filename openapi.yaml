@@ -430,7 +430,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonalInformation'
+                $ref: '#/components/schemas/CustomerInformation'
 
   /common/customer/{id}/detail:
     get:
@@ -450,7 +450,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonalInformation'
+                $ref: '#/components/schemas/CustomerInformation'
 
   /banking/account:
     get:
@@ -771,7 +771,7 @@ components:
           type: string
           maxLength: 100
           description: ID Type (e.g., "Drivers License", "Passport", etc.)
-
+    
     PersonalInformation:
       type: object
       required:
@@ -782,8 +782,6 @@ components:
         - email
         - birthdate
         - nationality
-        - presentedIds
-        - peraAdmin
       properties:
         sub:
           type: string
@@ -832,6 +830,21 @@ components:
           maxLength: 15
           pattern: '^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$'
           description: Format NNN-NNN-NNN-000
+
+    CustomerInformation:
+      type: object
+      required:
+        - sub
+        - pii
+        - cdd
+        - presentedIds
+      properties:
+        sub:
+          type: string
+          maxLength: 50
+          description: Subject – FI's unique identifier for the End-User
+        personalInformation:
+          $ref: '#/components/schemas/PersonalInformation'
         presentedIds:
           type: array
           items:

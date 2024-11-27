@@ -9,9 +9,9 @@ Feature: PERA Admin Bootstrapping Process
 
   Scenario: Retrieve All Registered Organizations
     Given there are multiple organizations registered in the system:
-      | Organization ID | Organization Name | Organization Type      |
-      | bank_123       | Sample Bank       | CONTRIBUTOR_INSTITUTION|
-      | bank_456       | Another Bank      | CONTRIBUTOR_INSTITUTION|
+      | Organization ID | Organization Name | Organization Type       |
+      | bank_123        | Sample Bank       | CONTRIBUTOR_INSTITUTION |
+      | bank_456        | Another Bank      | CONTRIBUTOR_INSTITUTION |
     When the PERA Admin sends a GET request to "/admin/organization"
     Then the response status code should be 200
     And the response should contain a list of registered organizations
@@ -33,16 +33,16 @@ Feature: PERA Admin Bootstrapping Process
     And the response should contain a valid X.509 certificate
     And the certificate should be in PEM format
     And the certificate details should include:
-      | Field        | Value                    |
+      | Field       | Value                    |
       | validFrom   | [current_date]           |
       | validUntil  | [current_date + 1 year]  |
       | subject     | CN=Sample Bank,O=Sample Bank Corporation |
 
   Scenario: Filter Organizations by Type
     Given there are organizations of different types in the system:
-      | Organization ID | Organization Name | Organization Type      |
-      | bank_123       | Sample Bank       | CONTRIBUTOR_INSTITUTION|
-      | admin_456      | Admin Corp        | ADMINISTRATOR         |
+      | Organization ID | Organization Name | Organization Type       |
+      | bank_123        | Sample Bank       | CONTRIBUTOR_INSTITUTION |
+      | admin_456       | Admin Corp        | ADMINISTRATOR           |
     When the PERA Admin sends a GET request to "/admin/organization?type=CONTRIBUTOR_INSTITUTION"
     Then the response status code should be 200
     And the response should only contain organizations of type "CONTRIBUTOR_INSTITUTION"
@@ -50,9 +50,9 @@ Feature: PERA Admin Bootstrapping Process
   Scenario: Monitor Organization Status
     Given there are organizations with different statuses:
       | Organization ID | Status    |
-      | bank_123       | ACTIVE    |
-      | bank_456       | INACTIVE  |
-      | bank_789       | SUSPENDED |
+      | bank_123        | ACTIVE    |
+      | bank_456        | INACTIVE  |
+      | bank_789        | SUSPENDED |
     When the PERA Admin sends a GET request to "/admin/organization/status"
     Then the response status code should be 200
     And the response should contain status information for all organizations
@@ -69,9 +69,9 @@ Feature: PERA Admin Bootstrapping Process
   Scenario: Certificate Expiry Monitoring
     Given there are organizations with different certificate expiry dates:
       | Organization ID | Days Until Expiry |
-      | bank_123       | 30                |
-      | bank_456       | 60                |
-      | bank_789       | 5                 |
+      | bank_123        | 30                |
+      | bank_456        | 60                |
+      | bank_789        | 5                 |
     When the PERA Admin sends a GET request to "/admin/organization/certificate/status"
     Then the response status code should be 200
     And the response should contain certificate expiry information

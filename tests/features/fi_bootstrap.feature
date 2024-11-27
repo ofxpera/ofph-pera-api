@@ -10,10 +10,10 @@ Feature: Financial Institution Bootstrapping Process
 
   Scenario: Successful Financial Institution Registration
     Given the Financial Institution prepares registration details:
-      | Field                | Value                                    |
+      | Field               | Value                                    |
       | organizationId      | bank_123                                 |
       | organizationName    | Sample Bank                              |
-      | organizationType    | CONTRIBUTOR_INSTITUTION                   |
+      | organizationType    | CONTRIBUTOR_INSTITUTION                  |
       | registeredName      | Sample Bank Corporation                  |
       | contactDetails      | {"email": "api@samplebank.com", "phone": "6328123456"} |
       | endpointURIs        | {"authorizationEndpoint": "https://auth.samplebank.com/authorize", "tokenEndpoint": "https://auth.samplebank.com/token", "resourceEndpoint": "https://api.samplebank.com"} |
@@ -24,7 +24,7 @@ Feature: Financial Institution Bootstrapping Process
 
   Scenario: Failed Registration - Missing Required Fields
     Given the Financial Institution prepares incomplete registration details:
-      | Field             | Value                                    |
+      | Field            | Value                                    |
       | organizationId   | bank_123                                 |
       | organizationName | Sample Bank                              |
     When the Financial Institution sends a POST request to "/admin/organization"
@@ -34,10 +34,10 @@ Feature: Financial Institution Bootstrapping Process
   Scenario: Failed Registration - Duplicate Organization ID
     Given an organization with ID "bank_123" already exists
     When the Financial Institution attempts to register with the same ID:
-      | Field                | Value                                    |
+      | Field               | Value                                    |
       | organizationId      | bank_123                                 |
       | organizationName    | Another Bank                             |
-      | organizationType    | CONTRIBUTOR_INSTITUTION                   |
+      | organizationType    | CONTRIBUTOR_INSTITUTION                  |
       | registeredName      | Another Bank Corporation                 |
       | contactDetails      | {"email": "api@anotherbank.com", "phone": "6328123457"} |
       | endpointURIs        | {"authorizationEndpoint": "https://auth.anotherbank.com/authorize"} |
@@ -47,7 +47,7 @@ Feature: Financial Institution Bootstrapping Process
   Scenario: Update Organization Endpoints
     Given a Financial Institution is registered with ID "bank_123"
     When the Financial Institution updates their endpoints:
-      | Field                | Value                                    |
+      | Field               | Value                                    |
       | endpointURIs        | {"authorizationEndpoint": "https://auth-new.samplebank.com/authorize", "tokenEndpoint": "https://auth-new.samplebank.com/token", "resourceEndpoint": "https://api-new.samplebank.com"} |
     Then the response status code should be 200
     And the response should contain the updated endpoint URIs

@@ -11,12 +11,12 @@ Feature: PERA Authorization Flow
 
   Scenario: Successful Authorization Flow with Customer Consent
     Given the PERA Admin initiates authorization request with the following details:
-      | Parameter     | Value                                    |
-      | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | openid profile accounts.basic accounts.details |
-      | state        | abc123xyz                                |
+      | Parameter     | Value                                           |
+      | response_type | code                                            |
+      | client_id     | pera_admin_client_123                           |
+      | redirect_uri  | https://peraadmin.com/callback                  |
+      | scope         | openid profile accounts.basic accounts.details  |
+      | state         | abc123xyz                                       |
     When the PERA Admin sends a POST request to "/oauth/par"
     Then the response status code should be 201
     And the response should contain a "request_uri"
@@ -58,10 +58,10 @@ Feature: PERA Authorization Flow
     Given the PERA Admin initiates authorization with invalid scope:
       | Parameter     | Value                                    |
       | response_type | code                                     |
-      | client_id    | pera_admin_client_123                    |
-      | redirect_uri | https://peraadmin.com/callback           |
-      | scope        | invalid.scope                            |
-      | state        | abc123xyz                                |
+      | client_id     | pera_admin_client_123                    |
+      | redirect_uri  | https://peraadmin.com/callback           |
+      | scope         | invalid.scope                            |
+      | state         | abc123xyz                                |
     When the PERA Admin sends a POST request to "/oauth/par"
     Then the response status code should be 400
     And the response should contain an error message "invalid_scope"
