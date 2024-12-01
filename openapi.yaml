@@ -22,12 +22,12 @@ tags:
     description: Banking-related use cases for OFxPERA
 
 paths:
-  /admin/organization:
+  /admin/organization/pera-admins:
     post:
       tags:
         - Admin
-      summary: Register organization URIs
-      description: API for registering a participating organization's URIs
+      summary: Register a PERA Administrator
+      description: API for registering a PERA Administrator's URIs
       requestBody:
         required: true
         content:
@@ -36,12 +36,69 @@ paths:
               $ref: '#/components/schemas/Organization'
       responses:
         '201':
-          description: Organization successfully registered
+          description: PERA Administrator successfully registered
+    put:
+      tags:
+        - Admin
+      summary: Upddate a PERA Administrator
+      description: API for updating the URIs and status of a PERA Administrator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '201':
+          description: PERA Administrator successfully updated
     get:
       tags:
         - Admin
-      summary: Get all organizations
-      description: API for retrieving all registered organization URIs
+      summary: Get a list of registered PERA Administrators
+      description: API for retrieving all registered PERA Administrator URIs
+      responses:
+        '200':
+          description: Successfully retrieved PERA Administrators
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+  /admin/organization/contributor-fi:
+    post:
+      tags:
+        - Admin
+      summary: Register a Contributor Financial Institution
+      description: API for registering a Contributor Financial Institution's URIs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '201':
+          description: Contributor Financial Institution successfully registered
+    put:
+      tags:
+        - Admin
+      summary: Upddate a Contributor Financial Institution
+      description: API for updating the URIs and status of a Contributor Financial Institution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '201':
+          description: Contributor Financial Institution successfully updated
+    get:
+      tags:
+        - Admin
+      summary: Get a list of registered Contributor Financial Institutions
+      description: API for retrieving all registered Contributor Financial Institution URIs
       responses:
         '200':
           description: Successfully retrieved organizations
@@ -911,8 +968,12 @@ components:
           description: Trading name of the organization
         organizationType:
           type: string
-          enum: [PERA_ADMIN, CONTRIBUTOR_INSTITUTION]
+          enum: [PERA_ADMIN, CONTRIBUTOR_FI]
           description: Type of organization in the PERA ecosystem
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, MAINTENANCE]
+          description: Status of the organization
         registeredName:
           type: string
           description: Legal registered name of the organization
