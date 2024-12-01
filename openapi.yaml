@@ -3,7 +3,7 @@ info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
   version: 0.0.1
-  
+
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
@@ -164,54 +164,6 @@ paths:
         '400':
           description: Invalid request
 
-  /oauth/par:
-    post:
-      tags:
-        - OAuth
-      summary: Push Authorization Request
-      description: OAuth Push Authorization Request
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - response_type
-                - client_id
-                - redirect_uri
-                - scope
-              properties:
-                response_type:
-                  type: string
-                  enum: [code]
-                client_id:
-                  type: string
-                redirect_uri:
-                  type: string
-                  format: uri
-                scope:
-                  type: string
-                state:
-                  type: string
-                nonce:
-                  type: string
-      responses:
-        '200':
-          description: Successfully processed PAR request
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - request_uri
-                  - expires_in
-                properties:
-                  request_uri:
-                    type: string
-                  expires_in:
-                    type: integer
-
   /oauth/authorize:
     get:
       tags:
@@ -309,7 +261,7 @@ paths:
                 client_secret:
                   type: string
                   description: Client secret for the token request.
-                refresh_token: 
+                refresh_token:
                   type: string
                   description: Refresh token used to obtain a new access token.
       responses:
@@ -341,7 +293,7 @@ paths:
                     type: string
                     description: Scope of the access token.
 
-  /oauth/introspection:
+  /oauth/introspect:
     get:
       tags:
         - OAuth
@@ -508,206 +460,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerInformation'
-
-  /banking/account:
-    get:
-      tags:
-        - Banking
-      summary: Get source account information
-      description: API for retrieving information about the customer's source account
-      responses:
-        '200':
-          description: Account information retrieved
-
-  /banking/products:
-    get:
-      tags:
-        - Banking
-      summary: Get PERA-compatible products
-      description: Retrieve a list of investment products that are compatible with PERA regulations in the Philippines
-      parameters:
-        - name: participant-id
-          in: query
-          description: Filter products by participant ID
-          required: false
-          schema:
-            type: string
-        - name: product-type
-          in: query
-          description: Filter products by type
-          required: false
-          schema:
-            type: string
-            enum:
-              - UITF
-              - MUTUAL_FUND
-              - INSURANCE
-              - GOVERNMENT_SECURITIES
-        - name: currency
-          in: query
-          description: Filter products by currency
-          required: false
-          schema:
-            type: string
-            enum:
-              - PHP
-              - USD
-        - name: risk-rating
-          in: query
-          description: Filter products by risk rating
-          required: false
-          schema:
-            type: string
-            enum:
-              - CONSERVATIVE
-              - MODERATE
-              - AGGRESSIVE
-      responses:
-        '200':
-          description: Successfully retrieved PERA products
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - data
-                  - meta
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/PERAProduct'
-                  meta:
-                    type: object
-                    properties:
-                      totalRecords:
-                        type: integer
-                      pageSize:
-                        type: integer
-                      currentPage:
-                        type: integer
-                      totalPages:
-                        type: integer
-        '400':
-          description: Invalid request parameters
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-        '500':
-          description: Internal server error
-
-  /banking/accounts:
-    post:
-      tags:
-        - Banking
-      summary: Create banking account
-      responses:
-        '201':
-          description: Banking account created
-    get:
-      tags:
-        - Banking
-      summary: Get banking accounts
-      responses:
-        '200':
-          description: Banking accounts retrieved
-
-  /banking/accounts/{id}:
-    get:
-      tags:
-        - Banking
-      summary: Get specific banking account
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Banking account retrieved
-
-  /banking/account/{id}/transactions:
-    get:
-      tags:
-        - Banking
-      summary: Get account transactions
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Account transactions retrieved
-
-  /banking/account/{id}/transactions/{transactionId}:
-    get:
-      tags:
-        - Banking
-      summary: Get specific transaction
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: transactionId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Transaction details retrieved
-
-  /banking/payments:
-    post:
-      tags:
-        - Banking
-      summary: Initiate payment
-      description: API for initiating a payment (money movement) transaction
-      responses:
-        '201':
-          description: Payment initiated successfully
-    get:
-      tags:
-        - Banking
-      summary: Get payments
-      responses:
-        '200':
-          description: Payments retrieved
-
-  /banking/payments/{id}:
-    get:
-      tags:
-        - Banking
-      summary: Get payment status
-      description: API for retrieving and validating payment status and other details
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Payment status retrieved
-    delete:
-      tags:
-        - Banking
-      summary: Cancel payment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Payment cancelled successfully
 
 components:
   parameters:
