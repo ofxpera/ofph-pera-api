@@ -65,6 +65,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Organization'
+  
   /admin/organization/contributor-fi:
     post:
       tags:
@@ -171,13 +172,6 @@ paths:
       summary: Authorization endpoint
       description: OAuth 2.0 authorization endpoint that initiates the authorization flow
       parameters:
-        - name: request_uri
-          in: query
-          required: true
-          description: URI containing the authorization request parameters from PAR
-          schema:
-            type: string
-            format: uri
         - name: client_id
           in: query
           required: true
@@ -198,16 +192,35 @@ paths:
           schema:
             type: string
             format: uri
-        - name: scope
+        - name: code_challenge
           in: query
           required: true
+          description: Code challenge for PKCE
+          schema:
+            type: string
+        - name: code_challenge_method
+          in: query
+          required: true
+          description: Code challenge method for PKCE
+          schema:
+            type: string
+            enum: [S256]
+        - name: scope
+          in: query
+          required: false
           description: Space-separated list of requested scope values
           schema:
             type: string
         - name: state
           in: query
-          required: false
+          required: true
           description: Opaque value to maintain state between request and callback
+          schema:
+            type: string
+        - name: prompt
+          in: query
+          required: false
+          description: Prompt for the authorization request
           schema:
             type: string
         - name: nonce
