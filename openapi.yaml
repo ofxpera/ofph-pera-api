@@ -438,23 +438,27 @@ paths:
         '200':
           description: Consent revoked successfully
 
-  /common/customer:
-    get:
+  /common/customers:
+    post:
       tags:
         - Common
-      summary: Get customer's Personal Information
-      description: (deprecate?) Returns the customer's Personal Information as defined in section 5.2.3
-      security:
-        - OAuth2: []
+      summary: Add a new customer record
+      description: API to add a new customer record to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInformation'
       responses:
-        '200':
-          description: Customer's Personal Information retrieved successfully
+        '201':
+          description: Customer record created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerInformation'
 
-  /common/customer/{id}/detail:
+  /common/customers/{id}/detail:
     get:
       tags:
         - Common
