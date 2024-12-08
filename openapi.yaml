@@ -64,7 +64,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: '#/components/schemas/OrganizationConfig'
   
   /admin/organization/contributor-fi:
     post:
@@ -102,13 +102,13 @@ paths:
       description: API for retrieving all registered Contributor Financial Institution URIs
       responses:
         '200':
-          description: Successfully retrieved organizations
+          description: Successfully retrieved Contributor Financial Institutions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: '#/components/schemas/OrganizationConfig'
 
   /admin/organization/{id}/certificate:
     get:
@@ -138,6 +138,8 @@ paths:
                   certificate:
                     type: string
                     description: PEM-encoded X.509 certificate as a string
+                    pattern: '^[A-Za-z0-9+/=]+$'
+                    maxLength: 5000
                   validFrom:
                     type: string
                     format: date-time
@@ -495,6 +497,7 @@ components:
       description: Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
       schema:
         type: integer
+        maximum: 100
         minimum: 1
     
     FapiInteractionId:
@@ -505,6 +508,7 @@ components:
       schema:
         type: string
         format: uuid
+        maxLength: 64
     
     FapiAuthDate:
       name: x-fapi-auth-date
@@ -764,6 +768,20 @@ components:
         endpointURIs:
           type: object
           $ref: '#/components/schemas/endpointURIs'
+
+    OrganizationConfig:
+      type: object
+      required:
+        - organization
+        - organizationSecret
+      properties:
+        organization:
+          $ref: '#/components/schemas/Organization'
+        organizationSecret:
+          type: string
+          format: password
+          description: Secure secret key for the organization. This should be stored and transmitted securely.
+          writeOnly: true
 
     endpointURIs:
       type: object
