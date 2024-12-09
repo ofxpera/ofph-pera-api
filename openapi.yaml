@@ -14,8 +14,8 @@ servers:
 tags:
   - name: Admin
     description: Administrative endpoints for organization management
-  - name: OAuth
-    description: Authentication, authorization and consent management
+  - name: OIDC
+    description: OpenID Connect authentication, authorization and consent management
   - name: Common
     description: Common APIs used across different industries
   - name: Banking
@@ -27,7 +27,7 @@ paths:
       tags:
         - Admin
       summary: Register a PERA Administrator
-      description: API for registering a PERA Administrator's URIs
+      description: API for registering a PERA Administrator following FAPI Dynamic Client Registration requirements
       requestBody:
         required: true
         content:
@@ -37,6 +37,10 @@ paths:
       responses:
         '201':
           description: PERA Administrator successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
     put:
       tags:
         - Admin
@@ -71,7 +75,7 @@ paths:
       tags:
         - Admin
       summary: Register a Contributor Financial Institution
-      description: API for registering a Contributor Financial Institution's URIs
+      description: API for registering a Contributor Financial Institution following FAPI Dynamic Client Registration requirements
       requestBody:
         required: true
         content:
@@ -81,6 +85,10 @@ paths:
       responses:
         '201':
           description: Contributor Financial Institution successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
     put:
       tags:
         - Admin
@@ -110,69 +118,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganizationConfig'
 
-  /admin/organization/{id}/certificate:
+  /oidc/auth:
     get:
       tags:
-        - Admin
-      summary: Get organization certificate
-      description: API for retrieving a registered organization's mTLS certificate for secure communication
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The unique identifier of the organization
-      responses:
-        '200':
-          description: Successfully retrieved certificate
-          content:
-            application/x-pem-file:
-              schema:
-                type: string
-                description: PEM-encoded X.509 certificate
-            application/json:
-              schema:
-                type: object
-                properties:
-                  certificate:
-                    type: string
-                    description: PEM-encoded X.509 certificate as a string
-                    pattern: '^[A-Za-z0-9+/=]+$'
-                    maxLength: 5000
-                  validFrom:
-                    type: string
-                    format: date-time
-                    description: Certificate validity start date
-                  validUntil:
-                    type: string
-                    format: date-time
-                    description: Certificate validity end date
-                  subject:
-                    type: object
-                    properties:
-                      commonName:
-                        type: string
-                      organizationName:
-                        type: string
-                      organizationId:
-                        type: string
-                required:
-                  - certificate
-                  - validFrom
-                  - validUntil
-                  - subject
-        '404':
-          description: Organization or certificate not found
-        '400':
-          description: Invalid request
-
-  /oauth/authorize:
-    get:
-      tags:
-        - OAuth
+        - OIDC
       summary: Authorization endpoint
-      description: OAuth 2.0 authorization endpoint that initiates the authorization flow
+      description: OpenID Connect authorization endpoint that initiates the authorization flow
       parameters:
         - name: client_id
           in: query
@@ -186,7 +137,7 @@ paths:
           description: Must be set to "code" for authorization code flow
           schema:
             type: string
-            enum: [code]
+            enum: [ code ]
         - name: redirect_uri
           in: query
           required: true
@@ -206,7 +157,7 @@ paths:
           description: Code challenge method for PKCE
           schema:
             type: string
-            enum: [S256]
+            enum: [ S256 ]
         - name: scope
           in: query
           required: false
@@ -243,10 +194,10 @@ paths:
                 format: uri
                 description: Redirect URI with authorization code
 
-  /oauth/token:
+  /oidc/token:
     post:
       tags:
-        - OAuth
+        - OIDC
       summary: Token endpoint
       requestBody:
         required: true
@@ -262,7 +213,7 @@ paths:
               properties:
                 grant_type:
                   type: string
-                  enum: [authorization_code, refresh_token]
+                  enum: [ authorization_code, refresh_token ]
                 code:
                   type: string
                   description: Authorization code received from the authorization server.
@@ -296,7 +247,7 @@ paths:
                     description: Access token for the authenticated user.
                   token_type:
                     type: string
-                    enum: [Bearer]
+                    enum: [ Bearer ]
                     description: Type of the token.
                   expires_in:
                     type: integer
@@ -308,10 +259,10 @@ paths:
                     type: string
                     description: Scope of the access token.
 
-  /oauth/introspect:
+  /oidc/introspect:
     get:
       tags:
-        - OAuth
+        - OIDC
       summary: Token introspection
       parameters:
         - name: token
@@ -347,13 +298,13 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
-  /oauth/userinfo:
+  /oidc/userinfo:
     get:
       tags:
-        - OAuth
+        - OIDC
       summary: User information
       security:
-        - OAuth2: []
+        - OAuth2: [ ]
       responses:
         '200':
           description: User information retrieved
@@ -479,6 +430,169 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomerInformation'
+
+  /.well-known/oauth-authorization-server/register:
+    post:
+      tags:
+        - OIDC
+      summary: FAPI Dynamic Client Registration
+      description: |
+        Register a new PERA Administrator as an OAuth client following FAPI Dynamic Client Registration requirements.
+        Requires a software statement and supports JWKS for key management.
+      security:
+        - openFinanceHeaders: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - redirect_uris
+                - token_endpoint_auth_method
+                - grant_types
+                - response_types
+                - software_statement
+                - scope
+              properties:
+                redirect_uris:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  description: Array of redirect URIs for use in OAuth flows
+                token_endpoint_auth_method:
+                  type: string
+                  enum: [
+                    'private_key_jwt',
+                    'tls_client_auth'
+                  ]
+                  description: Authentication method for token endpoint, must be either private_key_jwt or tls_client_auth for FAPI
+                grant_types:
+                  type: array
+                  items:
+                    type: string
+                    enum: [
+                      'authorization_code',
+                      'refresh_token'
+                    ]
+                  description: Allowed OAuth grant types
+                response_types:
+                  type: array
+                  items:
+                    type: string
+                    enum: ['code']
+                  description: Allowed OAuth response types
+                scope:
+                  type: string
+                  description: Space-separated list of requested scopes
+                software_statement:
+                  type: string
+                  description: JWT containing software statement from trusted authority
+                jwks:
+                  type: object
+                  description: JSON Web Key Set for client authentication
+                  properties:
+                    keys:
+                      type: array
+                      items:
+                        type: object
+                        description: JWK format keys
+                jwks_uri:
+                  type: string
+                  format: uri
+                  description: URI of JSON Web Key Set
+                organization_name:
+                  type: string
+                  description: Name of the PERA Administrator organization
+                contacts:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                  description: Administrative contact emails
+      responses:
+        '201':
+          description: Client registration successful
+          headers:
+            Registration-Access-Token:
+              schema:
+                type: string
+              description: Token for managing the registration
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - client_id
+                  - client_id_issued_at
+                  - registration_access_token
+                  - registration_client_uri
+                properties:
+                  client_id:
+                    type: string
+                    description: Issued client identifier
+                  client_id_issued_at:
+                    type: integer
+                    description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
+                  registration_access_token:
+                    type: string
+                    description: Token to be used for subsequent operations on this registration
+                  registration_client_uri:
+                    type: string
+                    format: uri
+                    description: URI for subsequent operations on this registration
+                  client_secret:
+                    type: string
+                    description: Client secret (only if token_endpoint_auth_method requires it)
+                  client_secret_expires_at:
+                    type: integer
+                    description: Time at which the client secret will expire, 0 if it will not expire
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      tags:
+        - OIDC
+      summary: Get Client Registration
+      security:
+        - RegistrationAccessToken: []
+      responses:
+        '200':
+          description: Current client configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistration'
+    put:
+      tags:
+        - OIDC
+      summary: Update Client Registration
+      security:
+        - RegistrationAccessToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRegistration'
+      responses:
+        '200':
+          description: Client configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistration'
+    delete:
+      tags:
+        - OIDC
+      summary: Delete Client Registration
+      security:
+        - RegistrationAccessToken: []
+      responses:
+        '204':
+          description: Client registration deleted
 
 components:
   parameters:
@@ -726,35 +840,65 @@ components:
     Organization:
       type: object
       required:
-        - organizationId
-        - organizationName
-        - organizationType
-        - registeredName
-        - contactDetails
-        - endpointURIs
+        - organization_name
+        - endpoint_uris
       properties:
-        organizationId:
+        organization_id:
           type: string
           description: Unique identifier assigned to the organization
-        organizationName:
+        organization_name:
           type: string
           description: Trading name of the organization
-        organizationType:
+        organization_type:
           type: string
           enum: [PERA_ADMIN, CONTRIBUTOR_FI]
           description: Type of organization in the PERA ecosystem
+        registered_name:
+          type: string
+          description: Legal registered name of the organization
         status:
           type: string
           enum: [ACTIVE, INACTIVE, MAINTENANCE]
           description: Status of the organization
-        registeredName:
+        endpoint_uris:
+          $ref: '#/components/schemas/endpointURIs'
+        token_endpoint_auth_method:
           type: string
-          description: Legal registered name of the organization
-        registeredOfficeAddress:
-          $ref: '#/components/schemas/Address'
-        businessAddress:
-          $ref: '#/components/schemas/Address'
-        contactDetails:
+          enum: [
+            'private_key_jwt',
+            'tls_client_auth'
+          ]
+          description: Authentication method for token endpoint
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum: [
+              'authorization_code',
+              'refresh_token'
+            ]
+          description: Allowed OAuth 2.0 grant types
+        response_types:
+          type: array
+          items:
+            type: string
+            enum: ['code']
+          description: Allowed OAuth 2.0 response types
+        scope:
+          type: string
+          description: Space-separated list of requested scopes
+        software_statement:
+          type: string
+          description: Software statement containing organization metadata
+        jwks:
+          type: object
+          properties:
+            keys:
+              type: array
+              items:
+                type: object
+          description: JSON Web Key Set for signing requests
+        contact_details:
           type: object
           required:
             - phone
@@ -765,40 +909,112 @@ components:
             email:
               type: string
               format: email
-        endpointURIs:
-          type: object
-          $ref: '#/components/schemas/endpointURIs'
+
+    OrganizationResponse:
+      type: object
+      required:
+        - client_id
+        - registration_access_token
+        - registration_client_uri
+      properties:
+        client_id:
+          type: string
+          description: Issued client identifier
+        registration_access_token:
+          type: string
+          description: Registration access token for subsequent operations
+        registration_client_uri:
+          type: string
+          format: uri
+          description: URI for managing the client registration
+        client_id_issued_at:
+          type: integer
+          description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
 
     OrganizationConfig:
       type: object
       required:
         - organization
+        - secretType
         - organizationSecret
       properties:
         organization:
           $ref: '#/components/schemas/Organization'
+        secretType:
+          enum: [X509, SECRET_KEY]
+          description: Type of secret key for identifying the organization
         organizationSecret:
           type: string
           format: password
           description: Secure secret key for the organization. This should be stored and transmitted securely.
-          writeOnly: true
+          readOnly: true
 
     endpointURIs:
       type: object
       required:
-        - authorizationEndpoint
-        - tokenEndpoint
-        - resourceEndpoint
+        - issuer
+        - authorization_endpoint
+        - token_endpoint
+        - userinfo_endpoint
+        - registration_endpoint
+        - redirect_uris
       properties:
-        authorizationEndpoint:
+        issuer:
           type: string
           format: uri
-        tokenEndpoint:
+          description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
+        authorization_endpoint:
           type: string
           format: uri
-        resourceEndpoint:
+          description: URL of the OP's OAuth 2.0 Authorization Endpoint
+        token_endpoint:
           type: string
           format: uri
+          description: URL of the OP's OAuth 2.0 Token Endpoint
+        userinfo_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's UserInfo Endpoint
+        jwks_uri:
+          type: string
+          format: uri
+          description: URL of the OP's JSON Web Key Set document
+        registration_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's Dynamic Client Registration Endpoint
+        scopes_supported:
+          type: array
+          items:
+            type: string
+          description: List of the OAuth 2.0 scope values that this server supports
+        response_types_supported:
+          type: array
+          items:
+            type: string
+          description: List of the OAuth 2.0 response_type values that this OP supports
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+          default: ["authorization_code", "refresh_token"]
+          description: List of the OAuth 2.0 Grant Type values that this OP supports
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+          default: ["client_secret_basic", "private_key_jwt"]
+          description: List of Client Authentication methods supported by this Token Endpoint
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+          description: Array of redirect URIs for use in OAuth 2.0 flows
+        end_session_endpoint:
+          type: string
+          format: uri
+          description: URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP
 
     PERAProduct:
       type: object
@@ -900,6 +1116,101 @@ components:
           type: integer
           description: Number of days for settlement of redemption
 
+    ClientRegistration:
+      type: object
+      required:
+        - client_id
+        - redirect_uris
+        - token_endpoint_auth_method
+        - grant_types
+        - response_types
+        - software_statement
+      properties:
+        client_id:
+          type: string
+          description: Issued client identifier
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+        token_endpoint_auth_method:
+          type: string
+          enum: [
+            'private_key_jwt',
+            'tls_client_auth'
+          ]
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum: [
+              'authorization_code',
+              'refresh_token'
+            ]
+        response_types:
+          type: array
+          items:
+            type: string
+            enum: ['code']
+        scope:
+          type: string
+        software_statement:
+          type: string
+        jwks:
+          type: object
+          properties:
+            keys:
+              type: array
+              items:
+                type: object
+        jwks_uri:
+          type: string
+          format: uri
+        organization_name:
+          type: string
+        contacts:
+          type: array
+          items:
+            type: string
+            format: email
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message describing the error
+        details:
+          type: array
+          items:
+            type: string
+          description: Additional details about the error
+
+    BadRequestError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - description: Bad Request - The server cannot process the request due to a client error
+
+    UnauthorizedError:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - description: Unauthorized - Authentication is required and has failed or not been provided
+
+  responses:
+    BadRequest:
+      description: Bad Request - The server cannot process the request due to a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestError'
+    Unauthorized:
+      description: Unauthorized - Authentication is required and has failed or not been provided
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -913,6 +1224,10 @@ components:
       in: header
       name: participant-id
       description: Open Finance security headers
+    RegistrationAccessToken:
+      type: http
+      scheme: bearer
+      description: Registration Access Token for managing client registration
 
 security:
   - OAuth2: []

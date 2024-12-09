@@ -54,10 +54,10 @@ paths:
       responses:
         "200":
           description: Successfully retrieved certificate
-  /oauth/par:
+  /oidc/par:
     post:
       tags:
-      - OAuth
+        - OAuth
       summary: Push Authorization Request
       description: OAuth Push Authorization Request
       requestBody:
@@ -73,74 +73,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/inline_response_200'
-  /oauth/authorize:
+  /oidc/authorize:
     get:
       tags:
-      - OAuth
+        - OAuth
       summary: Authorization endpoint
       description: OAuth 2.0 authorization endpoint that initiates the authorization
         flow
       parameters:
-      - name: request_uri
-        in: query
-        description: URI containing the authorization request parameters from PAR
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: uri
-      - name: client_id
-        in: query
-        description: Client identifier issued to the client during registration
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: response_type
-        in: query
-        description: Must be set to "code" for authorization code flow
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          enum:
-          - code
-      - name: redirect_uri
-        in: query
-        description: URI to return the user to after authorization is complete
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: uri
-      - name: scope
-        in: query
-        description: Space-separated list of requested scope values
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: state
-        in: query
-        description: Opaque value to maintain state between request and callback
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: nonce
-        in: query
-        description: Random value used to prevent replay attacks
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
+        - name: request_uri
+          in: query
+          description: URI containing the authorization request parameters from PAR
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: uri
+        - name: client_id
+          in: query
+          description: Client identifier issued to the client during registration
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: response_type
+          in: query
+          description: Must be set to "code" for authorization code flow
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - code
+        - name: redirect_uri
+          in: query
+          description: URI to return the user to after authorization is complete
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: uri
+        - name: scope
+          in: query
+          description: Space-separated list of requested scope values
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: Opaque value to maintain state between request and callback
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: nonce
+          in: query
+          description: Random value used to prevent replay attacks
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
       responses:
         "200":
           description: Authorization successful
@@ -154,10 +154,10 @@ paths:
                 type: string
                 description: Redirect URI with authorization code
                 format: uri
-  /oauth/token:
+  /oidc/token:
     post:
       tags:
-      - OAuth
+        - OAuth
       summary: Token endpoint
       requestBody:
         content:
@@ -172,19 +172,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/inline_response_200_1'
-  /oauth/introspection:
+  /oidc/introspection:
     get:
       tags:
-      - OAuth
+        - OAuth
       summary: Token introspection
       parameters:
-      - name: token
-        in: query
-        required: true
-        style: form
-        explode: true
-        schema:
-          type: string
+        - name: token
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
       responses:
         "200":
           description: Token information retrieved
@@ -192,10 +192,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/inline_response_200_2'
-  /oauth/userinfo:
+  /oidc/userinfo:
     get:
       tags:
-      - OAuth
+        - OAuth
       summary: User information
       responses:
         "200":
@@ -205,7 +205,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/inline_response_200_3'
       security:
-      - OAuth2: []
+        - OAuth2: [ ]
   /common/consent:
     post:
       tags:
