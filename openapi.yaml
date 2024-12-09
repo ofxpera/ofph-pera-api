@@ -14,10 +14,6 @@ servers:
 tags:
   - name: Bootstrap
     description: Core bootstrapping endpoints for organization registration and management
-  - name: Contributor FI
-    description: APIs used by Contributor Financial Institutions for their bootstrapping process
-  - name: PERA Admin
-    description: APIs used by PERA Administrators for their bootstrapping process
   - name: OIDC
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
@@ -26,12 +22,11 @@ tags:
     description: Banking-related use cases for OFxPERA
 
 paths:
-  /admin/organization/pera-admins:
+  /admin/organizations:
     post:
       tags:
         - Bootstrap
-        - PERA Admin
-      summary: Register a PERA Administrator
+      summary: Register an OFxPERA Participant
       description: API for registering a PERA Administrator following FAPI Dynamic Client Registration requirements
       requestBody:
         required: true
@@ -41,7 +36,7 @@ paths:
               $ref: '#/components/schemas/Organization'
       responses:
         '201':
-          description: PERA Administrator successfully registered
+          description: OFxPERA Participant successfully registered
           content:
             application/json:
               schema:
@@ -49,9 +44,8 @@ paths:
     put:
       tags:
         - Bootstrap
-        - PERA Admin
-      summary: Upddate a PERA Administrator
-      description: API for updating the URIs and status of a PERA Administrator
+      summary: Upddate an OFxPERA Participant
+      description: API for updating the URIs and status of an OFxPERA Participant
       requestBody:
         required: true
         content:
@@ -60,13 +54,12 @@ paths:
               $ref: '#/components/schemas/Organization'
       responses:
         '201':
-          description: PERA Administrator successfully updated
+          description: OFxPERA Participant successfully updated
     get:
       tags:
         - Bootstrap
-        - Contributor FI
-      summary: Get a list of registered PERA Administrators
-      description: API for retrieving all registered PERA Administrator URIs
+      summary: Get a list of registered OFxPERA Participants
+      description: API for retrieving all registered OFxPERA Participants
       responses:
         '200':
           description: Successfully retrieved PERA Administrators
@@ -77,57 +70,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/OrganizationConfig'
   
-  /admin/organization/contributor-fi:
-    post:
-      tags:
-        - Bootstrap
-        - Contributor FI
-      summary: Register a Contributor Financial Institution
-      description: API for registering a Contributor Financial Institution following FAPI Dynamic Client Registration requirements
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Organization'
-      responses:
-        '201':
-          description: Contributor Financial Institution successfully registered
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OrganizationResponse'
-    put:
-      tags:
-        - Bootstrap
-        - Contributor FI
-      summary: Upddate a Contributor Financial Institution
-      description: API for updating the URIs and status of a Contributor Financial Institution
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Organization'
-      responses:
-        '201':
-          description: Contributor Financial Institution successfully updated
-    get:
-      tags:
-        - Bootstrap
-        - PERA Admin
-      summary: Get a list of registered Contributor Financial Institutions
-      description: API for retrieving all registered Contributor Financial Institution URIs
-      responses:
-        '200':
-          description: Successfully retrieved Contributor Financial Institutions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationConfig'
-
   /oidc/auth:
     get:
       tags:
