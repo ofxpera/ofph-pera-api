@@ -12,8 +12,12 @@ servers:
     description: OFxPERA API server
 
 tags:
-  - name: Admin
-    description: Administrative endpoints for organization management
+  - name: Bootstrap
+    description: Core bootstrapping endpoints for organization registration and management
+  - name: Contributor FI
+    description: APIs used by Contributor Financial Institutions for their bootstrapping process
+  - name: PERA Admin
+    description: APIs used by PERA Administrators for their bootstrapping process
   - name: OIDC
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
@@ -25,7 +29,8 @@ paths:
   /admin/organization/pera-admins:
     post:
       tags:
-        - Admin
+        - Bootstrap
+        - PERA Admin
       summary: Register a PERA Administrator
       description: API for registering a PERA Administrator following FAPI Dynamic Client Registration requirements
       requestBody:
@@ -43,7 +48,8 @@ paths:
                 $ref: '#/components/schemas/OrganizationResponse'
     put:
       tags:
-        - Admin
+        - Bootstrap
+        - PERA Admin
       summary: Upddate a PERA Administrator
       description: API for updating the URIs and status of a PERA Administrator
       requestBody:
@@ -57,7 +63,8 @@ paths:
           description: PERA Administrator successfully updated
     get:
       tags:
-        - Admin
+        - Bootstrap
+        - Contributor FI
       summary: Get a list of registered PERA Administrators
       description: API for retrieving all registered PERA Administrator URIs
       responses:
@@ -73,7 +80,8 @@ paths:
   /admin/organization/contributor-fi:
     post:
       tags:
-        - Admin
+        - Bootstrap
+        - Contributor FI
       summary: Register a Contributor Financial Institution
       description: API for registering a Contributor Financial Institution following FAPI Dynamic Client Registration requirements
       requestBody:
@@ -91,7 +99,8 @@ paths:
                 $ref: '#/components/schemas/OrganizationResponse'
     put:
       tags:
-        - Admin
+        - Bootstrap
+        - Contributor FI
       summary: Upddate a Contributor Financial Institution
       description: API for updating the URIs and status of a Contributor Financial Institution
       requestBody:
@@ -105,7 +114,8 @@ paths:
           description: Contributor Financial Institution successfully updated
     get:
       tags:
-        - Admin
+        - Bootstrap
+        - PERA Admin
       summary: Get a list of registered Contributor Financial Institutions
       description: API for retrieving all registered Contributor Financial Institution URIs
       responses:
