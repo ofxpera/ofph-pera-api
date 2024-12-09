@@ -14,7 +14,7 @@ servers:
 tags:
   - name: Bootstrap
     description: Core bootstrapping endpoints for organization registration and management
-  - name: OIDC
+  - name: OAuth
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
     description: Common APIs used across different industries
@@ -22,7 +22,7 @@ tags:
     description: Banking-related use cases for OFxPERA
 
 paths:
-  /admin/organizations:
+  /ofxpera/participants:
     post:
       tags:
         - Bootstrap
@@ -44,7 +44,7 @@ paths:
     put:
       tags:
         - Bootstrap
-      summary: Upddate an OFxPERA Participant
+      summary: Update an OFxPERA Participant
       description: API for updating the URIs and status of an OFxPERA Participant
       requestBody:
         required: true
@@ -74,10 +74,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Organization'
   
-  /oidc/auth:
+  /oauth/auth:
     get:
       tags:
-        - OIDC
+        - OAuth
       summary: Authorization endpoint
       description: OpenID Connect authorization endpoint that initiates the authorization flow
       parameters:
@@ -150,10 +150,10 @@ paths:
                 format: uri
                 description: Redirect URI with authorization code
 
-  /oidc/token:
+  /oauth/token:
     post:
       tags:
-        - OIDC
+        - OAuth
       summary: Token endpoint
       requestBody:
         required: true
@@ -215,10 +215,10 @@ paths:
                     type: string
                     description: Scope of the access token.
 
-  /oidc/introspect:
+  /oauth/introspect:
     get:
       tags:
-        - OIDC
+        - OAuth
       summary: Token introspection
       parameters:
         - name: token
@@ -254,10 +254,10 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
-  /oidc/userinfo:
+  /oauth/userinfo:
     get:
       tags:
-        - OIDC
+        - OAuth
       summary: User information
       security:
         - OAuth2: [ ]
@@ -390,7 +390,7 @@ paths:
   /.well-known/oauth-authorization-server/register:
     post:
       tags:
-        - OIDC
+        - OAuth
       summary: FAPI Dynamic Client Registration
       description: |
         Register a new PERA Administrator as an OAuth client following FAPI Dynamic Client Registration requirements.
@@ -485,7 +485,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
     get:
       tags:
-        - OIDC
+        - OAuth
       summary: Get Client Registration
       security:
         - RegistrationAccessToken: []
@@ -498,7 +498,7 @@ paths:
                 $ref: '#/components/schemas/ClientRegistration'
     put:
       tags:
-        - OIDC
+        - OAuth
       summary: Update Client Registration
       security:
         - RegistrationAccessToken: []
@@ -517,7 +517,7 @@ paths:
                 $ref: '#/components/schemas/ClientRegistration'
     delete:
       tags:
-        - OIDC
+        - OAuth
       summary: Delete Client Registration
       security:
         - RegistrationAccessToken: []
@@ -757,6 +757,7 @@ components:
           $ref: '#/components/schemas/Address'
         pepIndicator:
           type: boolean
+          default: false
           description: Politically Exposed Person 1 - True; 0 - False
         fundSource:
           type: string
@@ -766,6 +767,7 @@ components:
           type: string
           maxLength: 6
           enum: ['Low', 'Normal', 'High']
+          default: 'Normal'
           description: Customer Due Diligence Risk Level
 
     Organization:
@@ -783,6 +785,7 @@ components:
         organization_type:
           type: string
           enum: [PERA_ADMIN, CONTRIBUTOR_FI]
+          default: CONTRIBUTOR_FI
           description: Type of organization in the PERA ecosystem
         registered_name:
           type: string
@@ -790,6 +793,7 @@ components:
         status:
           type: string
           enum: [ACTIVE, INACTIVE, MAINTENANCE]
+          default: ACTIVE
           description: Status of the organization
         endpoint_uris:
           $ref: '#/components/schemas/endpointURIs'
@@ -799,7 +803,8 @@ components:
             'private_key_jwt',
             'tls_client_auth'
           ]
-          description: Authentication method for token endpoint
+          default: 'private_key_jwt'
+          description: Authentication method for token endpoint as per FAPI requirements
         grant_types:
           type: array
           items:
@@ -808,16 +813,19 @@ components:
               'authorization_code',
               'refresh_token'
             ]
-          description: Allowed OAuth 2.0 grant types
+          default: ['authorization_code']
+          description: Allowed OAuth 2.0 grant types (FAPI requires authorization_code)
         response_types:
           type: array
           items:
             type: string
             enum: ['code']
-          description: Allowed OAuth 2.0 response types
+          default: ['code']
+          description: Allowed OAuth 2.0 response types (FAPI requires code flow)
         scope:
           type: string
-          description: Space-separated list of requested scopes
+          default: 'openid profile'
+          description: Space-separated list of requested scopes (openid is required for FAPI)
         software_statement:
           type: string
           description: Software statement containing organization metadata
@@ -828,7 +836,7 @@ components:
               type: array
               items:
                 type: object
-          description: JSON Web Key Set for signing requests
+          description: JSON Web Key Set for signing requests (required for FAPI)
         contact_details:
           type: object
           required:
@@ -879,8 +887,6 @@ components:
         - issuer
         - authorization_endpoint
         - token_endpoint
-        - userinfo_endpoint
-        - registration_endpoint
         - redirect_uris
       properties:
         issuer:
@@ -949,6 +955,7 @@ components:
           enum:
             - PHP
             - USD
+          default: 'PHP'
           description: Currency of the product
         riskRating:
           type: string
