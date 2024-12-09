@@ -18,8 +18,6 @@ tags:
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
     description: Common APIs used across different industries
-  - name: Banking
-    description: Banking-related use cases for OFxPERA
 
 paths:
   /ofxpera/participants:
@@ -254,6 +252,7 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
+                    
   /oauth/userinfo:
     get:
       tags:
