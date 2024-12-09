@@ -17,7 +17,7 @@ tags:
   - name: OAuth
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
-    description: Common APIs used across different industries
+    description: Common APIs used across different use cases
 
 paths:
   /ofxpera/participants:
@@ -294,78 +294,6 @@ paths:
                     type: boolean
                     description: Indicates whether the user's phone number has been verified.
 
-  /common/consent:
-    post:
-      tags:
-        - Common
-      summary: Create consent
-      responses:
-        '201':
-          description: Consent created successfully
-
-  /common/consent/{id}:
-    get:
-      tags:
-        - Common
-      summary: Get consent information
-      description: API for retrieving the latest consent information
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Consent information retrieved
-    put:
-      tags:
-        - Common
-      summary: Update consent
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Consent updated successfully
-    delete:
-      tags:
-        - Common
-      summary: Revoke consent
-      description: API for revoking a previously provided consent
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Consent revoked successfully
-
-  /common/customers:
-    post:
-      tags:
-        - Common
-      summary: Add a new customer record
-      description: API to add a new customer record to the system.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomerInformation'
-      responses:
-        '201':
-          description: Customer record created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomerInformation'
-
   /common/customers/{id}/detail:
     get:
       tags:
@@ -374,7 +302,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: Customer ID, this should map to the sub field returned from the /oauth/userinfo endpoint
+          description: Customer ID, this should map to the sub field returned from the OIDC token endpoint or the sub field returned from the /oauth/userinfo endpoint
           required: true
           schema:
             type: string
