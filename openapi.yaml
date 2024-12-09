@@ -33,14 +33,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Organization'
+              $ref: '#/components/schemas/OrganizationConfig'
       responses:
         '201':
           description: OFxPERA Participant successfully registered
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrganizationResponse'
+                $ref: '#/components/schemas/RegistrationResponse'
     put:
       tags:
         - Bootstrap
@@ -51,10 +51,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Organization'
+              $ref: '#/components/schemas/OrganizationConfig'
       responses:
         '201':
           description: OFxPERA Participant successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResponse'
     get:
       tags:
         - Bootstrap
@@ -68,7 +72,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OrganizationConfig'
+                  $ref: '#/components/schemas/Organization'
   
   /oidc/auth:
     get:
@@ -474,32 +478,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - client_id
-                  - client_id_issued_at
-                  - registration_access_token
-                  - registration_client_uri
-                properties:
-                  client_id:
-                    type: string
-                    description: Issued client identifier
-                  client_id_issued_at:
-                    type: integer
-                    description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
-                  registration_access_token:
-                    type: string
-                    description: Token to be used for subsequent operations on this registration
-                  registration_client_uri:
-                    type: string
-                    format: uri
-                    description: URI for subsequent operations on this registration
-                  client_secret:
-                    type: string
-                    description: Client secret (only if token_endpoint_auth_method requires it)
-                  client_secret_expires_at:
-                    type: integer
-                    description: Time at which the client secret will expire, 0 if it will not expire
+                $ref: '#/components/schemas/RegistrationResponse'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -862,7 +841,7 @@ components:
               type: string
               format: email
 
-    OrganizationResponse:
+    RegistrationResponse:
       type: object
       required:
         - client_id
@@ -887,19 +866,12 @@ components:
       type: object
       required:
         - organization
-        - secretType
-        - organizationSecret
+        - internal_uris
       properties:
         organization:
           $ref: '#/components/schemas/Organization'
-        secretType:
-          enum: [X509, SECRET_KEY]
-          description: Type of secret key for identifying the organization
-        organizationSecret:
-          type: string
-          format: password
-          description: Secure secret key for the organization. This should be stored and transmitted securely.
-          readOnly: true
+        internal_uris:
+          $ref: '#/components/schemas/endpointURIs'
 
     endpointURIs:
       type: object
@@ -927,6 +899,10 @@ components:
           type: string
           format: uri
           description: URL of the OP's UserInfo Endpoint
+        end_session_endpoint:
+          type: string
+          format: uri
+          description: URL at the OP to which an RP can perform a redirect t
         jwks_uri:
           type: string
           format: uri
@@ -935,38 +911,12 @@ components:
           type: string
           format: uri
           description: URL of the OP's Dynamic Client Registration Endpoint
-        scopes_supported:
-          type: array
-          items:
-            type: string
-          description: List of the OAuth 2.0 scope values that this server supports
-        response_types_supported:
-          type: array
-          items:
-            type: string
-          description: List of the OAuth 2.0 response_type values that this OP supports
-        grant_types_supported:
-          type: array
-          items:
-            type: string
-          default: ["authorization_code", "refresh_token"]
-          description: List of the OAuth 2.0 Grant Type values that this OP supports
-        token_endpoint_auth_methods_supported:
-          type: array
-          items:
-            type: string
-          default: ["client_secret_basic", "private_key_jwt"]
-          description: List of Client Authentication methods supported by this Token Endpoint
         redirect_uris:
           type: array
           items:
             type: string
             format: uri
-          description: Array of redirect URIs for use in OAuth 2.0 flows
-        end_session_endpoint:
-          type: string
-          format: uri
-          description: URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP
+          description: Array of redirect URIs for use in OAuth 2.0 code flowo request that the End-User be logged out at the OP
 
     PERAProduct:
       type: object
