@@ -198,20 +198,23 @@ paths:
                 properties:
                   access_token:
                     type: string
-                    description: Access token for the authenticated user.
+                    description: Access token for the authenticated user
                   token_type:
                     type: string
                     enum: [ Bearer ]
-                    description: Type of the token.
+                    description: Type of the token, always "Bearer"
                   expires_in:
                     type: integer
-                    description: Expiration time of the access token in seconds.
+                    description: Lifetime in seconds of the access token
+                  id_token:
+                    type: string
+                    description: ID Token value associated with the authenticated session
                   refresh_token:
                     type: string
-                    description: Refresh token for obtaining a new access token.
+                    description: Refresh token used to obtain new access tokens
                   scope:
                     type: string
-                    description: Scope of the access token.
+                    description: Space-separated list of scopes associated with the access token
 
   /oauth/introspect:
     get:
