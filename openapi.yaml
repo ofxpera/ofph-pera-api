@@ -31,10 +31,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationConfig'
+              $ref: '#/components/schemas/ParticipantConfig'
       responses:
         '201':
-          description: OFxPERA Participant successfully registered
+          description: Participant successfully registered
           content:
             application/json:
               schema:
@@ -49,10 +49,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationConfig'
+              $ref: '#/components/schemas/ParticipantConfig'
       responses:
         '201':
-          description: OFxPERA Participant successfully updated
+          description: Participant successfully updated
           content:
             application/json:
               schema:
@@ -70,7 +70,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Organization'
+                  $ref: '#/components/schemas/Participant'
   
   /oauth/auth:
     get:
@@ -697,31 +697,34 @@ components:
           default: 'Normal'
           description: Customer Due Diligence Risk Level
 
-    Organization:
+    Participant:
       type: object
       required:
-        - organization_name
+        - participant_name
         - endpoint_uris
       properties:
-        organization_id:
+        participant_id:
           type: string
-          description: Unique identifier assigned to the organization
-        organization_name:
+          description: Unique identifier assigned to the participant
+        participant_name:
           type: string
-          description: Trading name of the organization
-        organization_type:
-          type: string
-          enum: [PERA_ADMIN, CONTRIBUTOR_FI]
-          default: CONTRIBUTOR_FI
-          description: Type of organization in the PERA ecosystem
+          description: Trading name of the participant
+        participant_type:
+          type: array
+          items:
+            type: string
+            enum: [PERA_ADMIN, CONTRIBUTOR_FI]
+          minItems: 1
+          uniqueItems: true
+          description: Type(s) of participant in the PERA ecosystem. Can be one or more roles (e.g., ['PERA_ADMIN', 'CONTRIBUTOR_FI'] for participants that function as both PERA administrator and contributor financial institution)
         registered_name:
           type: string
-          description: Legal registered name of the organization
+          description: Legal registered name of the participant
         status:
           type: string
           enum: [ACTIVE, INACTIVE, MAINTENANCE]
           default: ACTIVE
-          description: Status of the organization
+          description: Status of the participant
         endpoint_uris:
           $ref: '#/components/schemas/endpointURIs'
         token_endpoint_auth_method:
@@ -755,7 +758,7 @@ components:
           description: Space-separated list of requested scopes (openid is required for FAPI)
         software_statement:
           type: string
-          description: Software statement containing organization metadata
+          description: Software statement containing participant metadata
         jwks:
           type: object
           properties:
@@ -797,59 +800,72 @@ components:
           type: integer
           description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
 
-    OrganizationConfig:
+    ParticipantConfig:
       type: object
       required:
-        - organization
+        - participant
         - internal_uris
       properties:
-        organization:
-          $ref: '#/components/schemas/Organization'
+        participant:
+          $ref: '#/components/schemas/Participant'
         internal_uris:
           $ref: '#/components/schemas/endpointURIs'
 
     endpointURIs:
-      type: object
-      required:
-        - issuer
-        - authorization_endpoint
-        - token_endpoint
-        - redirect_uris
-      properties:
-        issuer:
-          type: string
-          format: uri
-          description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
-        authorization_endpoint:
-          type: string
-          format: uri
-          description: URL of the OP's OAuth 2.0 Authorization Endpoint
-        token_endpoint:
-          type: string
-          format: uri
-          description: URL of the OP's OAuth 2.0 Token Endpoint
-        userinfo_endpoint:
-          type: string
-          format: uri
-          description: URL of the OP's UserInfo Endpoint
-        end_session_endpoint:
-          type: string
-          format: uri
-          description: URL at the OP to which an RP can perform a redirect t
-        jwks_uri:
-          type: string
-          format: uri
-          description: URL of the OP's JSON Web Key Set document
-        registration_endpoint:
-          type: string
-          format: uri
-          description: URL of the OP's Dynamic Client Registration Endpoint
-        redirect_uris:
-          type: array
-          items:
-            type: string
-            format: uri
-          description: Array of redirect URIs for use in OAuth 2.0 code flowo request that the End-User be logged out at the OP
+      anyOf:
+        - type: object
+          description: Endpoints for CONTRIBUTOR_FI participants
+          required:
+            - issuer
+            - authorization_endpoint
+            - token_endpoint
+            - jwks_uri
+          properties:
+            issuer:
+              type: string
+              format: uri
+              description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
+            authorization_endpoint:
+              type: string
+              format: uri
+              description: URL of the OP's OAuth 2.0 Authorization Endpoint
+            token_endpoint:
+              type: string
+              format: uri
+              description: URL of the OP's OAuth 2.0 Token Endpoint
+            userinfo_endpoint:
+              type: string
+              format: uri
+              description: URL of the OP's UserInfo Endpoint
+            end_session_endpoint:
+              type: string
+              format: uri
+              description: URL at the OP to which an RP can perform a redirect to
+            jwks_uri:
+              type: string
+              format: uri
+              description: URL of the OP's JSON Web Key Set document for token verification
+            registration_endpoint:
+              type: string
+              format: uri
+              description: URL of the OP's Dynamic Client Registration Endpoint
+        - type: object
+          description: Endpoints for PERA_ADMIN participants
+          required:
+            - redirect_uris
+            - jwks_uri
+          properties:
+            jwks_uri:
+              type: string
+              format: uri
+              description: URL of the RP's JSON Web Key Set document for client authentication
+            redirect_uris:
+              type: array
+              items:
+                type: string
+                format: uri
+              minItems: 1
+              description: Array of redirect URIs to be used in OAuth 2.0 flows
 
     PERAProduct:
       type: object
