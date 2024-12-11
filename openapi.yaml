@@ -178,9 +178,6 @@ paths:
                 client_id:
                   type: string
                   description: Client identifier for the token request.
-                client_secret:
-                  type: string
-                  description: Client secret for the token request.
                 refresh_token:
                   type: string
                   description: Refresh token used to obtain a new access token.
