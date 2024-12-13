@@ -531,19 +531,19 @@ components:
         region:
           type: string
           maxLength: 10
-          description: PSGC Code
+          description: PSGC Code for Region
         province:
           type: string
           maxLength: 10
-          description: PSGC Code
+          description: PSGC Code for Province
         city:
           type: string
           maxLength: 10
-          description: PSGC Code
+          description: PSGC Code for City
         barangay:
           type: string
           maxLength: 10
-          description: PSGC Code
+          description: PSGC Code for Barangay
         street_address:
           type: string
           maxLength: 200
@@ -551,10 +551,12 @@ components:
           type: string
           maxLength: 3
           description: ISO 3166 Code
+          example: 'PHL'
+          pattern: '^[A-Z]{3}$'
         postal_code:
           type: string
           maxLength: 10
-
+          description: Postal Code
     IdType:
       type: object
       required:
