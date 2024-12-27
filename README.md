@@ -220,6 +220,7 @@ Customer Authentication, Authorization and Consent Management:
 | `POST /oauth/token` | Token endpoint |
 | `GET /oauth/introspection` | Token introspection endpoint |
 | `GET /oauth/userinfo` | User information endpoint |
+| `GET /.well-known/jwks.json` | JSON Web Key Set endpoint - Returns the public keys used to verify JWT signatures |
 
 #### 4.2.3 Common API Endpoints
 

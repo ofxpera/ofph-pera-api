@@ -31,14 +31,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParticipantConfig'
+              $ref: "#/components/schemas/ParticipantConfig"
       responses:
-        '201':
+        "201":
           description: Participant successfully registered
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationResponse'
+                $ref: "#/components/schemas/RegistrationResponse"
     put:
       tags:
         - Bootstrap
@@ -49,29 +49,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParticipantConfig'
+              $ref: "#/components/schemas/ParticipantConfig"
       responses:
-        '201':
+        "201":
           description: Participant successfully updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationResponse'
+                $ref: "#/components/schemas/RegistrationResponse"
     get:
       tags:
         - Bootstrap
       summary: Get a list of registered OFxPERA Participants
       description: API for retrieving all registered OFxPERA Participants
       responses:
-        '200':
+        "200":
           description: Successfully retrieved PERA Administrators
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Participant'
-  
+                  $ref: "#/components/schemas/Participant"
+
   /oauth/auth:
     get:
       tags:
@@ -91,7 +91,7 @@ paths:
           description: Must be set to "code" for authorization code flow
           schema:
             type: string
-            enum: [ code ]
+            enum: [code]
         - name: redirect_uri
           in: query
           required: true
@@ -111,7 +111,7 @@ paths:
           description: Code challenge method for PKCE
           schema:
             type: string
-            enum: [ S256 ]
+            enum: [S256]
         - name: scope
           in: query
           required: false
@@ -137,9 +137,9 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Authorization successful
-        '302':
+        "302":
           description: Redirect to client with authorization code
           headers:
             Location:
@@ -167,7 +167,7 @@ paths:
               properties:
                 grant_type:
                   type: string
-                  enum: [ authorization_code, refresh_token ]
+                  enum: [authorization_code, refresh_token]
                 code:
                   type: string
                   description: Authorization code received from the authorization server.
@@ -182,7 +182,7 @@ paths:
                   type: string
                   description: Refresh token used to obtain a new access token.
       responses:
-        '200':
+        "200":
           description: Token successfully issued
           content:
             application/json:
@@ -198,7 +198,7 @@ paths:
                     description: Access token for the authenticated user
                   token_type:
                     type: string
-                    enum: [ Bearer ]
+                    enum: [Bearer]
                     description: Type of the token, always "Bearer"
                   expires_in:
                     type: integer
@@ -225,7 +225,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Token information retrieved
           content:
             application/json:
@@ -252,16 +252,16 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
-                    
+
   /oauth/userinfo:
     get:
       tags:
         - OAuth
       summary: User information
       security:
-        - OAuth2: [ ]
+        - OAuth2: []
       responses:
-        '200':
+        "200":
           description: User information retrieved
           content:
             application/json:
@@ -307,12 +307,73 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Customer's Personal Information retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerInformation'
+                $ref: "#/components/schemas/CustomerInformation"
+
+  /.well-known/openid-configuration:
+    get:
+      tags:
+        - OAuth
+      summary: OpenID Connect Discovery
+      description: Retrieve OpenID Connect configuration information
+      responses:
+        "200":
+          description: OpenID Connect configuration retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    format: uri
+                  authorization_endpoint:
+                    type: string
+                    format: uri
+                  token_endpoint:
+                    type: string
+                    format: uri
+                  userinfo_endpoint:
+                    type: string
+                    format: uri
+                  jwks_uri:
+                    type: string
+                    format: uri
+                  registration_endpoint:
+                    type: string
+                    format: uri
+                  scopes_supported:
+                    type: array
+                    items:
+                      type: string
+                  response_types_supported:
+                    type: array
+                    items:
+                      type: string
+                  grant_types_supported:
+                    type: array
+                    items:
+                      type: string
+                  subject_types_supported:
+                    type: array
+                    items:
+                      type: string
+                  id_token_signing_alg_values_supported:
+                    type: array
+                    items:
+                      type: string
+                  token_endpoint_auth_methods_supported:
+                    type: array
+                    items:
+                      type: string
+                  claims_supported:
+                    type: array
+                    items:
+                      type: string
 
   /.well-known/oauth-authorization-server/register:
     post:
@@ -346,25 +407,19 @@ paths:
                   description: Array of redirect URIs for use in OAuth flows
                 token_endpoint_auth_method:
                   type: string
-                  enum: [
-                    'private_key_jwt',
-                    'tls_client_auth'
-                  ]
+                  enum: ["private_key_jwt", "tls_client_auth"]
                   description: Authentication method for token endpoint, must be either private_key_jwt or tls_client_auth for FAPI
                 grant_types:
                   type: array
                   items:
                     type: string
-                    enum: [
-                      'authorization_code',
-                      'refresh_token'
-                    ]
+                    enum: ["authorization_code", "refresh_token"]
                   description: Allowed OAuth grant types
                 response_types:
                   type: array
                   items:
                     type: string
-                    enum: ['code']
+                    enum: ["code"]
                   description: Allowed OAuth response types
                 scope:
                   type: string
@@ -380,7 +435,6 @@ paths:
                       type: array
                       items:
                         type: object
-                        description: JWK format keys
                 jwks_uri:
                   type: string
                   format: uri
@@ -395,7 +449,7 @@ paths:
                     format: email
                   description: Administrative contact emails
       responses:
-        '201':
+        "201":
           description: Client registration successful
           headers:
             Registration-Access-Token:
@@ -405,11 +459,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RegistrationResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                $ref: "#/components/schemas/RegistrationResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
     get:
       tags:
         - OAuth
@@ -417,12 +471,12 @@ paths:
       security:
         - RegistrationAccessToken: []
       responses:
-        '200':
+        "200":
           description: Current client configuration
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientRegistration'
+                $ref: "#/components/schemas/ClientRegistration"
     put:
       tags:
         - OAuth
@@ -434,14 +488,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClientRegistration'
+              $ref: "#/components/schemas/ClientRegistration"
       responses:
-        '200':
+        "200":
           description: Client configuration updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientRegistration'
+                $ref: "#/components/schemas/ClientRegistration"
     delete:
       tags:
         - OAuth
@@ -449,8 +503,71 @@ paths:
       security:
         - RegistrationAccessToken: []
       responses:
-        '204':
+        "204":
           description: Client registration deleted
+
+  /.well-known/jwks.json:
+    get:
+      tags:
+        - OAuth
+      summary: JSON Web Key Set
+      description: Returns the public keys used to verify JWT signatures
+      operationId: getJwks
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    description: Array of JWK objects
+                    items:
+                      type: object
+                      required:
+                        - kty
+                        - kid
+                        - use
+                        - alg
+                        - n
+                        - e
+                      properties:
+                        kty:
+                          type: string
+                          description: Key type (e.g., "RSA")
+                          example: "RSA"
+                        kid:
+                          type: string
+                          description: Key ID
+                          example: "1234567890"
+                        use:
+                          type: string
+                          description: Key usage (e.g., "sig" for signing)
+                          example: "sig"
+                        alg:
+                          type: string
+                          description: Algorithm (e.g., "RS256")
+                          example: "RS256"
+                        n:
+                          type: string
+                          description: RSA public key modulus
+                          example: "vzF9yJH5vpo..."
+                        e:
+                          type: string
+                          description: RSA public key exponent
+                          example: "AQAB"
+                example:
+                  keys:
+                    - kty: "RSA"
+                      kid: "1234567890"
+                      use: "sig"
+                      alg: "RS256"
+                      n: "vzF9yJH5vpo..."
+                      e: "AQAB"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
   parameters:
@@ -461,7 +578,7 @@ components:
       description: Field referencing the unique identifier of the requesting participant.
       schema:
         type: string
-    
+
     ApiVersion:
       name: x-v
       in: header
@@ -471,7 +588,7 @@ components:
         type: integer
         maximum: 100
         minimum: 1
-    
+
     FapiInteractionId:
       name: x-fapi-interaction-id
       in: header
@@ -481,7 +598,7 @@ components:
         type: string
         format: uuid
         maxLength: 64
-    
+
     FapiAuthDate:
       name: x-fapi-auth-date
       in: header
@@ -490,7 +607,7 @@ components:
       schema:
         type: string
         format: date-time
-    
+
     FapiCustomerIpAddress:
       name: x-fapi-customer-ip-address
       in: header
@@ -499,7 +616,7 @@ components:
       schema:
         type: string
         format: ipv4
-    
+
     ClientHeaders:
       name: x-client-headers
       in: header
@@ -508,7 +625,7 @@ components:
       schema:
         type: string
         format: base64
-    
+
     RetryAfter:
       name: Retry-After
       in: header
@@ -517,7 +634,7 @@ components:
       schema:
         type: integer
         minimum: 0
-  
+
   schemas:
     Address:
       type: object
@@ -551,8 +668,8 @@ components:
           type: string
           maxLength: 3
           description: ISO 3166 Code
-          example: 'PHL'
-          pattern: '^[A-Z]{3}$'
+          example: "PHL"
+          pattern: "^[A-Z]{3}$"
         postal_code:
           type: string
           maxLength: 10
@@ -575,7 +692,7 @@ components:
           type: string
           maxLength: 100
           description: ID Type (e.g., "Drivers License", "Passport", etc.)
-    
+
     PersonalInformation:
       type: object
       required:
@@ -609,13 +726,13 @@ components:
         phoneNumber:
           type: string
           maxLength: 15
-          pattern: '^[0-9]{11}$'
-          example: '63287654321'
+          pattern: "^[0-9]{11}$"
+          example: "63287654321"
         mobileNumber:
           type: string
           maxLength: 15
-          pattern: '^[0-9]{12}$'
-          example: '639171234567'
+          pattern: "^[0-9]{12}$"
+          example: "639171234567"
         email:
           type: string
           maxLength: 50
@@ -632,7 +749,7 @@ components:
         tin:
           type: string
           maxLength: 15
-          pattern: '^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$'
+          pattern: "^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$"
           description: Format NNN-NNN-NNN-000
 
     CustomerInformation:
@@ -648,14 +765,14 @@ components:
           maxLength: 50
           description: Subject – FI's unique identifier for the End-User
         personalInformation:
-          $ref: '#/components/schemas/PersonalInformation'
+          $ref: "#/components/schemas/PersonalInformation"
         presentedIds:
           type: array
           items:
-            $ref: '#/components/schemas/IdType'
+            $ref: "#/components/schemas/IdType"
           description: Array of identification details
         cdd:
-          $ref: '#/components/schemas/CustomerDueDiligence'
+          $ref: "#/components/schemas/CustomerDueDiligence"
         peraAdmin:
           type: string
           maxLength: 50
@@ -683,7 +800,7 @@ components:
           type: string
           maxLength: 255
         employerAddress:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         pepIndicator:
           type: boolean
           default: false
@@ -695,8 +812,8 @@ components:
         cddIndicator:
           type: string
           maxLength: 6
-          enum: ['Low', 'Normal', 'High']
-          default: 'Normal'
+          enum: ["Low", "Normal", "High"]
+          default: "Normal"
           description: Customer Due Diligence Risk Level
 
     Participant:
@@ -728,35 +845,29 @@ components:
           default: ACTIVE
           description: Status of the participant
         endpoint_uris:
-          $ref: '#/components/schemas/endpointURIs'
+          $ref: "#/components/schemas/endpointURIs"
         token_endpoint_auth_method:
           type: string
-          enum: [
-            'private_key_jwt',
-            'tls_client_auth'
-          ]
-          default: 'private_key_jwt'
+          enum: ["private_key_jwt", "tls_client_auth"]
+          default: "private_key_jwt"
           description: Authentication method for token endpoint as per FAPI requirements
         grant_types:
           type: array
           items:
             type: string
-            enum: [
-              'authorization_code',
-              'refresh_token'
-            ]
-          default: ['authorization_code']
+            enum: ["authorization_code", "refresh_token"]
+          default: ["authorization_code"]
           description: Allowed OAuth 2.0 grant types (FAPI requires authorization_code)
         response_types:
           type: array
           items:
             type: string
-            enum: ['code']
-          default: ['code']
+            enum: ["code"]
+          default: ["code"]
           description: Allowed OAuth 2.0 response types (FAPI requires code flow)
         scope:
           type: string
-          default: 'openid profile'
+          default: "openid profile"
           description: Space-separated list of requested scopes (openid is required for FAPI)
         software_statement:
           type: string
@@ -809,9 +920,9 @@ components:
         - internal_uris
       properties:
         participant:
-          $ref: '#/components/schemas/Participant'
+          $ref: "#/components/schemas/Participant"
         internal_uris:
-          $ref: '#/components/schemas/endpointURIs'
+          $ref: "#/components/schemas/endpointURIs"
 
     endpointURIs:
       anyOf:
@@ -869,107 +980,6 @@ components:
               minItems: 1
               description: Array of redirect URIs to be used in OAuth 2.0 flows
 
-    PERAProduct:
-      type: object
-      required:
-        - productId
-        - productName
-        - productType
-        - currency
-        - riskRating
-        - navPerShare
-        - fundManager
-        - regulatoryInfo
-      properties:
-        productId:
-          type: string
-          description: Unique identifier for the product
-        productName:
-          type: string
-          description: Name of the investment product
-        productType:
-          type: string
-          enum:
-            - UITF
-            - MUTUAL_FUND
-            - INSURANCE
-            - GOVERNMENT_SECURITIES
-          description: Type of PERA-eligible investment product
-        currency:
-          type: string
-          enum:
-            - PHP
-            - USD
-          default: 'PHP'
-          description: Currency of the product
-        riskRating:
-          type: string
-          enum:
-            - CONSERVATIVE
-            - MODERATE
-            - AGGRESSIVE
-          description: Risk classification of the product
-        navPerShare:
-          type: number
-          format: double
-          description: Current Net Asset Value per share/unit
-        fundManager:
-          type: string
-          description: Name of the fund manager or investment house
-        minimumInitialInvestment:
-          type: number
-          format: double
-          description: Minimum amount required for initial investment
-        minimumAdditionalInvestment:
-          type: number
-          format: double
-          description: Minimum amount for subsequent investments
-        managementFee:
-          type: number
-          format: double
-          description: Annual management fee percentage
-        regulatoryInfo:
-          type: object
-          required:
-            - bspApprovalNumber
-            - secRegistrationNumber
-          properties:
-            bspApprovalNumber:
-              type: string
-              description: BSP approval or certification number
-            secRegistrationNumber:
-              type: string
-              description: SEC registration number
-        historicalPerformance:
-          type: object
-          properties:
-            ytd:
-              type: number
-              format: double
-              description: Year-to-date return percentage
-            oneYear:
-              type: number
-              format: double
-              description: One-year return percentage
-            threeYear:
-              type: number
-              format: double
-              description: Three-year return percentage
-            fiveYear:
-              type: number
-              format: double
-              description: Five-year return percentage
-        investmentPolicy:
-          type: string
-          description: Summary of the product's investment policy and strategy
-        cutoffTime:
-          type: string
-          format: time
-          description: Daily cut-off time for transactions
-        settlementPeriod:
-          type: integer
-          description: Number of days for settlement of redemption
-
     ClientRegistration:
       type: object
       required:
@@ -990,23 +1000,17 @@ components:
             format: uri
         token_endpoint_auth_method:
           type: string
-          enum: [
-            'private_key_jwt',
-            'tls_client_auth'
-          ]
+          enum: ["private_key_jwt", "tls_client_auth"]
         grant_types:
           type: array
           items:
             type: string
-            enum: [
-              'authorization_code',
-              'refresh_token'
-            ]
+            enum: ["authorization_code", "refresh_token"]
         response_types:
           type: array
           items:
             type: string
-            enum: ['code']
+            enum: ["code"]
         scope:
           type: string
         software_statement:
@@ -1043,12 +1047,12 @@ components:
 
     BadRequestError:
       allOf:
-        - $ref: '#/components/schemas/Error'
+        - $ref: "#/components/schemas/Error"
         - description: Bad Request - The server cannot process the request due to a client error
 
     UnauthorizedError:
       allOf:
-        - $ref: '#/components/schemas/Error'
+        - $ref: "#/components/schemas/Error"
         - description: Unauthorized - Authentication is required and has failed or not been provided
 
   responses:
@@ -1057,13 +1061,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BadRequestError'
+            $ref: "#/components/schemas/BadRequestError"
     Unauthorized:
       description: Unauthorized - Authentication is required and has failed or not been provided
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UnauthorizedError'
+            $ref: "#/components/schemas/UnauthorizedError"
+    InternalServerError:
+      description: Internal Server Error - The server encountered an unexpected condition
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
 
   securitySchemes:
     OAuth2:
@@ -1088,10 +1098,10 @@ security:
   - openFinanceHeaders: []
 
 x-global-headers:
-  - $ref: '#/components/parameters/ParticipantId'
-  - $ref: '#/components/parameters/ApiVersion'
-  - $ref: '#/components/parameters/FapiInteractionId'
-  - $ref: '#/components/parameters/FapiAuthDate'
-  - $ref: '#/components/parameters/FapiCustomerIpAddress'
-  - $ref: '#/components/parameters/ClientHeaders'
-  - $ref: '#/components/parameters/RetryAfter'
+  - $ref: "#/components/parameters/ParticipantId"
+  - $ref: "#/components/parameters/ApiVersion"
+  - $ref: "#/components/parameters/FapiInteractionId"
+  - $ref: "#/components/parameters/FapiAuthDate"
+  - $ref: "#/components/parameters/FapiCustomerIpAddress"
+  - $ref: "#/components/parameters/ClientHeaders"
+  - $ref: "#/components/parameters/RetryAfter"
