@@ -327,25 +327,37 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - issuer
+                  - authorization_endpoint
+                  - token_endpoint
+                  - jwks_uri
+                  - registration_endpoint
                 properties:
                   issuer:
                     type: string
                     format: uri
+                    description: Base URL that uniquely identifies the authorization server
                   authorization_endpoint:
                     type: string
                     format: uri
+                    description: Authorization endpoint URL for initiating the OAuth 2.0 flow
                   token_endpoint:
                     type: string
                     format: uri
+                    description: Token endpoint URL for obtaining access tokens
                   userinfo_endpoint:
                     type: string
                     format: uri
+                    description: UserInfo endpoint URL for retrieving authenticated user information
                   jwks_uri:
                     type: string
                     format: uri
+                    description: URL for retrieving the JSON Web Key Set used to validate JWTs
                   registration_endpoint:
                     type: string
                     format: uri
+                    description: Dynamic Client Registration endpoint URL
                   scopes_supported:
                     type: array
                     items:
