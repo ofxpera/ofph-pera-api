@@ -18,6 +18,8 @@ tags:
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
     description: Common APIs used across different use cases
+  - name: Discovery
+    description: Optional discovery endpoints for OpenID/OAuth configuration and key management
 
 paths:
   /ofxpera/participants:
@@ -217,7 +219,9 @@ paths:
     get:
       tags:
         - OAuth
-      summary: Token introspection
+      summary: Optional token introspection
+      description: |
+        Endpoint for validating and retrieving metadata about an access token. Returns information about whether the token is active, its associated client, user, scopes, and expiration details. This endpoint allows resource servers to verify tokens before granting access to protected resources.
       parameters:
         - name: token
           in: query
@@ -257,7 +261,9 @@ paths:
     get:
       tags:
         - OAuth
-      summary: User information
+      summary: Optional OpenID Connect UserInfo Endpoint
+      description: |
+        OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
       security:
         - OAuth2: []
       responses:
@@ -317,7 +323,7 @@ paths:
   /.well-known/openid-configuration:
     get:
       tags:
-        - OAuth
+        - Discovery
       summary: OpenID Connect Discovery
       description: Retrieve OpenID Connect configuration information
       responses:
@@ -387,11 +393,11 @@ paths:
                     items:
                       type: string
 
-  /.well-known/oauth-authorization-server/register:
+  /.well-known/openid-registration:
     post:
       tags:
-        - OAuth
-      summary: FAPI Dynamic Client Registration
+        - Discovery
+      summary: Dynamic Client Registration (configurable endpoint)
       description: |
         Register a new PERA Administrator as an OAuth client following FAPI Dynamic Client Registration requirements.
         Requires a software statement and supports JWKS for key management.
@@ -478,8 +484,8 @@ paths:
           $ref: "#/components/responses/Unauthorized"
     get:
       tags:
-        - OAuth
-      summary: Get Client Registration
+        - Discovery
+      summary: Get Client Registration (configurable endpoint)
       security:
         - RegistrationAccessToken: []
       responses:
@@ -491,8 +497,8 @@ paths:
                 $ref: "#/components/schemas/ClientRegistration"
     put:
       tags:
-        - OAuth
-      summary: Update Client Registration
+        - Discovery
+      summary: Update Client Registration (configurable endpoint)
       security:
         - RegistrationAccessToken: []
       requestBody:
@@ -510,8 +516,8 @@ paths:
                 $ref: "#/components/schemas/ClientRegistration"
     delete:
       tags:
-        - OAuth
-      summary: Delete Client Registration
+        - Discovery
+      summary: Delete Client Registration (configurable endpoint)
       security:
         - RegistrationAccessToken: []
       responses:
@@ -521,7 +527,7 @@ paths:
   /.well-known/jwks.json:
     get:
       tags:
-        - OAuth
+        - Discovery
       summary: JSON Web Key Set
       description: Returns the public keys used to verify JWT signatures
       operationId: getJwks
@@ -531,53 +537,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  keys:
-                    type: array
-                    description: Array of JWK objects
-                    items:
-                      type: object
-                      required:
-                        - kty
-                        - kid
-                        - use
-                        - alg
-                        - n
-                        - e
-                      properties:
-                        kty:
-                          type: string
-                          description: Key type (e.g., "RSA")
-                          example: "RSA"
-                        kid:
-                          type: string
-                          description: Key ID
-                          example: "1234567890"
-                        use:
-                          type: string
-                          description: Key usage (e.g., "sig" for signing)
-                          example: "sig"
-                        alg:
-                          type: string
-                          description: Algorithm (e.g., "RS256")
-                          example: "RS256"
-                        n:
-                          type: string
-                          description: RSA public key modulus
-                          example: "vzF9yJH5vpo..."
-                        e:
-                          type: string
-                          description: RSA public key exponent
-                          example: "AQAB"
-                example:
-                  keys:
-                    - kty: "RSA"
-                      kid: "1234567890"
-                      use: "sig"
-                      alg: "RS256"
-                      n: "vzF9yJH5vpo..."
-                      e: "AQAB"
+                $ref: '#/components/schemas/JWKSet'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -1066,6 +1026,49 @@ components:
       allOf:
         - $ref: "#/components/schemas/Error"
         - description: Unauthorized - Authentication is required and has failed or not been provided
+
+    JWKSet:
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          description: Array of JWK objects
+          items:
+            type: object
+            required:
+              - kty
+              - kid
+              - use
+              - alg
+              - n
+              - e
+            properties:
+              kty:
+                type: string
+                description: Key type (e.g., "RSA")
+                example: "RSA"
+              kid:
+                type: string
+                description: Key ID
+                example: "1234567890"
+              use:
+                type: string
+                description: Key usage (e.g., "sig" for signing)
+                example: "sig"
+              alg:
+                type: string
+                description: Algorithm (e.g., "RS256")
+                example: "RS256"
+              n:
+                type: string
+                description: RSA public key modulus
+                example: "vzF9yJH5vpo..."
+              e:
+                type: string
+                description: RSA public key exponent
+                example: "AQAB"
 
   responses:
     BadRequest:
