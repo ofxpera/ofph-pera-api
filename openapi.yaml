@@ -40,7 +40,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegistrationResponse"
+                $ref: "#/components/schemas/ClientRegistrationResponse"
     put:
       tags:
         - Bootstrap
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegistrationResponse"
+                $ref: "#/components/schemas/ClientRegistrationResponse"
     get:
       tags:
         - Bootstrap
@@ -94,6 +94,15 @@ paths:
           schema:
             type: string
             enum: [code]
+        - name: scope
+          in: query
+          required: true
+          description: Space-separated list of requested scope values, OFxPERA requires openid to be included to maintain compatibility with OIDC.
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [openid, profile, email, address, phone]
         - name: redirect_uri
           in: query
           required: true
@@ -114,12 +123,6 @@ paths:
           schema:
             type: string
             enum: [S256]
-        - name: scope
-          in: query
-          required: false
-          description: Space-separated list of requested scope values
-          schema:
-            type: string
         - name: state
           in: query
           required: true
@@ -408,64 +411,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - redirect_uris
-                - token_endpoint_auth_method
-                - grant_types
-                - response_types
-                - software_statement
-                - scope
-              properties:
-                redirect_uris:
-                  type: array
-                  items:
-                    type: string
-                    format: uri
-                  description: Array of redirect URIs for use in OAuth flows
-                token_endpoint_auth_method:
-                  type: string
-                  enum: ["private_key_jwt", "tls_client_auth"]
-                  description: Authentication method for token endpoint, must be either private_key_jwt or tls_client_auth for FAPI
-                grant_types:
-                  type: array
-                  items:
-                    type: string
-                    enum: ["authorization_code", "refresh_token"]
-                  description: Allowed OAuth grant types
-                response_types:
-                  type: array
-                  items:
-                    type: string
-                    enum: ["code"]
-                  description: Allowed OAuth response types
-                scope:
-                  type: string
-                  description: Space-separated list of requested scopes
-                software_statement:
-                  type: string
-                  description: JWT containing software statement from trusted authority
-                jwks:
-                  type: object
-                  description: JSON Web Key Set for client authentication
-                  properties:
-                    keys:
-                      type: array
-                      items:
-                        type: object
-                jwks_uri:
-                  type: string
-                  format: uri
-                  description: URI of JSON Web Key Set
-                organization_name:
-                  type: string
-                  description: Name of the PERA Administrator organization
-                contacts:
-                  type: array
-                  items:
-                    type: string
-                    format: email
-                  description: Administrative contact emails
+              $ref: "#/components/schemas/ClientRegistration"
       responses:
         "201":
           description: Client registration successful
@@ -477,7 +423,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegistrationResponse"
+                $ref: "#/components/schemas/ClientRegistrationResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -528,7 +474,7 @@ paths:
     get:
       tags:
         - Discovery
-      summary: JSON Web Key Set
+      summary: Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
       description: Returns the public keys used to verify JWT signatures
       operationId: getJwks
       responses:
@@ -860,7 +806,7 @@ components:
               type: string
               format: email
 
-    RegistrationResponse:
+    ClientRegistrationResponse:
       type: object
       required:
         - client_id
@@ -951,24 +897,30 @@ components:
     ClientRegistration:
       type: object
       required:
-        - client_id
+        - application_type
+        - client_name
         - redirect_uris
         - token_endpoint_auth_method
         - grant_types
         - response_types
-        - software_statement
       properties:
-        client_id:
+        application_type:
           type: string
-          description: Issued client identifier
+          enum: ["web", "native", "hybrid"]
+          description: Type of application
+        client_name:
+          type: string
+          description: Name of the client
         redirect_uris:
           type: array
           items:
             type: string
             format: uri
+          description: Array of redirect URIs for use in OAuth flows
         token_endpoint_auth_method:
           type: string
-          enum: ["private_key_jwt", "tls_client_auth"]
+          enum: ["private_key_jwt"]
+          description: Authentication method for token endpoint, OFxPERA Phase 1 requires private_key_jwt
         grant_types:
           type: array
           items:
@@ -978,29 +930,35 @@ components:
           type: array
           items:
             type: string
-            enum: ["code"]
+            enum: ["code","id_token"]
+          description: Allowed OAuth response types, OFxPERA requires code and id_token.
+          example: ["code","id_token"]
+          minItems: 2
+          maxItems: 2
         scope:
           type: string
+          description: Space-separated list of requested scopes (e.g. openid profile email address phone)
         software_statement:
           type: string
+          description: JWT containing software statement from trusted authority
         jwks:
-          type: object
-          properties:
-            keys:
-              type: array
-              items:
-                type: object
+          $ref: "#/components/schemas/JWKSet"
+          description: JSON Web Key Set containing public keys used for client authentication and request object signing. Must include RSA or EC keys with 'sig' use parameter.
         jwks_uri:
           type: string
           format: uri
+          description: |
+            URI for JSON Web Key Set containing public keys used for client authentication and request object signing. 
+            Must be specified if jwks is not provided.
         organization_name:
           type: string
+          description: Legal name of the PERA Participant organization
         contacts:
           type: array
           items:
             type: string
             format: email
-
+          description: Administrative contact emails
     Error:
       type: object
       properties:
