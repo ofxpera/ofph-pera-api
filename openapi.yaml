@@ -1,8 +1,22 @@
-openapi: 3.0.3
+openapi: 3.0.4
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
   version: 0.0.1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-copyright: Copyright © 2024 OFxPERA Contributors
+  x-terms-of-service: |
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 servers:
   # Added by API Auto Mocking Plugin
@@ -13,7 +27,7 @@ servers:
 
 tags:
   - name: Bootstrap
-    description: Core bootstrapping endpoints for organization registration and management
+    description: Core bootstrapping endpoints for OFxPERA Participant registration and management
   - name: OAuth
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
@@ -27,7 +41,9 @@ paths:
       tags:
         - Bootstrap
       summary: Register an OFxPERA Participant
-      description: API for registering a PERA Administrator following FAPI Dynamic Client Registration requirements
+      description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
+      security:
+        - ParticipantKey: []
       requestBody:
         required: true
         content:
@@ -46,6 +62,8 @@ paths:
         - Bootstrap
       summary: Update an OFxPERA Participant
       description: API for updating the URIs and status of an OFxPERA Participant
+      security:
+        - RegistrationAccessToken: []
       requestBody:
         required: true
         content:
@@ -64,9 +82,11 @@ paths:
         - Bootstrap
       summary: Get a list of registered OFxPERA Participants
       description: API for retrieving all registered OFxPERA Participants
+      security:
+        - RegistrationAccessToken: []
       responses:
         "200":
-          description: Successfully retrieved PERA Administrators
+          description: Successfully retrieved OFxPERA Participants
           content:
             application/json:
               schema:
@@ -308,6 +328,8 @@ paths:
       tags:
         - Common
       summary: Get detailed customer information
+      security:
+        - OAuth2: []
       parameters:
         - name: id
           in: path
@@ -329,6 +351,8 @@ paths:
         - Discovery
       summary: OpenID Connect Discovery
       description: Retrieve OpenID Connect configuration information
+      security:
+        - ParticipantKey: []
       responses:
         "200":
           description: OpenID Connect configuration retrieved
@@ -401,11 +425,9 @@ paths:
       tags:
         - Discovery
       summary: Dynamic Client Registration (configurable endpoint)
-      description: |
-        Register a new PERA Administrator as an OAuth client following FAPI Dynamic Client Registration requirements.
-        Requires a software statement and supports JWKS for key management.
+      description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
       security:
-        - openFinanceHeaders: []
+        - ParticipantKey: []
       requestBody:
         required: true
         content:
@@ -694,7 +716,7 @@ components:
         peraAdmin:
           type: string
           maxLength: 50
-          description: Selected PERA Admin by Customer FI Codes of PERA admin
+          description: The PERA Admin selected by the Customer
 
     CustomerDueDiligence:
       type: object
@@ -841,7 +863,7 @@ components:
     endpointURIs:
       anyOf:
         - type: object
-          description: Endpoints for CONTRIBUTOR_FI participants
+          description: Endpoints of the OFxPERA Participant as an Authorization Server
           required:
             - issuer
             - authorization_endpoint
@@ -877,7 +899,7 @@ components:
               format: uri
               description: URL of the OP's Dynamic Client Registration Endpoint
         - type: object
-          description: Endpoints for PERA_ADMIN participants
+          description: API Endpoints of the OFxPERA Participant as an OAuth client
           required:
             - redirect_uris
             - jwks_uri
@@ -1070,19 +1092,15 @@ components:
           authorizationUrl: /oauth/authorize
           tokenUrl: /oauth/token
           scopes: {}
-    openFinanceHeaders:
+    ParticipantKey:
       type: apiKey
       in: header
-      name: participant-id
-      description: Open Finance security headers
+      name: participant-key
+      description: Short-lived API Key for creating a new participant
     RegistrationAccessToken:
       type: http
       scheme: bearer
       description: Registration Access Token for managing client registration
-
-security:
-  - OAuth2: []
-  - openFinanceHeaders: []
 
 x-global-headers:
   - $ref: "#/components/parameters/ParticipantId"
