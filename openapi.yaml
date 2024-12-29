@@ -1,4 +1,4 @@
-openapi: 3.1.1
+openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
@@ -41,7 +41,6 @@ paths:
       tags:
         - Bootstrap
       summary: Register an OFxPERA Participant
-      operationId: registerParticipant
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
       security:
         - ParticipantKey: []
@@ -58,13 +57,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
-        <<: *common_responses
-
     put:
       tags:
         - Bootstrap
       summary: Update an OFxPERA Participant
-      operationId: updateParticipant
       description: API for updating the URIs and status of an OFxPERA Participant
       security:
         - RegistrationAccessToken: []
@@ -81,12 +77,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
-        <<: *common_responses
     get:
       tags:
         - Bootstrap
       summary: Get a list of registered OFxPERA Participants
-      operationId: listParticipants
       description: API for retrieving all registered OFxPERA Participants
       security:
         - RegistrationAccessToken: []
@@ -99,15 +93,16 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Participant"
-        <<: *common_responses
 
   /oauth/auth:
     get:
+      operationId: authorizeOAuth
       tags:
         - OAuth
       summary: Authorization endpoint
-      operationId: authorize
       description: OpenID Connect authorization endpoint that initiates the authorization flow
+      security:
+        - ParticipantId: []
       parameters:
         - name: client_id
           in: query
@@ -180,14 +175,15 @@ paths:
                 type: string
                 format: uri
                 description: Redirect URI with authorization code
-        <<: *common_responses
 
   /oauth/token:
     post:
+      operationId: getOAuthToken
       tags:
         - OAuth
       summary: Token endpoint
-      operationId: token
+      security:
+        - ParticipantId: []
       requestBody:
         required: true
         content:
@@ -247,15 +243,17 @@ paths:
                   scope:
                     type: string
                     description: Space-separated list of scopes associated with the access token
-        <<: *common_responses
 
   /oauth/introspect:
     get:
+      operationId: introspectToken
       tags:
         - OAuth
       summary: Optional token introspection
       description: |
         Endpoint for validating and retrieving metadata about an access token. Returns information about whether the token is active, its associated client, user, scopes, and expiration details. This endpoint allows resource servers to verify tokens before granting access to protected resources.
+      security:
+        - OAuth2: []
       parameters:
         - name: token
           in: query
@@ -290,14 +288,13 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
-        <<: *common_responses
 
   /oauth/userinfo:
     get:
+      operationId: getUserInfo
       tags:
         - OAuth
       summary: Optional OpenID Connect UserInfo Endpoint
-      operationId: userinfo
       description: |
         OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
       security:
@@ -335,14 +332,12 @@ paths:
                   phone_number_verified:
                     type: boolean
                     description: Indicates whether the user's phone number has been verified.
-        <<: *common_responses
 
   /common/customers/{id}/detail:
     get:
       tags:
         - Common
       summary: Get detailed customer information
-      operationId: getCustomerDetail
       security:
         - OAuth2: []
       parameters:
@@ -359,9 +354,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CustomerInformation"
-        "404":
-          description: Customer not found
-        <<: *common_responses
 
   /.well-known/openid-configuration:
     get:
@@ -437,7 +429,6 @@ paths:
                     type: array
                     items:
                       type: string
-        <<: *common_responses
 
   /.well-known/openid-registration:
     post:
@@ -447,7 +438,6 @@ paths:
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
       security:
         - ParticipantKey: []
-      operationId: newParticipant
       requestBody:
         required: true
         content:
@@ -466,12 +456,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
-        <<: *common_responses
     get:
       tags:
         - Discovery
       summary: Get Client Registration (configurable endpoint)
-      operationId: getClientRegistration
       security:
         - RegistrationAccessToken: []
       responses:
@@ -485,7 +473,6 @@ paths:
       tags:
         - Discovery
       summary: Update Client Registration (configurable endpoint)
-      operationId: updateClientRegistration
       security:
         - RegistrationAccessToken: []
       requestBody:
@@ -501,12 +488,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistration"
-        <<: *common_responses
     delete:
       tags:
         - Discovery
       summary: Delete Client Registration (configurable endpoint)
-      operationId: deleteClientRegistration
       security:
         - RegistrationAccessToken: []
       responses:
@@ -519,6 +504,8 @@ paths:
         - Discovery
       summary: Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
       description: Returns the public keys used to verify JWT signatures
+      security:
+        - ParticipantKey: []
       operationId: getJwks
       responses:
         '200':
@@ -527,6 +514,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JWKSet'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -635,6 +624,7 @@ components:
           type: string
           maxLength: 10
           description: Postal Code
+    
     IdType:
       type: object
       required:
@@ -1002,6 +992,7 @@ components:
             type: string
             format: email
           description: Administrative contact emails
+    
     Error:
       type: object
       properties:
@@ -1023,6 +1014,11 @@ components:
       allOf:
         - $ref: "#/components/schemas/Error"
         - description: Unauthorized - Authentication is required and has failed or not been provided
+
+    NotFound:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+        - description: Not Found - The requested resource could not be found
 
     JWKSet:
       type: object
@@ -1086,25 +1082,47 @@ components:
                 example: "dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ"
 
   responses:
-    BadRequest:
-      description: Bad Request - The server cannot process the request due to a client error
+    NotFound:
+      description: Not Found - The requested resource could not be found
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/BadRequestError"
+            $ref: "#/components/schemas/Error"
     Unauthorized:
       description: Unauthorized - Authentication is required and has failed or not been provided
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/UnauthorizedError"
-    TooManyRequests:
-      description: Too Many Requests - The client has exceeded their rate limit
-      headers:
-        Retry-After:
-          $ref: "#/components/parameters/RetryAfter"
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: Bad Request - The server cannot process the request due to a client error
       content:
         application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    DefaultErrorResponse:
+      description: Default error responses
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: string
+        "400":
+          schema:
+            $ref: "#/components/schemas/Error"
+        "401":
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          schema:
+            $ref: "#/components/schemas/NotFound"
+        "500":
           schema:
             $ref: "#/components/schemas/Error"
     InternalServerError:
@@ -1122,6 +1140,11 @@ components:
           authorizationUrl: /oauth/authorize
           tokenUrl: /oauth/token
           scopes: {}
+    ParticipantId:
+      type: apiKey
+      in: header
+      name: participant-id
+      description: Participant ID
     ParticipantKey:
       type: apiKey
       in: header
@@ -1131,16 +1154,6 @@ components:
       type: http
       scheme: bearer
       description: Registration Access Token for managing client registration
-
-  x-common-responses: &common_responses
-    "400":
-      $ref: "#/components/responses/BadRequest"
-    "401":
-      $ref: "#/components/responses/Unauthorized"
-    "429":
-      $ref: "#/components/responses/TooManyRequests"
-    "500":
-      $ref: "#/components/responses/InternalServerError"
 
 x-global-headers:
   - $ref: "#/components/parameters/ParticipantId"
