@@ -47,6 +47,13 @@ def step_impl(context, endpoint):
         data=form_data
     )
 
+@when('I send a GET request to "{endpoint}"')
+def step_impl(context, endpoint):
+    base_url = context.config.userdata.get('base_url', 'https://api.ofxpera.ph/v1')
+    url = f"{base_url}{endpoint}"
+    params = context.auth_params if hasattr(context, 'auth_params') else None
+    context.response = requests.get(url=url, headers=context.headers, params=params)
+
 @when('I send a GET request to "{endpoint}" with parameters')
 def step_impl(context, endpoint):
     base_url = context.config.userdata.get('base_url', 'https://api.ofxpera.ph/v1')

@@ -1,4 +1,4 @@
-openapi: 3.0.4
+openapi: 3.1.1
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
@@ -41,6 +41,7 @@ paths:
       tags:
         - Bootstrap
       summary: Register an OFxPERA Participant
+      operationId: registerParticipant
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
       security:
         - ParticipantKey: []
@@ -57,10 +58,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
+        <<: *common_responses
+
     put:
       tags:
         - Bootstrap
       summary: Update an OFxPERA Participant
+      operationId: updateParticipant
       description: API for updating the URIs and status of an OFxPERA Participant
       security:
         - RegistrationAccessToken: []
@@ -77,10 +81,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
+        <<: *common_responses
     get:
       tags:
         - Bootstrap
       summary: Get a list of registered OFxPERA Participants
+      operationId: listParticipants
       description: API for retrieving all registered OFxPERA Participants
       security:
         - RegistrationAccessToken: []
@@ -93,12 +99,14 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Participant"
+        <<: *common_responses
 
   /oauth/auth:
     get:
       tags:
         - OAuth
       summary: Authorization endpoint
+      operationId: authorize
       description: OpenID Connect authorization endpoint that initiates the authorization flow
       parameters:
         - name: client_id
@@ -172,12 +180,14 @@ paths:
                 type: string
                 format: uri
                 description: Redirect URI with authorization code
+        <<: *common_responses
 
   /oauth/token:
     post:
       tags:
         - OAuth
       summary: Token endpoint
+      operationId: token
       requestBody:
         required: true
         content:
@@ -237,6 +247,7 @@ paths:
                   scope:
                     type: string
                     description: Space-separated list of scopes associated with the access token
+        <<: *common_responses
 
   /oauth/introspect:
     get:
@@ -279,12 +290,14 @@ paths:
                   iat:
                     type: integer
                     description: Issued at timestamp of the token in seconds since epoch.
+        <<: *common_responses
 
   /oauth/userinfo:
     get:
       tags:
         - OAuth
       summary: Optional OpenID Connect UserInfo Endpoint
+      operationId: userinfo
       description: |
         OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
       security:
@@ -322,12 +335,14 @@ paths:
                   phone_number_verified:
                     type: boolean
                     description: Indicates whether the user's phone number has been verified.
+        <<: *common_responses
 
   /common/customers/{id}/detail:
     get:
       tags:
         - Common
       summary: Get detailed customer information
+      operationId: getCustomerDetail
       security:
         - OAuth2: []
       parameters:
@@ -344,6 +359,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CustomerInformation"
+        "404":
+          description: Customer not found
+        <<: *common_responses
 
   /.well-known/openid-configuration:
     get:
@@ -419,6 +437,7 @@ paths:
                     type: array
                     items:
                       type: string
+        <<: *common_responses
 
   /.well-known/openid-registration:
     post:
@@ -428,6 +447,7 @@ paths:
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
       security:
         - ParticipantKey: []
+      operationId: newParticipant
       requestBody:
         required: true
         content:
@@ -446,14 +466,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistrationResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        <<: *common_responses
     get:
       tags:
         - Discovery
       summary: Get Client Registration (configurable endpoint)
+      operationId: getClientRegistration
       security:
         - RegistrationAccessToken: []
       responses:
@@ -467,6 +485,7 @@ paths:
       tags:
         - Discovery
       summary: Update Client Registration (configurable endpoint)
+      operationId: updateClientRegistration
       security:
         - RegistrationAccessToken: []
       requestBody:
@@ -482,10 +501,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClientRegistration"
+        <<: *common_responses
     delete:
       tags:
         - Discovery
       summary: Delete Client Registration (configurable endpoint)
+      operationId: deleteClientRegistration
       security:
         - RegistrationAccessToken: []
       responses:
@@ -1077,6 +1098,15 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/UnauthorizedError"
+    TooManyRequests:
+      description: Too Many Requests - The client has exceeded their rate limit
+      headers:
+        Retry-After:
+          $ref: "#/components/parameters/RetryAfter"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
     InternalServerError:
       description: Internal Server Error - The server encountered an unexpected condition
       content:
@@ -1101,6 +1131,16 @@ components:
       type: http
       scheme: bearer
       description: Registration Access Token for managing client registration
+
+  x-common-responses: &common_responses
+    "400":
+      $ref: "#/components/responses/BadRequest"
+    "401":
+      $ref: "#/components/responses/Unauthorized"
+    "429":
+      $ref: "#/components/responses/TooManyRequests"
+    "500":
+      $ref: "#/components/responses/InternalServerError"
 
 x-global-headers:
   - $ref: "#/components/parameters/ParticipantId"
