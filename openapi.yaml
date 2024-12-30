@@ -1043,7 +1043,7 @@ components:
       required:
         - client_id
         - registration_access_token
-        - registration_client_uri
+        - client_id_issued_at
       properties:
         client_id:
           type: string
