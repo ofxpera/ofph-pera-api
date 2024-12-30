@@ -999,9 +999,9 @@ components:
           $ref: "#/components/schemas/endpointURIs"
         token_endpoint_auth_method:
           type: string
-          enum: ["private_key_jwt", "tls_client_auth"]
+          enum: ["private_key_jwt"]
           default: "private_key_jwt"
-          description: Authentication method for token endpoint as per FAPI requirements
+          description: Authentication method for token endpoint as per FAPI requirements, OFxPERA Phase 1 requires private_key_jwt
         grant_types:
           type: array
           items:
@@ -1077,7 +1077,6 @@ components:
             - issuer
             - authorization_endpoint
             - token_endpoint
-            - jwks_uri
           properties:
             issuer:
               type: string
@@ -1099,10 +1098,12 @@ components:
               type: string
               format: uri
               description: URL at the OP to which an RP can perform a redirect to
+            jwks:
+              $ref: "#/components/schemas/JWKSet"
             jwks_uri:
               type: string
               format: uri
-              description: URL of the OP's JSON Web Key Set document for token verification
+              description: URI for JSON Web Key Set containing public keys
             registration_endpoint:
               type: string
               format: uri
@@ -1111,8 +1112,9 @@ components:
           description: API Endpoints of the OFxPERA Participant as an OAuth client
           required:
             - redirect_uris
-            - jwks_uri
           properties:
+            jwks:
+              $ref: "#/components/schemas/JWKSet"
             jwks_uri:
               type: string
               format: uri
@@ -1124,6 +1126,9 @@ components:
                 format: uri
               minItems: 1
               description: Array of redirect URIs to be used in OAuth 2.0 flows
+          anyOf:
+            - required: ["jwks"]
+            - required: ["jwks_uri"]
 
     ClientRegistration:
       type: object
@@ -1139,6 +1144,9 @@ components:
           type: string
           enum: ["web", "native", "hybrid"]
           description: Type of application
+        client_id:
+          type: string
+          description: Client identifier
         client_name:
           type: string
           description: Name of the client
@@ -1177,9 +1185,7 @@ components:
         jwks_uri:
           type: string
           format: uri
-          description: |
-            URI for JSON Web Key Set containing public keys used for client authentication and request object signing. 
-            Must be specified if jwks is not provided.
+          description: URI for JSON Web Key Set containing public keys
         organization_name:
           type: string
           description: Legal name of the PERA Participant organization
@@ -1189,6 +1195,9 @@ components:
             type: string
             format: email
           description: Administrative contact emails
+      anyOf:
+        - required: ["jwks"]
+        - required: ["jwks_uri"]
     
     Error:
       type: object
