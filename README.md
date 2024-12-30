@@ -17,8 +17,8 @@ This repository contains the OpenAPI 3.0 specification for the OFxPERA API, whic
 ### OAuth/OpenID Connect APIs
 - `GET /oauth/auth` - Authorization endpoint
 - `POST /oauth/token` - Token endpoint
-- `GET /oauth/introspect` - Token introspection
-- `GET /oauth/userinfo` - UserInfo endpoint
+- `GET /oauth/introspect` - Token introspection (optional)
+- `GET /oauth/userinfo` - UserInfo endpoint (optional)
 
 ### Common APIs
 - `GET /common/customers/{id}/detail` - Get customer information
