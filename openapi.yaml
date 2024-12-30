@@ -133,6 +133,42 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /ofxpera/participants/{client_id}:
+    get:
+      operationId: getParticipant
+      tags:
+        - Bootstrap
+      summary: Get an OFxPERA Participant's registration information
+      description: API for retrieving registration information for a specific OFxPERA Participant
+      security:
+        - RegistrationAccessToken: []
+      parameters:
+        - name: client_id
+          in: path
+          required: true
+          description: Client identifier issued during participant registration
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved participant information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Participant"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /oauth/auth:
     get:
       operationId: authorizeOAuth
@@ -989,7 +1025,6 @@ components:
           description: Software statement containing participant metadata
         jwks:
           $ref: "#/components/schemas/JWKSet"
-          description: JSON Web Key Set for signing requests (required for FAPI)
         contact_details:
           type: object
           required:
@@ -1139,7 +1174,6 @@ components:
           description: JWT containing software statement from trusted authority
         jwks:
           $ref: "#/components/schemas/JWKSet"
-          description: JSON Web Key Set containing public keys used for client authentication and request object signing. Must include RSA or EC keys with 'sig' use parameter.
         jwks_uri:
           type: string
           format: uri
