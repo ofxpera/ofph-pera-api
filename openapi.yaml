@@ -1224,21 +1224,6 @@ components:
             type: string
           description: Additional details about the error
 
-    BadRequestError:
-      allOf:
-        - $ref: "#/components/schemas/Error"
-        - description: Bad Request - The server cannot process the request due to a client error
-
-    UnauthorizedError:
-      allOf:
-        - $ref: "#/components/schemas/Error"
-        - description: Unauthorized - Authentication is required and has failed or not been provided
-
-    NotFound:
-      allOf:
-        - $ref: "#/components/schemas/Error"
-        - description: Not Found - The requested resource could not be found
-
     JWKSet:
       type: object
       title: JWKSet
