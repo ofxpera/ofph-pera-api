@@ -972,7 +972,7 @@ components:
       required:
         - participant_name
         - endpoint_uris
-        - jwkConfiguration
+        - jwks
       properties:
         participant_id:
           type: string
@@ -1024,8 +1024,8 @@ components:
         software_statement:
           type: string
           description: Software statement containing participant metadata
-        jwkConfiguration:
-          $ref: "#/components/schemas/jwkConfiguration"
+        jwks:
+          $ref: "#/components/schemas/jwksConfiguration"
         contact_details:
           type: object
           required:
@@ -1060,6 +1060,11 @@ components:
           description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
 
     ParticipantConfig:
+      oneOf:
+        - $ref: "#/components/schemas/AuthServer"
+        - $ref: "#/components/schemas/OAuthClient"
+
+    AuthServer:
       type: object
       required:
         - participant
@@ -1068,63 +1073,75 @@ components:
         participant:
           $ref: "#/components/schemas/Participant"
         internal_uris:
-          $ref: "#/components/schemas/endpointURIs"
+          $ref: "#/components/schemas/AuthServerURIs"
 
-    jwkConfiguration:
+    OAuthClient:
+      type: object
+      required:
+        - participant
+      properties:
+        participant:
+          $ref: "#/components/schemas/Participant"
+
+    jwksConfiguration:
       anyOf:
+        - $ref: "#/components/schemas/JWKSet"
         - type: string
           title: JWKSetURI
           format: uri
           description: URI for JSON Web Key Set containing public keys
-        - $ref: "#/components/schemas/JWKSet"
+
+    AuthServerURIs:
+      title: AuthorizationServer
+      description: Endpoints of the OFxPERA Participant as an Authorization Server
+      required:
+        - issuer
+        - authorization_endpoint
+        - token_endpoint
+      properties:
+        issuer:
+          type: string
+          format: uri
+          description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
+        authorization_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's OAuth 2.0 Authorization Endpoint
+        token_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's OAuth 2.0 Token Endpoint
+        userinfo_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's UserInfo Endpoint
+        end_session_endpoint:
+          type: string
+          format: uri
+          description: URL at the OP to which an RP can perform a redirect to
+        registration_endpoint:
+          type: string
+          format: uri
+          description: URL of the OP's Dynamic Client Registration Endpoint
+
+    OAuthClientURIs:
+      title: OAuthClient
+      description: API Endpoints of the OFxPERA Participant as an OAuth client
+      required:
+        - redirect_uris
+      properties:
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+          minItems: 1
+          description: Array of redirect URIs to be used in OAuth 2.0 flows
 
     endpointURIs:
-      anyOf:
-        - type: object
-          title: AuthorizationServer
-          description: Endpoints of the OFxPERA Participant as an Authorization Server
-          required:
-            - issuer
-            - authorization_endpoint
-            - token_endpoint
-          properties:
-            issuer:
-              type: string
-              format: uri
-              description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
-            authorization_endpoint:
-              type: string
-              format: uri
-              description: URL of the OP's OAuth 2.0 Authorization Endpoint
-            token_endpoint:
-              type: string
-              format: uri
-              description: URL of the OP's OAuth 2.0 Token Endpoint
-            userinfo_endpoint:
-              type: string
-              format: uri
-              description: URL of the OP's UserInfo Endpoint
-            end_session_endpoint:
-              type: string
-              format: uri
-              description: URL at the OP to which an RP can perform a redirect to
-            registration_endpoint:
-              type: string
-              format: uri
-              description: URL of the OP's Dynamic Client Registration Endpoint
-        - type: object
-          title: OAuthClient
-          description: API Endpoints of the OFxPERA Participant as an OAuth client
-          required:
-            - redirect_uris
-          properties:
-            redirect_uris:
-              type: array
-              items:
-                type: string
-                format: uri
-              minItems: 1
-              description: Array of redirect URIs to be used in OAuth 2.0 flows
+      oneOf:
+        - $ref: "#/components/schemas/OAuthClientURIs"
+        - $ref: "#/components/schemas/AuthServerURIs"
 
     ClientRegistration:
       type: object
