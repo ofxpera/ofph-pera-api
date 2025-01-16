@@ -1,3 +1,7 @@
 .42c/**
 .idea
 .qodo
+target
+build
+.DS_Store
+.vscode
