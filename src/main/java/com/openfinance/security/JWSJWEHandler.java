@@ -8,48 +8,110 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
- * Record to represent the cryptographic result
+ * Sealed interface to represent cryptographic operations
  */
-record CryptoResult(String token, String operation, Instant timestamp) {
+sealed interface CryptoOperation permits CryptoOperation.SignAndEncrypt, CryptoOperation.DecryptAndVerify {
+    record SignAndEncrypt() implements CryptoOperation {}
+    record DecryptAndVerify() implements CryptoOperation {}
+}
+
+/**
+ * Record to represent the cryptographic result with enhanced validation
+ * @param token The resulting token from the operation
+ * @param operation The type of operation performed
+ * @param timestamp The timestamp of when the operation was performed
+ */
+record CryptoResult(String token, CryptoOperation operation, Instant timestamp) {
+    public CryptoResult {
+        if (token == null || token.isBlank()) {
+            throw new IllegalArgumentException("Token cannot be null or blank");
+        }
+        if (operation == null) {
+            throw new IllegalArgumentException("Operation cannot be null");
+        }
+        if (timestamp == null) {
+            throw new IllegalArgumentException("Timestamp cannot be null");
+        }
+    }
+
+    /**
+     * Returns a JSON representation of this result
+     * @return JSONObject containing the operation, timestamp, and token
+     */
+    public JSONObject toJson() {
+        return new JSONObject()
+            .put("operation", operation.getClass().getSimpleName())
+            .put("timestamp", timestamp.toString())
+            .put("token", token);
+    }
+
     @Override
     public String toString() {
-        return """
-               Operation: %s
-               Timestamp: %s
-               Token: %s
-               """.formatted(operation, timestamp, token);
+        return toJson().toString(2); // return formatted JSON string with 2-space indentation
     }
 }
 
 /**
  * Handles JWS (signing) and JWE (encryption) operations between two entities
+ * Enhanced with Java 21 features and improved error handling
  */
-public class JWSJWEHandler {
-    private final RSAKey senderSigningKey;      // Entity A's signing key pair
-    private final RSAKey receiverEncryptionKey; // Entity B's encryption key pair
+public final class JWSJWEHandler implements AutoCloseable {
+    private final RSAKey senderSigningKey;
+    private final RSAKey receiverEncryptionKey;
+    private final ExecutorService executorService;
 
     public JWSJWEHandler() throws JOSEException {
-        // Generate RSA key pairs for demonstration
-        // In production, these would be loaded from secure storage
-        this.senderSigningKey = new RSAKeyGenerator(2048)
+        // Use virtual threads for async operations
+        this.executorService = Executors.newVirtualThreadPerTaskExecutor();
+        
+        // Generate RSA key pairs with enhanced security
+        this.senderSigningKey = new RSAKeyGenerator(4096)
                 .keyID("sender-signing-key")
                 .generate();
         
-        this.receiverEncryptionKey = new RSAKeyGenerator(2048)
+        this.receiverEncryptionKey = new RSAKeyGenerator(4096)
                 .keyID("receiver-encryption-key")
                 .generate();
     }
 
     /**
-     * Signs and encrypts the payload
+     * Signs and encrypts the payload asynchronously
+     * @param payload The payload to sign and encrypt
+     * @return A Future containing the CryptoResult
+     * @throws IllegalArgumentException if payload is null or empty
+     */
+    public Future<CryptoResult> signAndEncryptAsync(String payload) {
+        if (payload == null || payload.isBlank()) {
+            throw new IllegalArgumentException("Payload cannot be null or empty");
+        }
+
+        return executorService.submit(() -> {
+            try {
+                return signAndEncrypt(payload);
+            } catch (JOSEException e) {
+                throw new SecurityException("Failed to sign and encrypt payload", e);
+            }
+        });
+    }
+
+    /**
+     * Signs and encrypts the payload synchronously
      * @param payload The payload to sign and encrypt
      * @return A CryptoResult containing the signed and encrypted token
+     * @throws JOSEException if signing or encryption fails
+     * @throws IllegalArgumentException if payload is null or empty
      */
     public CryptoResult signAndEncrypt(String payload) throws JOSEException {
-        // Step 1: Create the JWS
-        var jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256)
+        if (payload == null || payload.isBlank()) {
+            throw new IllegalArgumentException("Payload cannot be null or empty");
+        }
+
+        var jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS512) // Enhanced to RS512
                 .keyID(senderSigningKey.getKeyID())
                 .build();
 
@@ -57,9 +119,9 @@ public class JWSJWEHandler {
         var signer = new RSASSASigner(senderSigningKey);
         jwsObject.sign(signer);
 
-        // Step 2: Create the JWE
         var jweHeader = new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
-                .contentType("JWS") // indicates that the payload is a JWS
+                .contentType("JWS")
+                .compressionAlgorithm(CompressionAlgorithm.DEF) // Added compression
                 .build();
 
         var jweObject = new JWEObject(jweHeader, new Payload(jwsObject.serialize()));
@@ -68,35 +130,73 @@ public class JWSJWEHandler {
 
         return new CryptoResult(
             jweObject.serialize(),
-            "SIGN_AND_ENCRYPT",
+            new CryptoOperation.SignAndEncrypt(),
             Instant.now()
         );
     }
 
     /**
-     * Decrypts and verifies the token
+     * Decrypts and verifies the token asynchronously
      * @param token The token to decrypt and verify
-     * @return A CryptoResult containing the decrypted and verified payload
+     * @return A Future containing the CryptoResult
+     * @throws IllegalArgumentException if token is null or empty
      */
-    public CryptoResult decryptAndVerify(String token) throws JOSEException, ParseException {
-        // Step 1: Decrypt the JWE using receiver's private key
-        var jweObject = JWEObject.parse(token);
-        var decrypter = new RSADecrypter(receiverEncryptionKey);
-        jweObject.decrypt(decrypter);
-
-        // Step 2: Verify the JWS using sender's public key
-        var jwsObject = JWSObject.parse(jweObject.getPayload().toString());
-        var verifier = new RSASSAVerifier(senderSigningKey.toPublicJWK());
-        
-        if (!jwsObject.verify(verifier)) {
-            throw new JOSEException("JWS signature verification failed");
+    public Future<CryptoResult> decryptAndVerifyAsync(String token) {
+        if (token == null || token.isBlank()) {
+            throw new IllegalArgumentException("Token cannot be null or empty");
         }
 
-        return new CryptoResult(
-            jwsObject.getPayload().toString(),
-            "DECRYPT_AND_VERIFY",
-            Instant.now()
-        );
+        return executorService.submit(() -> {
+            try {
+                return decryptAndVerify(token);
+            } catch (Exception e) {
+                throw new SecurityException("Failed to decrypt and verify token", e);
+            }
+        });
+    }
+
+    /**
+     * Decrypts and verifies the token synchronously
+     * @param token The token to decrypt and verify
+     * @return A CryptoResult containing the decrypted and verified payload
+     * @throws JOSEException if decryption or verification fails
+     * @throws ParseException if token parsing fails
+     * @throws IllegalArgumentException if token is null or empty
+     */
+    public CryptoResult decryptAndVerify(String token) throws JOSEException, ParseException {
+        if (token == null || token.isBlank()) {
+            throw new IllegalArgumentException("Token cannot be null or empty");
+        }
+
+        try {
+            var jweObject = JWEObject.parse(token);
+            var decrypter = new RSADecrypter(receiverEncryptionKey);
+            jweObject.decrypt(decrypter);
+
+            var jwsObject = JWSObject.parse(jweObject.getPayload().toString());
+            var verifier = new RSASSAVerifier(senderSigningKey.toPublicJWK());
+            
+            if (!jwsObject.verify(verifier)) {
+                throw new JOSEException("JWS signature verification failed");
+            }
+
+            return new CryptoResult(
+                jwsObject.getPayload().toString(),
+                new CryptoOperation.DecryptAndVerify(),
+                Instant.now()
+            );
+        } catch (ParseException | JOSEException e) {
+            throw switch (e) {
+                case ParseException pe -> new JOSEException("Failed to parse token", pe);
+                case JOSEException je -> je;
+                default -> new JOSEException("Unexpected error during decryption/verification", e);
+            };
+        }
+    }
+
+    @Override
+    public void close() {
+        executorService.shutdown();
     }
 
     public static void main(String[] args) {
@@ -105,16 +205,16 @@ public class JWSJWEHandler {
             var handler = new JWSJWEHandler();
 
             // Create sample payload using text block (Java 17 feature)
-            var payload = new JSONObject("""
+            var payload = """
                 {
                     "message": "Hello, World!",
                     "timestamp": "%s",
                     "sender": "Entity A"
                 }
-                """.formatted(Instant.now()));
+                """.formatted(Instant.now());
 
             // Sign and encrypt
-            var signedAndEncrypted = handler.signAndEncrypt(payload.toString());
+            var signedAndEncrypted = handler.signAndEncrypt(payload);
             System.out.println("Signed and Encrypted Result:");
             System.out.println(signedAndEncrypted);
 

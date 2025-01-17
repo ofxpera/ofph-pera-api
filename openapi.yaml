@@ -6,7 +6,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  x-copyright: Copyright © 2024 OFxPERA Contributors
+  x-copyright: Copyright 2024 OFxPERA Contributors
   x-terms-of-service: |
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -971,12 +971,12 @@ components:
       title: Participant
       required:
         - participant_name
-        - endpoint_uris
+        - participant_type
         - jwks
       properties:
         participant_id:
           type: string
-          description: Unique identifier assigned to the participant
+          description: Unique identifier for the participant
         participant_name:
           type: string
           description: Trading name of the participant
@@ -984,49 +984,16 @@ components:
           type: array
           items:
             type: string
-            enum: [PERA_ADMIN, CONTRIBUTOR_FI]
+            enum: ["oauth_client", "auth_server"]
           minItems: 1
-          uniqueItems: true
-          description: Type(s) of participant in the PERA ecosystem. Can be one or more roles (e.g., ['PERA_ADMIN', 'CONTRIBUTOR_FI'] for participants that function as both PERA administrator and contributor financial institution)
-        registered_name:
-          type: string
-          description: Legal registered name of the participant
+          description: Types of roles this participant can perform
         status:
           type: string
-          enum: [ACTIVE, INACTIVE, MAINTENANCE]
-          default: ACTIVE
-          description: Status of the participant
-        endpoint_uris:
-          $ref: "#/components/schemas/endpointURIs"
-        token_endpoint_auth_method:
-          type: string
-          enum: ["private_key_jwt"]
-          default: "private_key_jwt"
-          description: Authentication method for token endpoint as per FAPI requirements, OFxPERA Phase 1 requires private_key_jwt
-        grant_types:
-          type: array
-          items:
-            type: string
-            enum: ["authorization_code", "refresh_token"]
-          default: ["authorization_code"]
-          description: Allowed OAuth 2.0 grant types (FAPI requires authorization_code)
-        response_types:
-          type: array
-          items:
-            type: string
-            enum: ["code"]
-          default: ["code"]
-          description: Allowed OAuth 2.0 response types (FAPI requires code flow)
-        scope:
-          type: string
-          default: "openid profile"
-          description: Space-separated list of requested scopes (openid is required for FAPI)
-        software_statement:
-          type: string
-          description: Software statement containing participant metadata
+          enum: ["active", "inactive", "suspended"]
+          default: "active"
         jwks:
-          $ref: "#/components/schemas/jwksConfiguration"
-        contact_details:
+          $ref: "#/components/schemas/JWKSet"
+        contact:
           type: object
           required:
             - phone
@@ -1034,9 +1001,24 @@ components:
           properties:
             phone:
               type: string
+              description: Contact phone number
             email:
               type: string
               format: email
+              description: Contact email address
+        address:
+          $ref: "#/components/schemas/Address"
+
+    OAuthClient:
+      type: object
+      required:
+        - participant
+        - client_config
+      properties:
+        participant:
+          $ref: "#/components/schemas/Participant"
+        client_config:
+          $ref: "#/components/schemas/ClientRegistration"
 
     ClientRegistrationResponse:
       type: object
@@ -1068,20 +1050,12 @@ components:
       type: object
       required:
         - participant
-        - internal_uris
+        - authserver_config
       properties:
         participant:
           $ref: "#/components/schemas/Participant"
-        internal_uris:
+        authserver_config:
           $ref: "#/components/schemas/AuthServerURIs"
-
-    OAuthClient:
-      type: object
-      required:
-        - participant
-      properties:
-        participant:
-          $ref: "#/components/schemas/Participant"
 
     jwksConfiguration:
       anyOf:
