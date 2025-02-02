@@ -119,7 +119,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Participant"
+                  $ref: "#/components/schemas/ParticipantConfig"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -133,7 +133,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /ofxpera/participants/{client_id}:
+  /ofxpera/participants/{participant_id}:
     get:
       operationId: getParticipant
       tags:
@@ -143,10 +143,10 @@ paths:
       security:
         - RegistrationAccessToken: []
       parameters:
-        - name: client_id
+        - name: participant_id
           in: path
           required: true
-          description: Client identifier issued during participant registration
+          description: Participant identifier issued during participant registration
           schema:
             type: string
       responses:
@@ -155,7 +155,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Participant"
+                $ref: "#/components/schemas/ParticipantConfig"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -456,7 +456,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /common/customers/{id}/detail:
+  /common/customers/{customer_id}/detail:
     get:
       operationId: getCustomerDetail
       tags:
@@ -465,7 +465,7 @@ paths:
       security:
         - OAuth2: []
       parameters:
-        - name: id
+        - name: customer_id
           in: path
           description: Customer ID, this should map to the sub field returned from the OIDC token endpoint or the sub field returned from the /oauth/userinfo endpoint
           required: true
