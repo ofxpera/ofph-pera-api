@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.1
+  version: 0.0.2
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.1
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.2
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -170,6 +170,87 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
   /oauth/auth:
+    post:
+      operationId: OAuthPAR
+      tags:
+        - OAuth
+      summary: Phase 2 - Authorization API for FI-initiated onboarding
+      description: POST version of the authorization API that initiates the authorization flow
+      security:
+        - ParticipantId: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - participant_id
+                - response_type
+              properties:
+                participant_id:
+                  type: string
+                  description: Participant identifier of the FI issued during registration
+                endorsement_details:
+                  $ref: "#/components/schemas/EndorsementDetails"
+                authorization_code:
+                  type: string
+                  description: Authorization code
+                response_type:
+                  type: string
+                  enum: [code]
+                  description: Must be set to "code" for authorization code flow
+                scope:
+                  type: array
+                  items:
+                    type: string
+                    enum: [openid, profile, email, address, phone]
+                  description: Space-separated list of requested scope values, OFxPERA requires openid to be included to maintain compatibility with OIDC.
+                token_endpoint:
+                  type: string
+                  format: uri
+                  description: URI of the token endpoint for retrieving access tokens
+                code_challenge:
+                  type: string
+                  description: Code challenge for PKCE
+                code_challenge_method:
+                  type: string
+                  enum: [S256]
+                  description: Code challenge method for PKCE
+                state:
+                  type: string
+                  description: Opaque value to maintain state between request and callback
+                prompt:
+                  type: string
+                  description: Prompt for the authorization request
+                nonce:
+                  type: string
+                  description: Random value used to prevent replay attacks
+       
+      responses:
+        "200":
+          description: Authorization successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_uri:
+                    type: string
+                    format: uri
+                    description: URI to redirect the user to for authorization
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     get:
       operationId: authorizeOAuth
       tags:
@@ -443,6 +524,41 @@ paths:
                   phone_number_verified:
                     type: boolean
                     description: Indicates whether the user's phone number has been verified.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /common/customers/endorse:
+    get:
+      operationId: forwardCustomerEndorsement
+      tags:
+        - Common
+      summary: Forward customer endorsement
+      parameters:
+        - name: endorsement
+          in: query
+          description: Encrypted endorsement payload in JWS/JWE format
+          required: true
+          schema:
+            type: string
+      security:
+        - OAuth2: []
+      responses:
+        "200":
+          description: Successfully forwarded customer endorsement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EndorsementResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1259,6 +1375,43 @@ components:
                 type: string
                 description: X.509 certificate SHA-1 thumbprint
                 example: "dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ"
+
+    EndorsementResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        endorsement_details:
+          $ref: '#/components/schemas/EndorsementDetails'
+      required:
+        - status
+        - timestamp
+
+    EndorsementDetails:
+      type: object
+      properties:
+        endorser_id:
+          type: string
+          description: Endorser's unique identifier
+        sub:
+          type: string
+          description: Subject – FI's unique identifier for the End-User
+        endorsement_date:
+          type: string
+          format: date-time
+          description: Date and time the endorsement was created
+        reference_id:
+          type: string
+          description: Reference ID from the PERA Admin
+      required:
+        - endorser_id
+        - endorsement_date
 
   responses:
     NotFound:
