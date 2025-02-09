@@ -174,7 +174,7 @@ paths:
       operationId: OAuthPAR
       tags:
         - OAuth
-      summary: Phase 2 - Authorization API for FI-initiated onboarding
+      summary: "[Phase 2] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow
       security:
         - ParticipantId: []
@@ -612,7 +612,7 @@ paths:
       operationId: getOpenIdConfiguration
       tags:
         - Discovery
-      summary: OpenID Connect Discovery
+      summary: Optional - OpenID Connect Discovery
       description: Retrieve OpenID Connect configuration information
       security:
         - ParticipantKey: []
