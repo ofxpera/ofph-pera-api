@@ -1608,6 +1608,7 @@ components:
       type: object
       required:
         - sub
+        - arrangementId
         - pii
         - cdd
         - presentedIds
@@ -1616,6 +1617,9 @@ components:
           type: string
           maxLength: 50
           description: Subject – FI's unique identifier for the End-User
+        arrangementId:
+          type: string
+          description: The unique identifier for the Consent Arrangement
         personalInformation:
           $ref: "#/components/schemas/PersonalInformation"
         presentedIds:
