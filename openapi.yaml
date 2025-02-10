@@ -1056,6 +1056,379 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /consent/arrangements/{arrangement_id}/history:
+    get:
+      operationId: getConsentHistory
+      tags:
+        - Consent
+      summary: Get consent arrangement history
+      description: |
+        Retrieve the full history of changes to a consent arrangement.
+        Based on:
+        - Australia CDR Consent History API
+        - UK Open Banking Consent Audit Requirements
+      security:
+        - OAuth2: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the consent arrangement
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Consent arrangement history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentHistory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/bulk:
+    post:
+      operationId: createBulkConsent
+      tags:
+        - Consent
+      summary: Create bulk consent arrangements
+      description: |
+        Create multiple consent arrangements in a single request.
+        Based on:
+        - Korea MyData Bulk Consent API
+        - Singapore SGFinDex Multi-Institution Consent
+      security:
+        - OAuth2: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkConsentRequest'
+      responses:
+        '201':
+          description: Bulk consent arrangements created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkConsentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/templates:
+    get:
+      operationId: listConsentTemplates
+      tags:
+        - Consent
+      summary: List available consent templates
+      description: |
+        Retrieve available consent templates that can be used to create new arrangements.
+        Based on:
+        - Australia CDR Consent Taxonomy
+        - UK Open Banking Standard Permissions
+      security:
+        - OAuth2: []
+      parameters:
+        - name: category
+          in: query
+          description: Filter templates by category
+          schema:
+            type: string
+        - name: purpose
+          in: query
+          description: Filter templates by purpose
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of consent templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentTemplate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/arrangements/{arrangement_id}/extend:
+    post:
+      operationId: extendConsentDuration
+      tags:
+        - Consent
+      summary: Extend consent arrangement duration
+      description: |
+        Extend the duration of an existing consent arrangement.
+        Based on:
+        - Australia CDR Consent Amendment
+        - UK Open Banking Re-authentication
+      security:
+        - OAuth2: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the consent arrangement
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentExtensionRequest'
+      responses:
+        '200':
+          description: Consent duration extended successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/customers/{customer_id}/arrangements:
+    get:
+      operationId: getCustomerConsents
+      tags:
+        - Consent
+      summary: Get customer's consent arrangements
+      description: |
+        Retrieve all consent arrangements for a specific customer.
+        Based on:
+        - UK Open Banking Customer Consent Management
+        - Australia CDR Consumer Dashboard APIs
+        - Singapore SGFinDex Customer Consent View
+      security:
+        - OAuth2: []
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: The customer's unique identifier
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter consents by status
+          schema:
+            type: string
+            enum: [active, expired, revoked, suspended]
+        - name: data_holder_id
+          in: query
+          description: Filter by specific data holder/institution
+          schema:
+            type: string
+        - name: purpose
+          in: query
+          description: Filter by consent purpose
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer's consent arrangements
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - customer_id
+                  - arrangements
+                properties:
+                  customer_id:
+                    type: string
+                  total_arrangements:
+                    type: integer
+                  active_arrangements:
+                    type: integer
+                  arrangements:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/customers/{customer_id}/arrangements/bulk-update:
+    post:
+      operationId: bulkUpdateCustomerConsents
+      tags:
+        - Consent
+      summary: Bulk update customer's consent arrangements
+      description: |
+        Update multiple consent arrangements for a specific customer in a single request.
+        Based on:
+        - Australia CDR Bulk Consumer Update
+        - Korea MyData Consent Management
+      security:
+        - OAuth2: []
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: The customer's unique identifier
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - updates
+              properties:
+                updates:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - arrangement_id
+                      - action
+                    properties:
+                      arrangement_id:
+                        type: string
+                      action:
+                        type: string
+                        enum: [revoke, suspend, resume, extend]
+                      reason:
+                        type: string
+                      extension_details:
+                        $ref: '#/components/schemas/ConsentExtensionRequest'
+                  minItems: 1
+                  maxItems: 50
+      responses:
+        '200':
+          description: Bulk update results
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - customer_id
+                  - results
+                properties:
+                  customer_id:
+                    type: string
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - arrangement_id
+                        - status
+                      properties:
+                        arrangement_id:
+                          type: string
+                        status:
+                          type: string
+                          enum: [success, failed]
+                        error:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                            message:
+                              type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/customers/{customer_id}/dashboard:
+    get:
+      operationId: getCustomerConsentDashboard
+      tags:
+        - Consent
+      summary: Get customer's consent dashboard
+      description: |
+        Retrieve a comprehensive view of customer's consent arrangements and data sharing.
+        Based on:
+        - Australia CDR Consumer Dashboard
+        - UK Open Banking Consent Dashboard
+        - Singapore SGFinDex Customer Portal
+      security:
+        - OAuth2: []
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: The customer's unique identifier
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer's consent dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentDashboard'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   parameters:
     ParticipantId:
@@ -1764,6 +2137,211 @@ components:
         reason:
           type: string
           description: Reason for the status update
+
+    ConsentHistory:
+      type: object
+      required:
+        - arrangement_id
+        - events
+      properties:
+        arrangement_id:
+          type: string
+          description: The ID of the consent arrangement
+        events:
+          type: array
+          items:
+            type: object
+            required:
+              - event_type
+              - timestamp
+              - actor
+            properties:
+              event_type:
+                type: string
+                enum:
+                  - created
+                  - updated
+                  - suspended
+                  - resumed
+                  - revoked
+                  - expired
+                  - extended
+              timestamp:
+                type: string
+                format: date-time
+              actor:
+                type: string
+                description: The entity that performed the action (e.g., user_id, system)
+              details:
+                type: object
+                description: Additional event-specific details
+              previous_state:
+                type: object
+                description: State before the change
+              new_state:
+                type: object
+                description: State after the change
+
+    BulkConsentRequest:
+      type: object
+      required:
+        - arrangements
+      properties:
+        arrangements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArrangementRequest'
+          minItems: 1
+          maxItems: 50
+        batch_id:
+          type: string
+          description: Optional identifier for the bulk operation
+
+    BulkConsentResponse:
+      type: object
+      required:
+        - results
+      properties:
+        batch_id:
+          type: string
+        results:
+          type: array
+          items:
+            type: object
+            required:
+              - status
+              - arrangement
+            properties:
+              status:
+                type: string
+                enum: [success, failed]
+              arrangement:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+              error:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+
+    ConsentTemplate:
+      type: object
+      required:
+        - template_id
+        - name
+        - permissions
+        - purpose
+      properties:
+        template_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        purpose:
+          type: string
+        default_duration:
+          type: object
+          properties:
+            value:
+              type: integer
+            unit:
+              type: string
+              enum: [days, months, years]
+        terms_and_conditions:
+          type: string
+        data_usage_policy:
+          type: string
+        version:
+          type: string
+
+    ConsentExtensionRequest:
+      type: object
+      required:
+        - new_end_date
+      properties:
+        new_end_date:
+          type: string
+          format: date-time
+          description: New end date for the consent arrangement
+        reason:
+          type: string
+          description: Reason for extending the consent
+        additional_terms:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+
+    ConsentDashboard:
+      type: object
+      required:
+        - customer_id
+        - summary
+      properties:
+        customer_id:
+          type: string
+        summary:
+          type: object
+          required:
+            - total_arrangements
+            - active_arrangements
+          properties:
+            total_arrangements:
+              type: integer
+            active_arrangements:
+              type: integer
+            arrangements_by_status:
+              type: object
+              properties:
+                active:
+                  type: integer
+                expired:
+                  type: integer
+                revoked:
+                  type: integer
+                suspended:
+                  type: integer
+            arrangements_by_purpose:
+              type: array
+              items:
+                type: object
+                properties:
+                  purpose:
+                    type: string
+                  count:
+                    type: integer
+            data_holders:
+              type: array
+              items:
+                type: object
+                properties:
+                  data_holder_id:
+                    type: string
+                  name:
+                    type: string
+                  active_arrangements:
+                    type: integer
+            recent_activity:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConsentHistory'
+            expiring_soon:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+              description: Arrangements expiring in the next 30 days
 
   responses:
     NotFound:
