@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.2
+  version: 0.0.3
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -34,6 +34,8 @@ tags:
     description: Common APIs used across different use cases
   - name: Discovery
     description: Optional discovery endpoints for OpenID/OAuth configuration and key management
+  - name: Consent
+    description: Consent management endpoints
 
 paths:
   /ofxpera/participants:
@@ -843,6 +845,217 @@ paths:
           $ref: "#/components/responses/TooManyRequests"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  /consent/arrangements:
+    post:
+      operationId: createConsentArrangement
+      tags:
+        - Consent
+      summary: Create a consent arrangement
+      description: |
+        Create a new consent arrangement between a data holder and data recipient.
+        Based on:
+        - UK Open Banking Consent API v3.1.10
+        - Australia CDR Consent Management Standards v1.14.0
+        - Singapore SGFinDex Consent Framework
+      security:
+        - OAuth2: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentArrangementRequest'
+      responses:
+        '201':
+          description: Consent arrangement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      operationId: listConsentArrangements
+      tags:
+        - Consent
+      summary: List consent arrangements
+      description: |
+        Retrieve a list of active consent arrangements for the authenticated user.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Get Consent API
+      security:
+        - OAuth2: []
+      parameters:
+        - name: status
+          in: query
+          description: Filter consents by status
+          schema:
+            type: string
+            enum: [active, expired, revoked, suspended]
+        - name: from_date
+          in: query
+          description: Filter consents created after this date
+          schema:
+            type: string
+            format: date-time
+        - name: to_date
+          in: query
+          description: Filter consents created before this date
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: List of consent arrangements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /consent/arrangements/{arrangement_id}:
+    get:
+      operationId: getConsentArrangement
+      tags:
+        - Consent
+      summary: Get consent arrangement details
+      description: |
+        Retrieve details of a specific consent arrangement.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Get Consent API
+      security:
+        - OAuth2: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the consent arrangement
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Consent arrangement details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      operationId: revokeConsentArrangement
+      tags:
+        - Consent
+      summary: Revoke consent arrangement
+      description: |
+        Revoke an existing consent arrangement.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Revoke Consent API
+        - Korea MyData Consent Revocation API
+      security:
+        - OAuth2: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the consent arrangement to revoke
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Consent arrangement successfully revoked
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    put:
+      operationId: updateConsentStatus
+      tags:
+        - Consent
+      summary: Update consent arrangement status
+      description: |
+        Update the status of a consent arrangement (e.g., suspend, resume).
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Update Consent API
+      security:
+        - OAuth2: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the consent arrangement
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentStatusUpdate'
+      responses:
+        '200':
+          description: Consent status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   parameters:
     ParticipantId:
@@ -1416,6 +1629,141 @@ components:
       required:
         - endorser_id
         - endorsement_date
+
+    ConsentArrangementRequest:
+      type: object
+      required:
+        - data_holder_id
+        - permissions
+        - sharing_duration
+        - purpose
+      properties:
+        data_holder_id:
+          type: string
+          description: Identifier of the data holder (financial institution)
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              - PERA_BASIC_INFO
+              - PERA_BALANCE
+              - PERA_TRANSACTIONS
+              - PERA_INVESTMENT_DETAILS
+              - PERA_STATEMENTS
+          minItems: 1
+          description: Permissions being requested for data access
+        sharing_duration:
+          type: object
+          required:
+            - start_date
+            - end_date
+          properties:
+            start_date:
+              type: string
+              format: date-time
+              description: When the consent arrangement should start
+            end_date:
+              type: string
+              format: date-time
+              description: When the consent arrangement should end
+        purpose:
+          type: string
+          description: Purpose for which the data will be used
+        additional_terms:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+          description: Additional terms and conditions specific to this arrangement
+
+    ConsentArrangementResponse:
+      type: object
+      required:
+        - arrangement_id
+        - status
+        - created_at
+        - data_holder_id
+        - permissions
+        - sharing_duration
+        - purpose
+      properties:
+        arrangement_id:
+          type: string
+          description: Unique identifier for the consent arrangement
+        status:
+          type: string
+          enum:
+            - active
+            - expired
+            - revoked
+            - suspended
+          description: Current status of the consent arrangement
+        created_at:
+          type: string
+          format: date-time
+          description: When the consent arrangement was created
+        last_updated_at:
+          type: string
+          format: date-time
+          description: When the consent arrangement was last updated
+        data_holder_id:
+          type: string
+          description: Identifier of the data holder
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Granted permissions for data access
+        sharing_duration:
+          type: object
+          properties:
+            start_date:
+              type: string
+              format: date-time
+            end_date:
+              type: string
+              format: date-time
+        purpose:
+          type: string
+          description: Purpose for which the data will be used
+        additional_terms:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+        revocation_info:
+          type: object
+          properties:
+            revoked_at:
+              type: string
+              format: date-time
+            reason:
+              type: string
+          description: Information about consent revocation if applicable
+
+    ConsentStatusUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - active
+            - suspended
+          description: New status for the consent arrangement
+        reason:
+          type: string
+          description: Reason for the status update
 
   responses:
     NotFound:
