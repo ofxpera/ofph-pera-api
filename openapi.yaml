@@ -170,7 +170,110 @@ paths:
           $ref: "#/components/responses/TooManyRequests"
         "500":
           $ref: "#/components/responses/InternalServerError"
+ 
+  /ofxpera/product:
+   post:
+      operationId: registerProduct
+      tags:
+        - Bootstrap
+      summary: Register a PERA Admin Product
+      description: API that allows PERA Admin to register a PERA product. 
+      security:
+        - RegistrationAccessToken: []
+      responses:
+        "200":
+          description: Product successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  
+  /ofxpera/product/{product_id}:
+   put:
+      operationId: updateProduct
+      tags:
+        - Bootstrap
+      summary: Update a PERA Admin Product
+      description: API that allows PERA Admin to update their product. 
+      security:
+        - RegistrationAccessToken: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Product identifier issued during product registration
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Product successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
+  /ofxpera/product/{participant_id}:
+   get:
+      operationId: listProductByParticipant
+      tags:
+        - Bootstrap
+      summary: Get a list of PERA products associated with PERA Admin
+      description: API for retrieving all registered products associated with the PERA Admin. 
+      security:
+        - RegistrationAccessToken: []
+      parameters:
+        - name: participant_id
+          in: path
+          required: true
+          description: Participant identifier issued during Participant registration
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the list of registered products associated with the PERA Admin.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+          
   /oauth/auth:
     post:
       operationId: OAuthPAR
@@ -1714,7 +1817,35 @@ components:
               description: Contact email address
         address:
           $ref: "#/components/schemas/Address"
-
+          
+    Product:
+        type: object
+        properties:
+          product_id:
+            type: string
+            description: Unique Identifier for the product
+          product_name:
+            type: string
+            description: The name of the product
+          product_description:
+            type: string
+            description: A detailed description of the product
+          product_risk_rating:
+            type: string
+            description: The risk rating of the product
+            enum:
+              - Conservative
+              - Moderate
+              - Aggressive
+          product_kiid_uri:
+            type: string
+            description: URI to the KIID (Key Investor Information Document) for the product
+        required:
+          - product_name
+          - product_description
+          - product_risk_rating
+          - product_kiid_uri
+    
     OAuthClient:
       type: object
       required:
