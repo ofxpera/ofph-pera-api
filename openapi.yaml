@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.3
+  version: 0.0.4
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -396,13 +396,13 @@ paths:
             format: uri
         - name: code_challenge
           in: query
-          required: true
+          required: false
           description: Code challenge for PKCE
           schema:
             type: string
         - name: code_challenge_method
           in: query
-          required: true
+          required: false
           description: Code challenge method for PKCE
           schema:
             type: string
