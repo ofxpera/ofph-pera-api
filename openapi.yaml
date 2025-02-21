@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.2
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.4
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -1796,6 +1796,12 @@ components:
             enum: ["oauth_client", "auth_server"]
           minItems: 1
           description: Types of roles this participant can perform
+        participant_description:
+          type: string
+          description: Short Description of the participant (Required for PERA Admin)
+        participant_logo_uri:
+          type: string
+          description: logo uri of the participant
         status:
           type: string
           enum: ["active", "inactive", "suspended"]
