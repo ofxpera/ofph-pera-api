@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.4
+  version: 0.0.5
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -32,10 +32,12 @@ tags:
     description: OpenID Connect authentication, authorization and consent management
   - name: Common
     description: Common APIs used across different use cases
-  - name: Discovery
-    description: Optional discovery endpoints for OpenID/OAuth configuration and key management
+  - name: PERA
+    description: APIs specific to PERA operations (Philippine Equity and Retirement Account)
   - name: Consent
     description: Consent management endpoints
+  - name: Discovery
+    description: Optional discovery endpoints for OpenID/OAuth configuration and key management
 
 paths:
   /ofxpera/participants:
@@ -186,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/PeraProduct"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -222,7 +224,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/PeraProduct"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -260,11 +262,36 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/PeraProduct"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /ofxpera/arrangements:
+    post:
+      operationId: peraArrangementRegistration
+      tags:
+        - PERA
+      summary: Registers a new PERA arrangement
+      description: API that allows PERA Admins to register the successful creation of one or more new PERA Arrangements
+      responses:
+        "200":
+          description: Successfully created a new PERA Account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PeraArrangement"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
@@ -1431,10 +1458,10 @@ paths:
                   items:
                     type: object
                     required:
-                      - arrangement_id
+                      - id
                       - action
                     properties:
-                      arrangement_id:
+                      id:
                         type: string
                       action:
                         type: string
@@ -1463,10 +1490,10 @@ paths:
                     items:
                       type: object
                       required:
-                        - arrangement_id
+                        - id
                         - status
                       properties:
-                        arrangement_id:
+                        id:
                           type: string
                         status:
                           type: string
@@ -1823,34 +1850,6 @@ components:
               description: Contact email address
         address:
           $ref: "#/components/schemas/Address"
-          
-    Product:
-        type: object
-        properties:
-          product_id:
-            type: string
-            description: Unique Identifier for the product
-          product_name:
-            type: string
-            description: The name of the product
-          product_description:
-            type: string
-            description: A detailed description of the product
-          product_risk_rating:
-            type: string
-            description: The risk rating of the product
-            enum:
-              - Conservative
-              - Moderate
-              - Aggressive
-          product_kiid_uri:
-            type: string
-            description: URI to the KIID (Key Investor Information Document) for the product
-        required:
-          - product_name
-          - product_description
-          - product_risk_rating
-          - product_kiid_uri
     
     OAuthClient:
       type: object
@@ -2198,7 +2197,7 @@ components:
     ConsentArrangementResponse:
       type: object
       required:
-        - arrangement_id
+        - id
         - status
         - created_at
         - data_holder_id
@@ -2206,7 +2205,7 @@ components:
         - sharing_duration
         - purpose
       properties:
-        arrangement_id:
+        id:
           type: string
           description: Unique identifier for the consent arrangement
         status:
@@ -2282,10 +2281,10 @@ components:
     ConsentHistory:
       type: object
       required:
-        - arrangement_id
+        - id
         - events
       properties:
-        arrangement_id:
+        id:
           type: string
           description: The ID of the consent arrangement
         events:
@@ -2483,6 +2482,107 @@ components:
               items:
                 $ref: '#/components/schemas/ConsentArrangementResponse'
               description: Arrangements expiring in the next 30 days
+
+    PeraAccount:
+      type: object
+      required:
+        - id
+        - customer_id
+        - creation_date
+      properties:
+        id:
+          type: string
+          description: Generated by the PERA admin, this is the unique identifier of the customer's PERA account
+        customer_id:
+          type: string
+          description: PERA Administrator's unique identifier of the customer who owns the PERA account
+        creation_date:
+          type: string
+          format: date-time
+          description: Date and time when the PERA account was created
+        product:
+          $ref: '#/components/schemas/PeraProduct'
+        balance:
+          type: object
+          properties:
+            current_value:
+              type: number
+              format: double
+              description: Current value of the PERA arrangement
+            currency:
+              type: string
+              default: PHP
+              description: Currency of the balance amounts
+            as_of:
+              type: string
+              format: date-time
+              description: Timestamp of when the balance was last updated
+
+    PeraArrangement:
+      type: object
+      required:
+        - id
+        - admin_id
+        - customer_id
+        - sub
+        - consent_id
+        - status
+        - creation_date
+      properties:
+        id:
+          type: string
+          description: Generated by the PERA admin, this is the unique identifier for the PERA arrangement
+        admin_id:
+          type: string
+          description: Participant Identifier of the PERA Administrator managing this arrangement
+        customer_id:
+          type: string
+          description: PERA Administrator's unique identifier of the customer who owns the PERA arrangement
+        sub:
+          type: string
+          maxLength: 50
+          description: Subject – FI's unique identifier for the End-User
+        consent_id:
+          type: string
+          description: Unique identifier of the consent provided by the Customer to the FI
+        status:
+          type: string
+          enum: [ACTIVE, SUSPENDED, CLOSED]
+          description: Current status of the PERA arrangement
+        creation_date:
+          type: string
+          format: date-time
+          description: Date and time when the PERA arrangement was created
+        account:
+          $ref: '#/components/schemas/PeraAccount'
+          
+    PeraProduct:
+        type: object
+        properties:
+          product_id:
+            type: string
+            description: Unique Identifier for the product
+          product_name:
+            type: string
+            description: The name of the product
+          product_description:
+            type: string
+            description: A detailed description of the product
+          product_risk_rating:
+            type: string
+            description: The risk rating of the product
+            enum:
+              - Conservative
+              - Moderate
+              - Aggressive
+          product_kiid_uri:
+            type: string
+            description: URI to the KIID (Key Investor Information Document) for the product
+        required:
+          - product_name
+          - product_description
+          - product_risk_rating
+          - product_kiid_uri
 
   responses:
     NotFound:
