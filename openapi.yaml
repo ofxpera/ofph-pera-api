@@ -300,6 +300,40 @@ paths:
           $ref: "#/components/responses/TooManyRequests"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+  /ofxpera/arrangements/{arrangement_id}:
+    get:
+      operationId: getArrangementStatus
+      tags:
+        - PERA
+      summary: Get the status of a PERA arrangement
+      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the PERA Arrangement
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved the status of the PERA Arrangement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PeraArrangement"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
           
   /oauth/auth:
     post:
@@ -307,7 +341,7 @@ paths:
       tags:
         - OAuth
       summary: "[Phase 2] PAR-based Authorization API for FI-initiated onboarding"
-      description: POST version of the authorization API that initiates the authorization flow
+      description: POST version of the authorization API that initiates the authorization flow"
       security:
         - SignedJWT: []
       requestBody:

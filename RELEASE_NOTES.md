@@ -11,6 +11,7 @@ This release introduces significant enhancements to the OFxPERA API, focusing on
 #### PERA-Specific Enhancements
 - **Added new PERA tag** for better organization of PERA-specific endpoints
 - **Created new `/ofxpera/arrangements` endpoint** for PERA arrangement registration
+- **Added new GET `/ofxpera/arrangements/{arrangement_id}` endpoint** for retrieving PERA arrangement status
 - **Added new schemas**:
   - `PeraAccount`: Represents a customer's PERA account with balance information
   - `PeraArrangement`: Represents a PERA arrangement between a customer and financial institution
@@ -36,10 +37,20 @@ This release introduces significant enhancements to the OFxPERA API, focusing on
 
 #### New Endpoints
 - **POST `/ofxpera/arrangements`**: Allows PERA Admins to register the successful creation of new PERA Arrangements
+- **GET `/ofxpera/arrangements/{arrangement_id}`**: Allows Financial Institutions to retrieve the status of a PERA Arrangement
 
 #### Modified Schemas
 - **ConsentHistory**: Changed `arrangement_id` field to `id`
 - **Bulk update operations**: Changed `arrangement_id` field to `id` in request and response objects
+
+#### Security Updates
+- **Updated security scheme** from `ParticipantId` to `SignedJWT` for OAuth endpoints:
+  - `/oauth/auth` (POST)
+  - `/oauth/auth` (GET)
+  - `/oauth/token` (POST)
+
+#### Other Changes
+- **Updated SwaggerHub API Auto Mocking URL** from version 0.0.4 to 0.0.5
 
 ### Migration Notes
 - Applications using the previous Product schema should now use PeraProduct
