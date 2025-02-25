@@ -48,7 +48,7 @@ paths:
       summary: Register an OFxPERA Participant
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
       security:
-        - ParticipantKey: []
+        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -747,7 +747,7 @@ paths:
       summary: Optional - OpenID Connect Discovery
       description: Retrieve OpenID Connect configuration information
       security:
-        - ParticipantKey: []
+        - SignedJWT: []
       responses:
         "200":
           description: OpenID Connect configuration retrieved
@@ -835,7 +835,7 @@ paths:
       summary: Dynamic Client Registration (configurable endpoint)
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
       security:
-        - ParticipantKey: []
+        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -954,7 +954,7 @@ paths:
       summary: Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
       description: Returns the public keys used to verify JWT signatures
       security:
-        - ParticipantKey: []
+        - SignedJWT: []
       operationId: getJwks
       responses:
         '200':
@@ -2636,16 +2636,11 @@ components:
           authorizationUrl: /oauth/authorize
           tokenUrl: /oauth/token
           scopes: {}
-    ParticipantId:
-      type: apiKey
-      in: header
-      name: participant-id
-      description: Participant ID
-    ParticipantKey:
-      type: apiKey
-      in: header
-      name: participant-key
-      description: Short-lived API Key for creating a new participant
+    SignedJWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Signed JWT for participant authentication and authorization
     RegistrationAccessToken:
       type: http
       scheme: bearer
