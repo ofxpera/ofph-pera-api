@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.4
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.5
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -309,7 +309,7 @@ paths:
       summary: "[Phase 2] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow
       security:
-        - ParticipantId: []
+        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -390,7 +390,7 @@ paths:
       summary: Authorization endpoint
       description: OpenID Connect authorization endpoint that initiates the authorization flow
       security:
-        - ParticipantId: []
+        - SignedJWT: []
       parameters:
         - name: client_id
           in: query
@@ -483,7 +483,7 @@ paths:
         - OAuth
       summary: Token endpoint
       security:
-        - ParticipantId: []
+        - SignedJWT: []
       requestBody:
         required: true
         content:
