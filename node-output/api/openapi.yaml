@@ -1,0 +1,4935 @@
+openapi: 3.0.3
+info:
+  title: OFxPERA API
+  description: Philippines Open Finance API Implementation for PERA
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.5
+  x-copyright: Copyright 2024 OFxPERA Contributors
+  x-terms-of-service: |
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+servers:
+- url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.5
+  description: SwaggerHub API Auto Mocking
+- url: https://api.ofxpera.ph/v1
+  description: OFxPERA API server
+tags:
+- name: Bootstrap
+  description: Core bootstrapping endpoints for OFxPERA Participant registration and
+    management
+- name: OAuth
+  description: "OpenID Connect authentication, authorization and consent management"
+- name: Common
+  description: Common APIs used across different use cases
+- name: PERA
+  description: APIs specific to PERA operations (Philippine Equity and Retirement
+    Account)
+- name: Consent
+  description: Consent management endpoints
+- name: Discovery
+  description: Optional discovery endpoints for OpenID/OAuth configuration and key
+    management
+paths:
+  /ofxpera/participants:
+    get:
+      tags:
+      - Bootstrap
+      summary: Get a list of registered OFxPERA Participants
+      description: API for retrieving all registered OFxPERA Participants
+      operationId: listParticipants
+      responses:
+        "200":
+          description: Successfully retrieved OFxPERA Participants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParticipantConfig'
+                x-content-type: application/json
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+    put:
+      tags:
+      - Bootstrap
+      summary: Update an OFxPERA Participant
+      description: API for updating the URIs and status of an OFxPERA Participant
+      operationId: updateParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantConfig'
+        required: true
+      responses:
+        "201":
+          description: Participant successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistrationResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+    post:
+      tags:
+      - Bootstrap
+      summary: Register an OFxPERA Participant
+      description: API for registering an OFxPERA Participant following FAPI Dynamic
+        Client Registration requirements
+      operationId: registerParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantConfig'
+        required: true
+      responses:
+        "201":
+          description: Participant successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistrationResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: Bootstrap
+  /ofxpera/participants/{participant_id}:
+    get:
+      tags:
+      - Bootstrap
+      summary: Get an OFxPERA Participant's registration information
+      description: API for retrieving registration information for a specific OFxPERA
+        Participant
+      operationId: getParticipant
+      parameters:
+      - name: participant_id
+        in: path
+        description: Participant identifier issued during participant registration
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved participant information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantConfig'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+  /ofxpera/product:
+    post:
+      tags:
+      - Bootstrap
+      summary: Register a PERA Admin Product
+      description: API that allows PERA Admin to register a PERA product.
+      operationId: registerProduct
+      responses:
+        "200":
+          description: Product successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeraProduct'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+  /ofxpera/product/{product_id}:
+    put:
+      tags:
+      - Bootstrap
+      summary: Update a PERA Admin Product
+      description: API that allows PERA Admin to update their product.
+      operationId: updateProduct
+      parameters:
+      - name: product_id
+        in: path
+        description: Product identifier issued during product registration
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Product successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeraProduct'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+  /ofxpera/product/{participant_id}:
+    get:
+      tags:
+      - Bootstrap
+      summary: Get a list of PERA products associated with PERA Admin
+      description: API for retrieving all registered products associated with the
+        PERA Admin.
+      operationId: listProductByParticipant
+      parameters:
+      - name: participant_id
+        in: path
+        description: Participant identifier issued during Participant registration
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved the list of registered products associated
+            with the PERA Admin.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PeraProduct'
+                x-content-type: application/json
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Bootstrap
+  /ofxpera/arrangements:
+    post:
+      tags:
+      - PERA
+      summary: Registers a new PERA arrangement
+      description: API that allows PERA Admins to register the successful creation
+        of one or more new PERA Arrangements
+      operationId: peraArrangementRegistration
+      responses:
+        "200":
+          description: Successfully created a new PERA Account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeraArrangement'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: PERA
+  /ofxpera/arrangements/{arrangement_id}:
+    get:
+      tags:
+      - PERA
+      summary: Get the status of a PERA arrangement
+      description: API that allows FIs to retrieve the status of one or more PERA
+        Arrangements
+      operationId: getArrangementStatus
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the PERA Arrangement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved the status of the PERA Arrangement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeraArrangement'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-swagger-router-controller: PERA
+  /oauth/auth:
+    get:
+      tags:
+      - OAuth
+      summary: Authorization endpoint
+      description: OpenID Connect authorization endpoint that initiates the authorization
+        flow
+      operationId: authorizeOAuth
+      parameters:
+      - name: client_id
+        in: query
+        description: Client identifier issued to the client during registration
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: response_type
+        in: query
+        description: Must be set to "code" for authorization code flow
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - code
+      - name: scope
+        in: query
+        description: "Space-separated list of requested scope values, OFxPERA requires\
+          \ openid to be included to maintain compatibility with OIDC."
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - openid
+            - profile
+            - email
+            - address
+            - phone
+      - name: redirect_uri
+        in: query
+        description: URI to return the user to after authorization is complete
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: uri
+      - name: code_challenge
+        in: query
+        description: Code challenge for PKCE
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: code_challenge_method
+        in: query
+        description: Code challenge method for PKCE
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - S256
+      - name: state
+        in: query
+        description: Opaque value to maintain state between request and callback
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: prompt
+        in: query
+        description: Prompt for the authorization request
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        description: Random value used to prevent replay attacks
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Authorization successful
+        "302":
+          description: Redirect to client with authorization code
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                description: Redirect URI with authorization code
+                format: uri
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: OAuth
+    post:
+      tags:
+      - OAuth
+      summary: "[Phase 2] PAR-based Authorization API for FI-initiated onboarding"
+      description: POST version of the authorization API that initiates the authorization
+        flow"
+      operationId: OAuthPAR
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/oauth_auth_body'
+        required: true
+      responses:
+        "200":
+          description: Authorization successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: OAuth
+  /oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Token endpoint
+      operationId: getOAuthToken
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/oauth_token_body'
+        required: true
+      responses:
+        "200":
+          description: Token successfully issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: OAuth
+  /oauth/introspect:
+    get:
+      tags:
+      - OAuth
+      summary: Optional token introspection
+      description: |
+        Endpoint for validating and retrieving metadata about an access token. Returns information about whether the token is active, its associated client, user, scopes, and expiration details. This endpoint allows resource servers to verify tokens before granting access to protected resources.
+      operationId: introspectToken
+      parameters:
+      - name: token
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Token information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: OAuth
+  /oauth/userinfo:
+    get:
+      tags:
+      - OAuth
+      summary: Optional OpenID Connect UserInfo Endpoint
+      description: |
+        OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
+      operationId: getUserInfo
+      responses:
+        "200":
+          description: User information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: OAuth
+  /common/customers/endorse:
+    get:
+      tags:
+      - Common
+      summary: Forward customer endorsement
+      operationId: forwardCustomerEndorsement
+      parameters:
+      - name: endorsement
+        in: query
+        description: Encrypted endorsement payload in JWS/JWE format
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully forwarded customer endorsement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndorsementResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Common
+  /common/customers/{customer_id}/detail:
+    get:
+      tags:
+      - Common
+      summary: Get detailed customer information
+      operationId: getCustomerDetail
+      parameters:
+      - name: customer_id
+        in: path
+        description: "Customer ID, this should map to the sub field returned from\
+          \ the OIDC token endpoint or the sub field returned from the /oauth/userinfo\
+          \ endpoint"
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Customer's Personal Information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerInformation'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Common
+  /.well-known/openid-configuration:
+    get:
+      tags:
+      - Discovery
+      summary: Optional - OpenID Connect Discovery
+      description: Retrieve OpenID Connect configuration information
+      operationId: getOpenIdConfiguration
+      responses:
+        "200":
+          description: OpenID Connect configuration retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: Discovery
+  /.well-known/openid-registration:
+    get:
+      tags:
+      - Discovery
+      summary: Get Client Registration (configurable endpoint)
+      operationId: getClientRegistration
+      responses:
+        "200":
+          description: Current client configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistration'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Discovery
+    put:
+      tags:
+      - Discovery
+      summary: Update Client Registration (configurable endpoint)
+      operationId: updateClientRegistration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRegistration'
+        required: true
+      responses:
+        "200":
+          description: Client configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistration'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Discovery
+    post:
+      tags:
+      - Discovery
+      summary: Dynamic Client Registration (configurable endpoint)
+      description: Register a new OFxPERA Participant as an OAuth client following
+        FAPI Dynamic Client Registration requirements.
+      operationId: registerClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientRegistration'
+        required: true
+      responses:
+        "201":
+          description: Client registration successful
+          headers:
+            Registration-Access-Token:
+              description: Token for managing the registration
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientRegistrationResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: Discovery
+    delete:
+      tags:
+      - Discovery
+      summary: Delete Client Registration (configurable endpoint)
+      operationId: deleteClientRegistration
+      responses:
+        "204":
+          description: Client registration deleted
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - RegistrationAccessToken: []
+      x-swagger-router-controller: Discovery
+  /.well-known/jwks.json:
+    get:
+      tags:
+      - Discovery
+      summary: Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature
+        verification (configurable endpoint)
+      description: Returns the public keys used to verify JWT signatures
+      operationId: getJwks
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWKSet'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - SignedJWT: []
+      x-swagger-router-controller: Discovery
+  /consent/arrangements:
+    get:
+      tags:
+      - Consent
+      summary: List consent arrangements
+      description: |
+        Retrieve a list of active consent arrangements for the authenticated user.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Get Consent API
+      operationId: listConsentArrangements
+      parameters:
+      - name: status
+        in: query
+        description: Filter consents by status
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - active
+          - expired
+          - revoked
+          - suspended
+      - name: from_date
+        in: query
+        description: Filter consents created after this date
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: to_date
+        in: query
+        description: Filter consents created before this date
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: List of consent arrangements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentArrangementResponse'
+                x-content-type: application/json
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+    post:
+      tags:
+      - Consent
+      summary: Create a consent arrangement
+      description: |
+        Create a new consent arrangement between a data holder and data recipient.
+        Based on:
+        - UK Open Banking Consent API v3.1.10
+        - Australia CDR Consent Management Standards v1.14.0
+        - Singapore SGFinDex Consent Framework
+      operationId: createConsentArrangement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentArrangementRequest'
+        required: true
+      responses:
+        "201":
+          description: Consent arrangement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/arrangements/{arrangement_id}:
+    get:
+      tags:
+      - Consent
+      summary: Get consent arrangement details
+      description: |
+        Retrieve details of a specific consent arrangement.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Get Consent API
+      operationId: getConsentArrangement
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the consent arrangement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent arrangement details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+    put:
+      tags:
+      - Consent
+      summary: Update consent arrangement status
+      description: |
+        Update the status of a consent arrangement (e.g., suspend, resume).
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Update Consent API
+      operationId: updateConsentStatus
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the consent arrangement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentStatusUpdate'
+        required: true
+      responses:
+        "200":
+          description: Consent status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+    delete:
+      tags:
+      - Consent
+      summary: Revoke consent arrangement
+      description: |
+        Revoke an existing consent arrangement.
+        Based on:
+        - UK Open Banking Account Access Consents API
+        - Australia CDR Revoke Consent API
+        - Korea MyData Consent Revocation API
+      operationId: revokeConsentArrangement
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the consent arrangement to revoke
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: Consent arrangement successfully revoked
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/arrangements/{arrangement_id}/history:
+    get:
+      tags:
+      - Consent
+      summary: Get consent arrangement history
+      description: |
+        Retrieve the full history of changes to a consent arrangement.
+        Based on:
+        - Australia CDR Consent History API
+        - UK Open Banking Consent Audit Requirements
+      operationId: getConsentHistory
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the consent arrangement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Consent arrangement history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentHistory'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/bulk:
+    post:
+      tags:
+      - Consent
+      summary: Create bulk consent arrangements
+      description: |
+        Create multiple consent arrangements in a single request.
+        Based on:
+        - Korea MyData Bulk Consent API
+        - Singapore SGFinDex Multi-Institution Consent
+      operationId: createBulkConsent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkConsentRequest'
+        required: true
+      responses:
+        "201":
+          description: Bulk consent arrangements created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkConsentResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/templates:
+    get:
+      tags:
+      - Consent
+      summary: List available consent templates
+      description: |
+        Retrieve available consent templates that can be used to create new arrangements.
+        Based on:
+        - Australia CDR Consent Taxonomy
+        - UK Open Banking Standard Permissions
+      operationId: listConsentTemplates
+      parameters:
+      - name: category
+        in: query
+        description: Filter templates by category
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: purpose
+        in: query
+        description: Filter templates by purpose
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: List of consent templates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConsentTemplate'
+                x-content-type: application/json
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/arrangements/{arrangement_id}/extend:
+    post:
+      tags:
+      - Consent
+      summary: Extend consent arrangement duration
+      description: |
+        Extend the duration of an existing consent arrangement.
+        Based on:
+        - Australia CDR Consent Amendment
+        - UK Open Banking Re-authentication
+      operationId: extendConsentDuration
+      parameters:
+      - name: arrangement_id
+        in: path
+        description: The ID of the consent arrangement
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentExtensionRequest'
+        required: true
+      responses:
+        "200":
+          description: Consent duration extended successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentArrangementResponse'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/customers/{customer_id}/arrangements:
+    get:
+      tags:
+      - Consent
+      summary: Get customer's consent arrangements
+      description: |
+        Retrieve all consent arrangements for a specific customer.
+        Based on:
+        - UK Open Banking Customer Consent Management
+        - Australia CDR Consumer Dashboard APIs
+        - Singapore SGFinDex Customer Consent View
+      operationId: getCustomerConsents
+      parameters:
+      - name: customer_id
+        in: path
+        description: The customer's unique identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter consents by status
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - active
+          - expired
+          - revoked
+          - suspended
+      - name: data_holder_id
+        in: query
+        description: Filter by specific data holder/institution
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: purpose
+        in: query
+        description: Filter by consent purpose
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Customer's consent arrangements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/customers/{customer_id}/arrangements/bulk-update:
+    post:
+      tags:
+      - Consent
+      summary: Bulk update customer's consent arrangements
+      description: |
+        Update multiple consent arrangements for a specific customer in a single request.
+        Based on:
+        - Australia CDR Bulk Consumer Update
+        - Korea MyData Consent Management
+      operationId: bulkUpdateCustomerConsents
+      parameters:
+      - name: customer_id
+        in: path
+        description: The customer's unique identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/arrangements_bulkupdate_body'
+        required: true
+      responses:
+        "200":
+          description: Bulk update results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+  /consent/customers/{customer_id}/dashboard:
+    get:
+      tags:
+      - Consent
+      summary: Get customer's consent dashboard
+      description: |
+        Retrieve a comprehensive view of customer's consent arrangements and data sharing.
+        Based on:
+        - Australia CDR Consumer Dashboard
+        - UK Open Banking Consent Dashboard
+        - Singapore SGFinDex Customer Portal
+      operationId: getCustomerConsentDashboard
+      parameters:
+      - name: customer_id
+        in: path
+        description: The customer's unique identifier
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Customer's consent dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsentDashboard'
+        "400":
+          description: Bad Request - The server cannot process the request due to
+            a client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: Unauthorized - Authentication is required and has failed or
+            not been provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Forbidden - The server understood the request but refuses to
+            authorize it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Not Found - The requested resource could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "429":
+          description: Too Many Requests - The client has sent too many requests in
+            a given amount of time
+          headers:
+            Retry-After:
+              description: Field indicating the time (in seconds) that the client
+                should wait before retrying an operation. The response should include
+                this header along with responses with the HTTP status code of 429
+                Too many requests.
+              style: simple
+              explode: false
+              schema:
+                minimum: 2
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Internal Server Error - The server encountered an unexpected
+            condition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - OAuth2: []
+      x-swagger-router-controller: Consent
+components:
+  schemas:
+    Address:
+      required:
+      - city
+      - country
+      - postal_code
+      - province
+      - region
+      type: object
+      properties:
+        region:
+          maxLength: 10
+          type: string
+          description: PSGC Code for Region
+        province:
+          maxLength: 10
+          type: string
+          description: PSGC Code for Province
+        city:
+          maxLength: 10
+          type: string
+          description: PSGC Code for City
+        barangay:
+          maxLength: 10
+          type: string
+          description: PSGC Code for Barangay
+        street_address:
+          maxLength: 200
+          type: string
+        country:
+          maxLength: 3
+          pattern: "^[A-Z]{3}$"
+          type: string
+          description: ISO 3166 Code
+          example: PHL
+        postal_code:
+          maxLength: 10
+          type: string
+          description: Postal Code
+      example:
+        street_address: street_address
+        country: PHL
+        province: province
+        city: city
+        region: region
+        postal_code: postal_code
+        barangay: barangay
+    IdType:
+      required:
+      - idNumber
+      - idType
+      type: object
+      properties:
+        idNumber:
+          maxLength: 50
+          type: string
+        idExpiryDate:
+          maxLength: 10
+          type: string
+          description: Format is YYYY-MM-DD
+          format: date
+        idType:
+          maxLength: 100
+          type: string
+          description: "ID Type (e.g., \"Drivers License\", \"Passport\", etc.)"
+      example:
+        idType: idType
+        idExpiryDate: 2000-01-23
+        idNumber: idNumber
+    PersonalInformation:
+      required:
+      - birthdate
+      - email
+      - givenName
+      - lastName
+      - mobileNumber
+      - nationality
+      - sub
+      type: object
+      properties:
+        sub:
+          maxLength: 50
+          type: string
+          description: Subject – FI's unique identifier for the End-User
+        title:
+          maxLength: 50
+          type: string
+        givenName:
+          maxLength: 50
+          type: string
+        middleName:
+          maxLength: 50
+          type: string
+        lastName:
+          maxLength: 50
+          type: string
+        suffix:
+          maxLength: 10
+          type: string
+        phoneNumber:
+          maxLength: 15
+          pattern: "^[0-9]{11}$"
+          type: string
+          example: "63287654321"
+        mobileNumber:
+          maxLength: 15
+          pattern: "^[0-9]{12}$"
+          type: string
+          example: "639171234567"
+        email:
+          maxLength: 50
+          type: string
+          format: email
+        birthdate:
+          maxLength: 10
+          type: string
+          description: Format YYYY-MM-DD
+          format: date
+        nationality:
+          maxLength: 3
+          type: string
+          description: ISO 3166 Code
+        tin:
+          maxLength: 15
+          pattern: "^[0-9]{3}-[0-9]{3}-[0-9]{3}-[0-9]{3}$"
+          type: string
+          description: Format NNN-NNN-NNN-000
+      example:
+        sub: sub
+        lastName: lastName
+        phoneNumber: "63287654321"
+        birthdate: 2000-01-23
+        nationality: nationality
+        mobileNumber: "639171234567"
+        givenName: givenName
+        tin: tin
+        middleName: middleName
+        title: title
+        suffix: suffix
+        email: ""
+    CustomerInformation:
+      required:
+      - arrangementId
+      - cdd
+      - pii
+      - presentedIds
+      - sub
+      type: object
+      properties:
+        sub:
+          maxLength: 50
+          type: string
+          description: Subject – FI's unique identifier for the End-User
+        arrangementId:
+          type: string
+          description: The unique identifier for the Consent Arrangement
+        personalInformation:
+          $ref: '#/components/schemas/PersonalInformation'
+        presentedIds:
+          type: array
+          description: Array of identification details
+          items:
+            $ref: '#/components/schemas/IdType'
+        cdd:
+          $ref: '#/components/schemas/CustomerDueDiligence'
+        peraAdmin:
+          maxLength: 50
+          type: string
+          description: The PERA Admin selected by the Customer
+      example:
+        arrangementId: arrangementId
+        sub: sub
+        cdd:
+          pepIndicator: false
+          occupation: occupation
+          employerAddress:
+            street_address: street_address
+            country: PHL
+            province: province
+            city: city
+            region: region
+            postal_code: postal_code
+            barangay: barangay
+          natureOfWork: natureOfWork
+          cddIndicator: Normal
+          employerName: employerName
+          employmentStatus: employmentStatus
+          fundSource: fundSource
+        presentedIds:
+        - idType: idType
+          idExpiryDate: 2000-01-23
+          idNumber: idNumber
+        - idType: idType
+          idExpiryDate: 2000-01-23
+          idNumber: idNumber
+        personalInformation:
+          sub: sub
+          lastName: lastName
+          phoneNumber: "63287654321"
+          birthdate: 2000-01-23
+          nationality: nationality
+          mobileNumber: "639171234567"
+          givenName: givenName
+          tin: tin
+          middleName: middleName
+          title: title
+          suffix: suffix
+          email: ""
+        peraAdmin: peraAdmin
+    CustomerDueDiligence:
+      required:
+      - cddIndicator
+      - employmentStatus
+      - fundSource
+      - pepIndicator
+      type: object
+      properties:
+        employmentStatus:
+          maxLength: 50
+          type: string
+        occupation:
+          maxLength: 150
+          type: string
+        natureOfWork:
+          maxLength: 10
+          type: string
+          description: PSIC Code
+        employerName:
+          maxLength: 255
+          type: string
+        employerAddress:
+          $ref: '#/components/schemas/Address'
+        pepIndicator:
+          type: boolean
+          description: Politically Exposed Person 1 - True; 0 - False
+          default: false
+        fundSource:
+          maxLength: 100
+          type: string
+          description: Source of Funds
+        cddIndicator:
+          maxLength: 6
+          type: string
+          description: Customer Due Diligence Risk Level
+          default: Normal
+          enum:
+          - Low
+          - Normal
+          - High
+      example:
+        pepIndicator: false
+        occupation: occupation
+        employerAddress:
+          street_address: street_address
+          country: PHL
+          province: province
+          city: city
+          region: region
+          postal_code: postal_code
+          barangay: barangay
+        natureOfWork: natureOfWork
+        cddIndicator: Normal
+        employerName: employerName
+        employmentStatus: employmentStatus
+        fundSource: fundSource
+    Participant:
+      title: Participant
+      required:
+      - jwks
+      - participant_name
+      - participant_type
+      type: object
+      properties:
+        participant_id:
+          type: string
+          description: Unique identifier for the participant
+        participant_name:
+          type: string
+          description: Trading name of the participant
+        participant_type:
+          minItems: 1
+          type: array
+          description: Types of roles this participant can perform
+          items:
+            type: string
+            enum:
+            - oauth_client
+            - auth_server
+        participant_description:
+          type: string
+          description: Short Description of the participant (Required for PERA Admin)
+        participant_logo_uri:
+          type: string
+          description: logo uri of the participant
+        status:
+          type: string
+          default: active
+          enum:
+          - active
+          - inactive
+          - suspended
+        jwks:
+          $ref: '#/components/schemas/JWKSet'
+        contact:
+          $ref: '#/components/schemas/Participant_contact'
+        address:
+          $ref: '#/components/schemas/Address'
+    OAuthClient:
+      required:
+      - client_config
+      - participant
+      type: object
+      properties:
+        participant:
+          $ref: '#/components/schemas/Participant'
+        client_config:
+          minItems: 1
+          type: array
+          description: Array of OAuth client configurations for this participant
+          items:
+            $ref: '#/components/schemas/ClientRegistration'
+    ClientRegistrationResponse:
+      required:
+      - client_id
+      - client_id_issued_at
+      - registration_access_token
+      type: object
+      properties:
+        client_id:
+          type: string
+          description: Issued client identifier
+        registration_access_token:
+          type: string
+          description: Registration access token for subsequent operations
+        registration_client_uri:
+          type: string
+          description: URI for managing the client registration
+          format: uri
+        client_id_issued_at:
+          type: integer
+          description: "Time at which the client identifier was issued, in seconds\
+            \ since Unix epoch (1970-01-01T00:00:00Z UTC)"
+      example:
+        registration_client_uri: http://example.com/aeiou
+        client_id_issued_at: 0
+        registration_access_token: registration_access_token
+        client_id: client_id
+    ParticipantConfig:
+      oneOf:
+      - $ref: '#/components/schemas/AuthServer'
+      - $ref: '#/components/schemas/OAuthClient'
+    AuthServer:
+      required:
+      - authserver_config
+      - participant
+      type: object
+      properties:
+        participant:
+          $ref: '#/components/schemas/Participant'
+        authserver_config:
+          $ref: '#/components/schemas/AuthServerURIs'
+    jwksConfiguration:
+      anyOf:
+      - $ref: '#/components/schemas/JWKSet'
+      - title: JWKSetURI
+        type: string
+        description: URI for JSON Web Key Set containing public keys
+        format: uri
+    AuthServerURIs:
+      title: AuthorizationServer
+      required:
+      - authorization_endpoint
+      - issuer
+      - token_endpoint
+      properties:
+        issuer:
+          type: string
+          description: URL using the https scheme with no query or fragment component
+            that the OP asserts as its Issuer Identifier
+          format: uri
+        authorization_endpoint:
+          type: string
+          description: URL of the OP's OAuth 2.0 Authorization Endpoint
+          format: uri
+        token_endpoint:
+          type: string
+          description: URL of the OP's OAuth 2.0 Token Endpoint
+          format: uri
+        userinfo_endpoint:
+          type: string
+          description: URL of the OP's UserInfo Endpoint
+          format: uri
+        end_session_endpoint:
+          type: string
+          description: URL at the OP to which an RP can perform a redirect to
+          format: uri
+        registration_endpoint:
+          type: string
+          description: URL of the OP's Dynamic Client Registration Endpoint
+          format: uri
+      description: Endpoints of the OFxPERA Participant as an Authorization Server
+    OAuthClientURIs:
+      title: OAuthClient
+      required:
+      - redirect_uris
+      properties:
+        redirect_uris:
+          minItems: 1
+          type: array
+          description: Array of redirect URIs to be used in OAuth 2.0 flows
+          items:
+            type: string
+            format: uri
+      description: API Endpoints of the OFxPERA Participant as an OAuth client
+    endpointURIs:
+      oneOf:
+      - $ref: '#/components/schemas/OAuthClientURIs'
+      - $ref: '#/components/schemas/AuthServerURIs'
+    ClientRegistration:
+      required:
+      - application_type
+      - client_name
+      - grant_types
+      - redirect_uris
+      - response_types
+      - token_endpoint_auth_method
+      type: object
+      properties:
+        application_type:
+          type: string
+          description: Type of application
+          enum:
+          - web
+          - native
+          - hybrid
+        client_id:
+          type: string
+          description: Client identifier
+        client_name:
+          type: string
+          description: Name of the client
+        redirect_uris:
+          type: array
+          description: Array of redirect URIs for use in OAuth flows
+          items:
+            type: string
+            format: uri
+        token_endpoint_auth_method:
+          type: string
+          description: "Authentication method for token endpoint, OFxPERA Phase 1\
+            \ requires private_key_jwt"
+          enum:
+          - private_key_jwt
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - authorization_code
+            - refresh_token
+        response_types:
+          maxItems: 2
+          minItems: 2
+          type: array
+          description: "Allowed OAuth response types, OFxPERA requires code and id_token."
+          example:
+          - code
+          - id_token
+          items:
+            type: string
+            enum:
+            - code
+            - id_token
+        scope:
+          type: string
+          description: Space-separated list of requested scopes (e.g. openid profile
+            email address phone)
+        software_statement:
+          type: string
+          description: JWT containing software statement from trusted authority
+        jwks:
+          $ref: '#/components/schemas/JWKSet'
+        jwks_uri:
+          type: string
+          description: URI for JSON Web Key Set containing public keys
+          format: uri
+        organization_name:
+          type: string
+          description: Legal name of the PERA Participant organization
+        contacts:
+          type: array
+          description: Administrative contact emails
+          items:
+            type: string
+            format: email
+      example:
+        grant_types:
+        - authorization_code
+        - authorization_code
+        jwks:
+          keys:
+          - kty: RSA
+            e: AQAB
+            use: sig
+            crv: P-256
+            x5t: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+            kid: "1234567890"
+            x5c:
+            - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+            x: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+            "y": SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+            alg: RS256
+            "n": 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+          - kty: RSA
+            e: AQAB
+            use: sig
+            crv: P-256
+            x5t: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+            kid: "1234567890"
+            x5c:
+            - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+            x: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+            "y": SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+            alg: RS256
+            "n": 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+        application_type: web
+        redirect_uris:
+        - http://example.com/aeiou
+        - http://example.com/aeiou
+        organization_name: organization_name
+        client_id: client_id
+        token_endpoint_auth_method: private_key_jwt
+        software_statement: software_statement
+        scope: scope
+        jwks_uri: http://example.com/aeiou
+        client_name: client_name
+        contacts:
+        - ""
+        - ""
+        response_types:
+        - code
+        - id_token
+      anyOf:
+      - required:
+        - jwks
+      - required:
+        - jwks_uri
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message describing the error
+        details:
+          type: array
+          description: Additional details about the error
+          items:
+            type: string
+    JWKSet:
+      title: JWKSet
+      required:
+      - keys
+      type: object
+      properties:
+        keys:
+          type: array
+          description: Array of JWK values representing public keys for verifying
+            JWTs
+          items:
+            $ref: '#/components/schemas/JWKSet_keys'
+      example:
+        keys:
+        - kty: RSA
+          e: AQAB
+          use: sig
+          crv: P-256
+          x5t: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+          kid: "1234567890"
+          x5c:
+          - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+          x: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+          "y": SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+          alg: RS256
+          "n": 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+        - kty: RSA
+          e: AQAB
+          use: sig
+          crv: P-256
+          x5t: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+          kid: "1234567890"
+          x5c:
+          - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+          x: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+          "y": SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+          alg: RS256
+          "n": 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+    EndorsementResponse:
+      required:
+      - status
+      - timestamp
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - SUCCESS
+          - FAILED
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        endorsement_details:
+          $ref: '#/components/schemas/EndorsementDetails'
+      example:
+        endorsement_details:
+          sub: sub
+          endorsement_date: 2000-01-23T04:56:07.000+00:00
+          reference_id: reference_id
+          endorser_id: endorser_id
+        message: message
+        status: SUCCESS
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    EndorsementDetails:
+      required:
+      - endorsement_date
+      - endorser_id
+      type: object
+      properties:
+        endorser_id:
+          type: string
+          description: Endorser's unique identifier
+        sub:
+          type: string
+          description: Subject – FI's unique identifier for the End-User
+        endorsement_date:
+          type: string
+          description: Date and time the endorsement was created
+          format: date-time
+        reference_id:
+          type: string
+          description: Reference ID from the PERA Admin
+      example:
+        sub: sub
+        endorsement_date: 2000-01-23T04:56:07.000+00:00
+        reference_id: reference_id
+        endorser_id: endorser_id
+    ConsentArrangementRequest:
+      required:
+      - data_holder_id
+      - permissions
+      - purpose
+      - sharing_duration
+      type: object
+      properties:
+        data_holder_id:
+          type: string
+          description: Identifier of the data holder (financial institution)
+        permissions:
+          minItems: 1
+          type: array
+          description: Permissions being requested for data access
+          items:
+            type: string
+            enum:
+            - PERA_BASIC_INFO
+            - PERA_BALANCE
+            - PERA_TRANSACTIONS
+            - PERA_INVESTMENT_DETAILS
+            - PERA_STATEMENTS
+        sharing_duration:
+          $ref: '#/components/schemas/ConsentArrangementRequest_sharing_duration'
+        purpose:
+          type: string
+          description: Purpose for which the data will be used
+        additional_terms:
+          type: array
+          description: Additional terms and conditions specific to this arrangement
+          items:
+            $ref: '#/components/schemas/ConsentArrangementRequest_additional_terms'
+    ConsentArrangementResponse:
+      required:
+      - created_at
+      - data_holder_id
+      - id
+      - permissions
+      - purpose
+      - sharing_duration
+      - status
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the consent arrangement
+        status:
+          type: string
+          description: Current status of the consent arrangement
+          enum:
+          - active
+          - expired
+          - revoked
+          - suspended
+        created_at:
+          type: string
+          description: When the consent arrangement was created
+          format: date-time
+        last_updated_at:
+          type: string
+          description: When the consent arrangement was last updated
+          format: date-time
+        data_holder_id:
+          type: string
+          description: Identifier of the data holder
+        permissions:
+          type: array
+          description: Granted permissions for data access
+          items:
+            type: string
+        sharing_duration:
+          $ref: '#/components/schemas/ConsentArrangementResponse_sharing_duration'
+        purpose:
+          type: string
+          description: Purpose for which the data will be used
+        additional_terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArrangementRequest_additional_terms'
+        revocation_info:
+          $ref: '#/components/schemas/ConsentArrangementResponse_revocation_info'
+      example:
+        data_holder_id: data_holder_id
+        sharing_duration:
+          end_date: 2000-01-23T04:56:07.000+00:00
+          start_date: 2000-01-23T04:56:07.000+00:00
+        purpose: purpose
+        last_updated_at: 2000-01-23T04:56:07.000+00:00
+        permissions:
+        - permissions
+        - permissions
+        revocation_info:
+          reason: reason
+          revoked_at: 2000-01-23T04:56:07.000+00:00
+        additional_terms:
+        - value: value
+          key: key
+        - value: value
+          key: key
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        status: active
+    ConsentStatusUpdate:
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          description: New status for the consent arrangement
+          enum:
+          - active
+          - suspended
+        reason:
+          type: string
+          description: Reason for the status update
+    ConsentHistory:
+      required:
+      - events
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the consent arrangement
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentHistory_events'
+      example:
+        id: id
+        events:
+        - actor: actor
+          event_type: created
+          previous_state: {}
+          new_state: {}
+          details: {}
+          timestamp: 2000-01-23T04:56:07.000+00:00
+        - actor: actor
+          event_type: created
+          previous_state: {}
+          new_state: {}
+          details: {}
+          timestamp: 2000-01-23T04:56:07.000+00:00
+    BulkConsentRequest:
+      required:
+      - arrangements
+      type: object
+      properties:
+        arrangements:
+          maxItems: 50
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArrangementRequest'
+        batch_id:
+          type: string
+          description: Optional identifier for the bulk operation
+    BulkConsentResponse:
+      required:
+      - results
+      type: object
+      properties:
+        batch_id:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkConsentResponse_results'
+      example:
+        batch_id: batch_id
+        results:
+        - arrangement:
+            data_holder_id: data_holder_id
+            sharing_duration:
+              end_date: 2000-01-23T04:56:07.000+00:00
+              start_date: 2000-01-23T04:56:07.000+00:00
+            purpose: purpose
+            last_updated_at: 2000-01-23T04:56:07.000+00:00
+            permissions:
+            - permissions
+            - permissions
+            revocation_info:
+              reason: reason
+              revoked_at: 2000-01-23T04:56:07.000+00:00
+            additional_terms:
+            - value: value
+              key: key
+            - value: value
+              key: key
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            status: active
+          error:
+            code: code
+            message: message
+          status: success
+        - arrangement:
+            data_holder_id: data_holder_id
+            sharing_duration:
+              end_date: 2000-01-23T04:56:07.000+00:00
+              start_date: 2000-01-23T04:56:07.000+00:00
+            purpose: purpose
+            last_updated_at: 2000-01-23T04:56:07.000+00:00
+            permissions:
+            - permissions
+            - permissions
+            revocation_info:
+              reason: reason
+              revoked_at: 2000-01-23T04:56:07.000+00:00
+            additional_terms:
+            - value: value
+              key: key
+            - value: value
+              key: key
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            status: active
+          error:
+            code: code
+            message: message
+          status: success
+    ConsentTemplate:
+      required:
+      - name
+      - permissions
+      - purpose
+      - template_id
+      type: object
+      properties:
+        template_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        purpose:
+          type: string
+        default_duration:
+          $ref: '#/components/schemas/ConsentTemplate_default_duration'
+        terms_and_conditions:
+          type: string
+        data_usage_policy:
+          type: string
+        version:
+          type: string
+      example:
+        terms_and_conditions: terms_and_conditions
+        purpose: purpose
+        permissions:
+        - permissions
+        - permissions
+        data_usage_policy: data_usage_policy
+        name: name
+        description: description
+        template_id: template_id
+        category: category
+        version: version
+        default_duration:
+          unit: days
+          value: 0
+    ConsentExtensionRequest:
+      required:
+      - new_end_date
+      type: object
+      properties:
+        new_end_date:
+          type: string
+          description: New end date for the consent arrangement
+          format: date-time
+        reason:
+          type: string
+          description: Reason for extending the consent
+        additional_terms:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArrangementRequest_additional_terms'
+    ConsentDashboard:
+      required:
+      - customer_id
+      - summary
+      type: object
+      properties:
+        customer_id:
+          type: string
+        summary:
+          $ref: '#/components/schemas/ConsentDashboard_summary'
+      example:
+        summary:
+          expiring_soon:
+          - data_holder_id: data_holder_id
+            sharing_duration:
+              end_date: 2000-01-23T04:56:07.000+00:00
+              start_date: 2000-01-23T04:56:07.000+00:00
+            purpose: purpose
+            last_updated_at: 2000-01-23T04:56:07.000+00:00
+            permissions:
+            - permissions
+            - permissions
+            revocation_info:
+              reason: reason
+              revoked_at: 2000-01-23T04:56:07.000+00:00
+            additional_terms:
+            - value: value
+              key: key
+            - value: value
+              key: key
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            status: active
+          - data_holder_id: data_holder_id
+            sharing_duration:
+              end_date: 2000-01-23T04:56:07.000+00:00
+              start_date: 2000-01-23T04:56:07.000+00:00
+            purpose: purpose
+            last_updated_at: 2000-01-23T04:56:07.000+00:00
+            permissions:
+            - permissions
+            - permissions
+            revocation_info:
+              reason: reason
+              revoked_at: 2000-01-23T04:56:07.000+00:00
+            additional_terms:
+            - value: value
+              key: key
+            - value: value
+              key: key
+            created_at: 2000-01-23T04:56:07.000+00:00
+            id: id
+            status: active
+          arrangements_by_status:
+            expired: 5
+            active: 1
+            revoked: 5
+            suspended: 2
+          arrangements_by_purpose:
+          - purpose: purpose
+            count: 7
+          - purpose: purpose
+            count: 7
+          data_holders:
+          - data_holder_id: data_holder_id
+            name: name
+            active_arrangements: 9
+          - data_holder_id: data_holder_id
+            name: name
+            active_arrangements: 9
+          total_arrangements: 0
+          recent_activity:
+          - id: id
+            events:
+            - actor: actor
+              event_type: created
+              previous_state: {}
+              new_state: {}
+              details: {}
+              timestamp: 2000-01-23T04:56:07.000+00:00
+            - actor: actor
+              event_type: created
+              previous_state: {}
+              new_state: {}
+              details: {}
+              timestamp: 2000-01-23T04:56:07.000+00:00
+          - id: id
+            events:
+            - actor: actor
+              event_type: created
+              previous_state: {}
+              new_state: {}
+              details: {}
+              timestamp: 2000-01-23T04:56:07.000+00:00
+            - actor: actor
+              event_type: created
+              previous_state: {}
+              new_state: {}
+              details: {}
+              timestamp: 2000-01-23T04:56:07.000+00:00
+          active_arrangements: 6
+        customer_id: customer_id
+    PeraAccount:
+      required:
+      - creation_date
+      - customer_id
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Generated by the PERA admin, this is the unique identifier\
+            \ of the customer's PERA account"
+        customer_id:
+          type: string
+          description: PERA Administrator's unique identifier of the customer who
+            owns the PERA account
+        creation_date:
+          type: string
+          description: Date and time when the PERA account was created
+          format: date-time
+        product:
+          $ref: '#/components/schemas/PeraProduct'
+        balance:
+          $ref: '#/components/schemas/PeraAccount_balance'
+      example:
+        product:
+          product_kiid_uri: product_kiid_uri
+          product_id: product_id
+          product_description: product_description
+          product_name: product_name
+          product_risk_rating: Conservative
+        balance:
+          as_of: 2000-01-23T04:56:07.000+00:00
+          currency: PHP
+          current_value: 0.8008281904610115
+        id: id
+        creation_date: 2000-01-23T04:56:07.000+00:00
+        customer_id: customer_id
+    PeraArrangement:
+      required:
+      - admin_id
+      - consent_id
+      - creation_date
+      - customer_id
+      - id
+      - status
+      - sub
+      type: object
+      properties:
+        id:
+          type: string
+          description: "Generated by the PERA admin, this is the unique identifier\
+            \ for the PERA arrangement"
+        admin_id:
+          type: string
+          description: Participant Identifier of the PERA Administrator managing this
+            arrangement
+        customer_id:
+          type: string
+          description: PERA Administrator's unique identifier of the customer who
+            owns the PERA arrangement
+        sub:
+          maxLength: 50
+          type: string
+          description: Subject – FI's unique identifier for the End-User
+        consent_id:
+          type: string
+          description: Unique identifier of the consent provided by the Customer to
+            the FI
+        status:
+          type: string
+          description: Current status of the PERA arrangement
+          enum:
+          - ACTIVE
+          - SUSPENDED
+          - CLOSED
+        creation_date:
+          type: string
+          description: Date and time when the PERA arrangement was created
+          format: date-time
+        account:
+          $ref: '#/components/schemas/PeraAccount'
+      example:
+        sub: sub
+        admin_id: admin_id
+        id: id
+        creation_date: 2000-01-23T04:56:07.000+00:00
+        customer_id: customer_id
+        consent_id: consent_id
+        account:
+          product:
+            product_kiid_uri: product_kiid_uri
+            product_id: product_id
+            product_description: product_description
+            product_name: product_name
+            product_risk_rating: Conservative
+          balance:
+            as_of: 2000-01-23T04:56:07.000+00:00
+            currency: PHP
+            current_value: 0.8008281904610115
+          id: id
+          creation_date: 2000-01-23T04:56:07.000+00:00
+          customer_id: customer_id
+        status: ACTIVE
+    PeraProduct:
+      required:
+      - product_description
+      - product_kiid_uri
+      - product_name
+      - product_risk_rating
+      type: object
+      properties:
+        product_id:
+          type: string
+          description: Unique Identifier for the product
+        product_name:
+          type: string
+          description: The name of the product
+        product_description:
+          type: string
+          description: A detailed description of the product
+        product_risk_rating:
+          type: string
+          description: The risk rating of the product
+          enum:
+          - Conservative
+          - Moderate
+          - Aggressive
+        product_kiid_uri:
+          type: string
+          description: URI to the KIID (Key Investor Information Document) for the
+            product
+      example:
+        product_kiid_uri: product_kiid_uri
+        product_id: product_id
+        product_description: product_description
+        product_name: product_name
+        product_risk_rating: Conservative
+    oauth_auth_body:
+      required:
+      - participant_id
+      - response_type
+      type: object
+      properties:
+        participant_id:
+          type: string
+          description: Participant identifier of the FI issued during registration
+        endorsement_details:
+          $ref: '#/components/schemas/EndorsementDetails'
+        authorization_code:
+          type: string
+          description: Authorization code
+        response_type:
+          type: string
+          description: Must be set to "code" for authorization code flow
+          enum:
+          - code
+        scope:
+          type: array
+          description: "Space-separated list of requested scope values, OFxPERA requires\
+            \ openid to be included to maintain compatibility with OIDC."
+          items:
+            type: string
+            enum:
+            - openid
+            - profile
+            - email
+            - address
+            - phone
+        token_endpoint:
+          type: string
+          description: URI of the token endpoint for retrieving access tokens
+          format: uri
+        code_challenge:
+          type: string
+          description: Code challenge for PKCE
+        code_challenge_method:
+          type: string
+          description: Code challenge method for PKCE
+          enum:
+          - S256
+        state:
+          type: string
+          description: Opaque value to maintain state between request and callback
+        prompt:
+          type: string
+          description: Prompt for the authorization request
+        nonce:
+          type: string
+          description: Random value used to prevent replay attacks
+    inline_response_200:
+      type: object
+      properties:
+        request_uri:
+          type: string
+          description: URI to redirect the user to for authorization
+          format: uri
+      example:
+        request_uri: http://example.com/aeiou
+    oauth_token_body:
+      required:
+      - client_id
+      - code
+      - grant_type
+      - redirect_uri
+      type: object
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - authorization_code
+          - refresh_token
+        code:
+          type: string
+          description: Authorization code received from the authorization server.
+        redirect_uri:
+          type: string
+          description: Redirect URI used in the authorization request.
+          format: uri
+        client_id:
+          type: string
+          description: Client identifier for the token request.
+        refresh_token:
+          type: string
+          description: Refresh token used to obtain a new access token.
+    inline_response_200_1:
+      required:
+      - access_token
+      - expires_in
+      - token_type
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Access token for the authenticated user
+        token_type:
+          type: string
+          description: "Type of the token, always \"Bearer\""
+          enum:
+          - Bearer
+        expires_in:
+          type: integer
+          description: Lifetime in seconds of the access token
+        id_token:
+          type: string
+          description: ID Token value associated with the authenticated session
+        refresh_token:
+          type: string
+          description: Refresh token used to obtain new access tokens
+        scope:
+          type: string
+          description: Space-separated list of scopes associated with the access token
+      example:
+        access_token: access_token
+        refresh_token: refresh_token
+        scope: scope
+        id_token: id_token
+        token_type: Bearer
+        expires_in: 0
+    inline_response_200_2:
+      required:
+      - active
+      type: object
+      properties:
+        active:
+          type: boolean
+          description: Indicates whether the token is currently active.
+        client_id:
+          type: string
+          description: Client identifier for the token.
+        username:
+          type: string
+          description: Username associated with the token.
+        scope:
+          type: string
+          description: Scope of the token.
+        exp:
+          type: integer
+          description: Expiration timestamp of the token in seconds since epoch.
+        iat:
+          type: integer
+          description: Issued at timestamp of the token in seconds since epoch.
+      example:
+        scope: scope
+        active: true
+        exp: 0
+        iat: 6
+        client_id: client_id
+        username: username
+    inline_response_200_3:
+      type: object
+      properties:
+        sub:
+          type: string
+          description: Unique identifier for the user from the authentication provider's
+            perspective.
+        name:
+          type: string
+          description: Full name of the user.
+        given_name:
+          type: string
+          description: Given name of the user.
+        family_name:
+          type: string
+          description: Family name of the user.
+        email:
+          type: string
+          description: Email address of the user.
+          format: email
+        email_verified:
+          type: boolean
+          description: Indicates whether the user's email address has been verified.
+        phone_number:
+          type: string
+          description: Phone number of the user.
+        phone_number_verified:
+          type: boolean
+          description: Indicates whether the user's phone number has been verified.
+      example:
+        sub: sub
+        email_verified: true
+        name: name
+        phone_number_verified: true
+        phone_number: phone_number
+        given_name: given_name
+        family_name: family_name
+        email: ""
+    inline_response_200_4:
+      required:
+      - authorization_endpoint
+      - issuer
+      - jwks_uri
+      - registration_endpoint
+      - token_endpoint
+      type: object
+      properties:
+        issuer:
+          type: string
+          description: Base URL that uniquely identifies the authorization server
+          format: uri
+        authorization_endpoint:
+          type: string
+          description: Authorization endpoint URL for initiating the OAuth 2.0 flow
+          format: uri
+        token_endpoint:
+          type: string
+          description: Token endpoint URL for obtaining access tokens
+          format: uri
+        userinfo_endpoint:
+          type: string
+          description: UserInfo endpoint URL for retrieving authenticated user information
+          format: uri
+        jwks_uri:
+          type: string
+          description: URL for retrieving the JSON Web Key Set used to validate JWTs
+          format: uri
+        registration_endpoint:
+          type: string
+          description: Dynamic Client Registration endpoint URL
+          format: uri
+        scopes_supported:
+          type: array
+          items:
+            type: string
+        response_types_supported:
+          type: array
+          items:
+            type: string
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+        subject_types_supported:
+          type: array
+          items:
+            type: string
+        id_token_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+        claims_supported:
+          type: array
+          items:
+            type: string
+      example:
+        response_types_supported:
+        - response_types_supported
+        - response_types_supported
+        grant_types_supported:
+        - grant_types_supported
+        - grant_types_supported
+        scopes_supported:
+        - scopes_supported
+        - scopes_supported
+        issuer: http://example.com/aeiou
+        authorization_endpoint: http://example.com/aeiou
+        userinfo_endpoint: http://example.com/aeiou
+        claims_supported:
+        - claims_supported
+        - claims_supported
+        jwks_uri: http://example.com/aeiou
+        subject_types_supported:
+        - subject_types_supported
+        - subject_types_supported
+        id_token_signing_alg_values_supported:
+        - id_token_signing_alg_values_supported
+        - id_token_signing_alg_values_supported
+        registration_endpoint: http://example.com/aeiou
+        token_endpoint_auth_methods_supported:
+        - token_endpoint_auth_methods_supported
+        - token_endpoint_auth_methods_supported
+        token_endpoint: http://example.com/aeiou
+    inline_response_200_5:
+      required:
+      - arrangements
+      - customer_id
+      type: object
+      properties:
+        customer_id:
+          type: string
+        total_arrangements:
+          type: integer
+        active_arrangements:
+          type: integer
+        arrangements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentArrangementResponse'
+      example:
+        total_arrangements: 0
+        customer_id: customer_id
+        active_arrangements: 6
+        arrangements:
+        - data_holder_id: data_holder_id
+          sharing_duration:
+            end_date: 2000-01-23T04:56:07.000+00:00
+            start_date: 2000-01-23T04:56:07.000+00:00
+          purpose: purpose
+          last_updated_at: 2000-01-23T04:56:07.000+00:00
+          permissions:
+          - permissions
+          - permissions
+          revocation_info:
+            reason: reason
+            revoked_at: 2000-01-23T04:56:07.000+00:00
+          additional_terms:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: active
+        - data_holder_id: data_holder_id
+          sharing_duration:
+            end_date: 2000-01-23T04:56:07.000+00:00
+            start_date: 2000-01-23T04:56:07.000+00:00
+          purpose: purpose
+          last_updated_at: 2000-01-23T04:56:07.000+00:00
+          permissions:
+          - permissions
+          - permissions
+          revocation_info:
+            reason: reason
+            revoked_at: 2000-01-23T04:56:07.000+00:00
+          additional_terms:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: active
+    consentcustomerscustomer_idarrangementsbulkupdate_updates:
+      required:
+      - action
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+          enum:
+          - revoke
+          - suspend
+          - resume
+          - extend
+        reason:
+          type: string
+        extension_details:
+          $ref: '#/components/schemas/ConsentExtensionRequest'
+    arrangements_bulkupdate_body:
+      required:
+      - updates
+      type: object
+      properties:
+        updates:
+          maxItems: 50
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/consentcustomerscustomer_idarrangementsbulkupdate_updates'
+    inline_response_200_6:
+      required:
+      - customer_id
+      - results
+      type: object
+      properties:
+        customer_id:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_6_results'
+      example:
+        customer_id: customer_id
+        results:
+        - id: id
+          error:
+            code: code
+            message: message
+          status: success
+        - id: id
+          error:
+            code: code
+            message: message
+          status: success
+    Participant_contact:
+      required:
+      - email
+      - phone
+      type: object
+      properties:
+        phone:
+          type: string
+          description: Contact phone number
+        email:
+          type: string
+          description: Contact email address
+          format: email
+    JWKSet_keys:
+      required:
+      - kty
+      type: object
+      properties:
+        kty:
+          type: string
+          description: Key type
+          enum:
+          - RSA
+          - EC
+        kid:
+          type: string
+          description: Key ID
+          example: "1234567890"
+        use:
+          type: string
+          description: "Key usage (e.g., \"sig\" for signing)"
+          example: sig
+        alg:
+          type: string
+          description: "Algorithm (e.g., \"RS256\")"
+          example: RS256
+        "n":
+          type: string
+          description: RSA modulus for RSA keys
+          example: 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+        e:
+          type: string
+          description: RSA public exponent for RSA keys
+          example: AQAB
+        x:
+          type: string
+          description: X coordinate for EC keys
+          example: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+        "y":
+          type: string
+          description: Y coordinate for EC keys
+          example: SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+        crv:
+          type: string
+          description: Curve type for EC keys
+          example: P-256
+          enum:
+          - P-256
+          - P-384
+          - P-521
+        x5c:
+          type: array
+          description: X.509 certificate chain
+          example:
+          - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+          items:
+            type: string
+        x5t:
+          type: string
+          description: X.509 certificate SHA-1 thumbprint
+          example: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+      example:
+        kty: RSA
+        e: AQAB
+        use: sig
+        crv: P-256
+        x5t: dGhpcyBpcyBub3QgYSByZWFsIHRodW1icHJpbnQ
+        kid: "1234567890"
+        x5c:
+        - MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA==
+        x: gI0GAILBdu7T53akrFmMyGcsF3n5dO7MmwNBHKW5SV0
+        "y": SLW_xSffzlPWrHEVI30DHM_4egVwt3NQqeUD7nMFpps
+        alg: RS256
+        "n": 0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw
+    ConsentArrangementRequest_sharing_duration:
+      required:
+      - end_date
+      - start_date
+      type: object
+      properties:
+        start_date:
+          type: string
+          description: When the consent arrangement should start
+          format: date-time
+        end_date:
+          type: string
+          description: When the consent arrangement should end
+          format: date-time
+    ConsentArrangementRequest_additional_terms:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      example:
+        value: value
+        key: key
+    ConsentArrangementResponse_sharing_duration:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date-time
+        end_date:
+          type: string
+          format: date-time
+      example:
+        end_date: 2000-01-23T04:56:07.000+00:00
+        start_date: 2000-01-23T04:56:07.000+00:00
+    ConsentArrangementResponse_revocation_info:
+      type: object
+      properties:
+        revoked_at:
+          type: string
+          format: date-time
+        reason:
+          type: string
+      description: Information about consent revocation if applicable
+      example:
+        reason: reason
+        revoked_at: 2000-01-23T04:56:07.000+00:00
+    ConsentHistory_events:
+      required:
+      - actor
+      - event_type
+      - timestamp
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum:
+          - created
+          - updated
+          - suspended
+          - resumed
+          - revoked
+          - expired
+          - extended
+        timestamp:
+          type: string
+          format: date-time
+        actor:
+          type: string
+          description: "The entity that performed the action (e.g., user_id, system)"
+        details:
+          type: object
+          description: Additional event-specific details
+        previous_state:
+          type: object
+          description: State before the change
+        new_state:
+          type: object
+          description: State after the change
+      example:
+        actor: actor
+        event_type: created
+        previous_state: {}
+        new_state: {}
+        details: {}
+        timestamp: 2000-01-23T04:56:07.000+00:00
+    BulkConsentResponse_error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      example:
+        code: code
+        message: message
+    BulkConsentResponse_results:
+      required:
+      - arrangement
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - success
+          - failed
+        arrangement:
+          $ref: '#/components/schemas/ConsentArrangementResponse'
+        error:
+          $ref: '#/components/schemas/BulkConsentResponse_error'
+      example:
+        arrangement:
+          data_holder_id: data_holder_id
+          sharing_duration:
+            end_date: 2000-01-23T04:56:07.000+00:00
+            start_date: 2000-01-23T04:56:07.000+00:00
+          purpose: purpose
+          last_updated_at: 2000-01-23T04:56:07.000+00:00
+          permissions:
+          - permissions
+          - permissions
+          revocation_info:
+            reason: reason
+            revoked_at: 2000-01-23T04:56:07.000+00:00
+          additional_terms:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: active
+        error:
+          code: code
+          message: message
+        status: success
+    ConsentTemplate_default_duration:
+      type: object
+      properties:
+        value:
+          type: integer
+        unit:
+          type: string
+          enum:
+          - days
+          - months
+          - years
+      example:
+        unit: days
+        value: 0
+    ConsentDashboard_summary_arrangements_by_status:
+      type: object
+      properties:
+        active:
+          type: integer
+        expired:
+          type: integer
+        revoked:
+          type: integer
+        suspended:
+          type: integer
+      example:
+        expired: 5
+        active: 1
+        revoked: 5
+        suspended: 2
+    ConsentDashboard_summary_arrangements_by_purpose:
+      type: object
+      properties:
+        purpose:
+          type: string
+        count:
+          type: integer
+      example:
+        purpose: purpose
+        count: 7
+    ConsentDashboard_summary_data_holders:
+      type: object
+      properties:
+        data_holder_id:
+          type: string
+        name:
+          type: string
+        active_arrangements:
+          type: integer
+      example:
+        data_holder_id: data_holder_id
+        name: name
+        active_arrangements: 9
+    ConsentDashboard_summary:
+      required:
+      - active_arrangements
+      - total_arrangements
+      type: object
+      properties:
+        total_arrangements:
+          type: integer
+        active_arrangements:
+          type: integer
+        arrangements_by_status:
+          $ref: '#/components/schemas/ConsentDashboard_summary_arrangements_by_status'
+        arrangements_by_purpose:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentDashboard_summary_arrangements_by_purpose'
+        data_holders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentDashboard_summary_data_holders'
+        recent_activity:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentHistory'
+        expiring_soon:
+          type: array
+          description: Arrangements expiring in the next 30 days
+          items:
+            $ref: '#/components/schemas/ConsentArrangementResponse'
+      example:
+        expiring_soon:
+        - data_holder_id: data_holder_id
+          sharing_duration:
+            end_date: 2000-01-23T04:56:07.000+00:00
+            start_date: 2000-01-23T04:56:07.000+00:00
+          purpose: purpose
+          last_updated_at: 2000-01-23T04:56:07.000+00:00
+          permissions:
+          - permissions
+          - permissions
+          revocation_info:
+            reason: reason
+            revoked_at: 2000-01-23T04:56:07.000+00:00
+          additional_terms:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: active
+        - data_holder_id: data_holder_id
+          sharing_duration:
+            end_date: 2000-01-23T04:56:07.000+00:00
+            start_date: 2000-01-23T04:56:07.000+00:00
+          purpose: purpose
+          last_updated_at: 2000-01-23T04:56:07.000+00:00
+          permissions:
+          - permissions
+          - permissions
+          revocation_info:
+            reason: reason
+            revoked_at: 2000-01-23T04:56:07.000+00:00
+          additional_terms:
+          - value: value
+            key: key
+          - value: value
+            key: key
+          created_at: 2000-01-23T04:56:07.000+00:00
+          id: id
+          status: active
+        arrangements_by_status:
+          expired: 5
+          active: 1
+          revoked: 5
+          suspended: 2
+        arrangements_by_purpose:
+        - purpose: purpose
+          count: 7
+        - purpose: purpose
+          count: 7
+        data_holders:
+        - data_holder_id: data_holder_id
+          name: name
+          active_arrangements: 9
+        - data_holder_id: data_holder_id
+          name: name
+          active_arrangements: 9
+        total_arrangements: 0
+        recent_activity:
+        - id: id
+          events:
+          - actor: actor
+            event_type: created
+            previous_state: {}
+            new_state: {}
+            details: {}
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - actor: actor
+            event_type: created
+            previous_state: {}
+            new_state: {}
+            details: {}
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        - id: id
+          events:
+          - actor: actor
+            event_type: created
+            previous_state: {}
+            new_state: {}
+            details: {}
+            timestamp: 2000-01-23T04:56:07.000+00:00
+          - actor: actor
+            event_type: created
+            previous_state: {}
+            new_state: {}
+            details: {}
+            timestamp: 2000-01-23T04:56:07.000+00:00
+        active_arrangements: 6
+    PeraAccount_balance:
+      type: object
+      properties:
+        current_value:
+          type: number
+          description: Current value of the PERA arrangement
+          format: double
+        currency:
+          type: string
+          description: Currency of the balance amounts
+          default: PHP
+        as_of:
+          type: string
+          description: Timestamp of when the balance was last updated
+          format: date-time
+      example:
+        as_of: 2000-01-23T04:56:07.000+00:00
+        currency: PHP
+        current_value: 0.8008281904610115
+    inline_response_200_6_results:
+      required:
+      - id
+      - status
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - success
+          - failed
+        error:
+          $ref: '#/components/schemas/BulkConsentResponse_error'
+      example:
+        id: id
+        error:
+          code: code
+          message: message
+        status: success
+  responses:
+    NotFound:
+      description: Not Found - The requested resource could not be found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized - Authentication is required and has failed or not
+        been provided
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden - The server understood the request but refuses to authorize
+        it
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad Request - The server cannot process the request due to a client
+        error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Too Many Requests - The client has sent too many requests in a
+        given amount of time
+      headers:
+        Retry-After:
+          description: Field indicating the time (in seconds) that the client should
+            wait before retrying an operation. The response should include this header
+            along with responses with the HTTP status code of 429 Too many requests.
+          style: simple
+          explode: false
+          schema:
+            minimum: 2
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal Server Error - The server encountered an unexpected condition
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    ParticipantId:
+      name: participant-id
+      in: header
+      description: Field referencing the unique identifier of the requesting participant.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    ApiVersion:
+      name: x-v
+      in: header
+      description: Version of the API endpoint requested by the client. Must be set
+        to a positive integer. If the version requested is not supported then the
+        holder must respond with a 406 Not Acceptable.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maximum: 100
+        minimum: 1
+        type: integer
+    FapiInteractionId:
+      name: x-fapi-interaction-id
+      in: header
+      description: "An [RFC4122] UUID used as a correlation id. If provided, the data\
+        \ holder must play back this value in the x-fapi-interaction-id response header.\
+        \ If not provided a [RFC4122] UUID value is required to be provided in the\
+        \ response header to track the interaction."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        maxLength: 64
+        type: string
+        format: uuid
+    FapiAuthDate:
+      name: x-fapi-auth-date
+      in: header
+      description: "The time when the customer last logged in to the Data Recipient\
+        \ Software Product as described in [FAPI-1.0-Baseline]. Required for all resource\
+        \ calls (customer present and unattended). Not required for unauthenticated\
+        \ calls."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: date-time
+    FapiCustomerIpAddress:
+      name: x-fapi-customer-ip-address
+      in: header
+      description: The customer's original IP address if the customer is currently
+        logged in to the Data Recipient Software Product. The presence of this header
+        indicates that the API is being called in a customer present context. Not
+        to be included for unauthenticated calls.
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: ipv4
+    ClientHeaders:
+      name: x-client-headers
+      in: header
+      description: "The customer's original standard http headers Base64 encoded,\
+        \ including the original User-Agent header, if the customer is currently logged\
+        \ in to the Data Recipient Software Product. Mandatory for customer present\
+        \ calls. Not required for unattended or unauthenticated calls."
+      required: false
+      style: simple
+      explode: false
+      schema:
+        type: string
+        format: base64
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          scopes: {}
+    SignedJWT:
+      type: http
+      description: Signed JWT for participant authentication and authorization
+      scheme: bearer
+      bearerFormat: JWT
+    RegistrationAccessToken:
+      type: http
+      description: Registration Access Token for managing client registration
+      scheme: bearer
+x-global-headers:
+- $ref: '#/components/parameters/ParticipantId'
+- $ref: '#/components/parameters/ApiVersion'
+- $ref: '#/components/parameters/FapiInteractionId'
+- $ref: '#/components/parameters/FapiAuthDate'
+- $ref: '#/components/parameters/FapiCustomerIpAddress'
+- $ref: '#/components/parameters/ClientHeaders'
