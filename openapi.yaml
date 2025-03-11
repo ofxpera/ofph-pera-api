@@ -285,13 +285,25 @@ paths:
       description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
       security:
         - SignedJWT: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeraArrangement"
       responses:
         "201":
-          description: Successfully created a new PERA Account
+          description: Successfully registered the status of a PERA onboarding process.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PeraArrangement"
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    description: The unique identifier of the PERA arrangement that was registered.
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -398,17 +410,14 @@ paths:
                   description: Random value used to prevent replay attacks
        
       responses:
-        "200":
-          description: Authorization successful
-          content:
-            application/json:
+        "302":
+          description: Redirect to authorization page
+          headers:
+            Location:
               schema:
-                type: object
-                properties:
-                  request_uri:
-                    type: string
-                    format: uri
-                    description: URI to redirect the user to for authorization
+                type: string
+                format: uri
+              description: URI to redirect the user to for authorization
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -550,6 +559,12 @@ paths:
                 refresh_token:
                   type: string
                   description: Refresh token used to obtain a new access token.
+                client_assertion_type:
+                  type: string
+                  enum: [urn:ietf:params:oauth:assertion-type:jwt-bearer]
+                client_assertion:
+                  type: string
+                  description: JWT assertion containing client credentials.
       responses:
         "200":
           description: Token successfully issued
@@ -2587,6 +2602,9 @@ components:
           type: string
           enum: [ACTIVE, DECLINED, CLOSED]
           description: Current status of the PERA arrangement
+        reason:
+          type: string
+          description: Reason for the resulting status of the arrangement, mostly used for DECLINED status.
         creation_date:
           type: string
           format: date-time

@@ -67,7 +67,7 @@ Cascade [2025-02-26T06:40:17+08:00]
 
 *Release Date: March 11, 2025*
 
-This release focuses on security enhancements and improvements to the PERA arrangement endpoints, along with several other refinements to the API specification.
+This release focuses on security enhancements, improvements to the PERA arrangement endpoints, and OAuth compliance updates.
 
 ### Security Enhancements
 
@@ -83,6 +83,14 @@ This release focuses on security enhancements and improvements to the PERA arran
   - Updated to require encrypted JWT (JWE) conforming to RFC 7516
   - Added specification for RSA-OAEP key management and AES-GCM content encryption
 
+### OAuth Improvements
+
+- **Updated OAuth authorization endpoint** to align with RFC 6749:
+  - Changed response code from 200 to 302 for proper redirection
+  - Added `Location` header for redirect URL
+  - Maintained `request_uri` in response body for compatibility
+  - Added support for `endorsement` as a valid `response_type` value
+
 ### PERA Arrangement Improvements
 
 - **Added security requirements** to PERA arrangement endpoints:
@@ -91,26 +99,33 @@ This release focuses on security enhancements and improvements to the PERA arran
 
 - **Updated PERA arrangement endpoint descriptions**:
   - Clarified that the POST endpoint registers the result of an FI-initiated PERA account opening
+  - Updated response description to be more specific about the onboarding process
   - Updated summary to "Registers the result of a PERA account opening"
 
-### Other Changes
-
-- **Updated API version** from 0.0.5 to 0.0.6
-
-- **Enhanced OAuth functionality**:
-  - Added `endorsement` as a valid value for the `response_type` parameter in the OAuth authorization endpoint
+### Schema Updates
 
 - **Updated PeraArrangement schema**:
   - Changed status enum values from `[ACTIVE, SUSPENDED, CLOSED]` to `[ACTIVE, DECLINED, CLOSED]`
+  - Renamed `customer_id` field to `account_id` for better clarity
+  - Updated field descriptions to be more precise
+
+### Documentation Updates
+
+- **Updated README.md**:
+  - Added new PERA APIs section
+  - Updated security requirements with JWT encryption details
+  - Updated API version and copyright information
+  - Fixed parameter naming consistency
 
 ### Migration Notes
 - Applications using `RegistrationAccessToken` should update to use `SignedJWT` instead
 - JWT implementations must be updated to conform to the enhanced encryption requirements
-- OAuth clients should be updated to handle the new `endorsement` response type if needed
+- OAuth clients should be updated to handle 302 redirects and the new `endorsement` response type
 - Applications handling PERA arrangements should update status handling to use `DECLINED` instead of `SUSPENDED`
+- Update any references to `customer_id` to use `account_id` in PeraArrangement schema
 
 ---
 
 *These release notes document changes from version 0.0.5 to version 0.0.6 of the OFxPERA API.*
 
-Cascade [2025-03-11T10:02:07+08:00]
+Cascade [2025-03-11T14:33:05+08:00]
