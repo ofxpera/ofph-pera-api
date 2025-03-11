@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.5
+  version: 0.0.6
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -81,7 +81,7 @@ paths:
       summary: Update an OFxPERA Participant
       description: API for updating the URIs and status of an OFxPERA Participant
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -114,7 +114,7 @@ paths:
       summary: Get a list of registered OFxPERA Participants
       description: API for retrieving all registered OFxPERA Participants
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -145,7 +145,7 @@ paths:
       summary: Get an OFxPERA Participant's registration information
       description: API for retrieving registration information for a specific OFxPERA Participant
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       parameters:
         - name: participant_id
           in: path
@@ -181,7 +181,7 @@ paths:
       summary: Register a PERA Admin Product
       description: API that allows PERA Admin to register a PERA product. 
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       responses:
         "200":
           description: Product successfully registered
@@ -210,7 +210,7 @@ paths:
       summary: Update a PERA Admin Product
       description: API that allows PERA Admin to update their product. 
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       parameters:
         - name: product_id
           in: path
@@ -246,7 +246,7 @@ paths:
       summary: Get a list of PERA products associated with PERA Admin
       description: API for retrieving all registered products associated with the PERA Admin. 
       security:
-        - RegistrationAccessToken: []
+        - SignedJWT: []
       parameters:
         - name: participant_id
           in: path
@@ -281,8 +281,10 @@ paths:
       operationId: peraArrangementRegistration
       tags:
         - PERA
-      summary: Registers a new PERA arrangement
-      description: API that allows PERA Admins to register the successful creation of one or more new PERA Arrangements
+      summary: Registers the result of a PERA account opening
+      description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
+      security:
+        - SignedJWT: []
       responses:
         "200":
           description: Successfully created a new PERA Account
@@ -308,6 +310,8 @@ paths:
         - PERA
       summary: Get the status of a PERA arrangement
       description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+      security:
+        - SignedJWT: []
       parameters:
         - name: arrangement_id
           in: path
@@ -364,7 +368,7 @@ paths:
                   description: Authorization code
                 response_type:
                   type: string
-                  enum: [code]
+                  enum: [code, endorsement]
                   description: Must be set to "code" for authorization code flow
                 scope:
                   type: array
@@ -2581,7 +2585,7 @@ components:
           description: Unique identifier of the consent provided by the Customer to the FI
         status:
           type: string
-          enum: [ACTIVE, SUSPENDED, CLOSED]
+          enum: [ACTIVE, DECLINED, CLOSED]
           description: Current status of the PERA arrangement
         creation_date:
           type: string
@@ -2674,7 +2678,9 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: Signed JWT for participant authentication and authorization
+      description: >
+        An encrypted JWT (JWE) that must conform to RFC 7516.
+        The token is encrypted using RSA-OAEP for key management and AES-GCM for content encryption.
     RegistrationAccessToken:
       type: http
       scheme: bearer
