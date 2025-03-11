@@ -12,7 +12,7 @@ This repository contains the OpenAPI 3.0 specification for the OFxPERA API, whic
 Production: `https://api.ofxpera.ph/v1`
 
 ### API Version
-Current Version: `0.0.1`
+Current Version: `0.0.6`
 
 ### Prerequisites
 - Valid participant registration with OFxPERA
@@ -28,13 +28,19 @@ Bootstrap APIs handle participant registration and management:
   - Requires participant details and FAPI-compliant registration information
 - `PUT /ofxpera/participants` - Update participant registration
 - `GET /ofxpera/participants` - List all registered participants
-- `GET /ofxpera/participants/{client_id}` - Get specific participant details
+- `GET /ofxpera/participants/{participant_id}` - Get specific participant details
+
+### PERA APIs
+Core PERA functionality endpoints:
+- `POST /ofxpera/arrangements` - Register the result of a PERA account opening
+- `GET /ofxpera/arrangements/{arrangement_id}` - Get PERA arrangement status
+- `PUT /ofxpera/arrangements/{arrangement_id}/status` - Update PERA arrangement status
 
 ### OAuth/OpenID Connect APIs
 Authentication and authorization endpoints following FAPI security profile:
-- `GET /oauth/auth` - Authorization endpoint
+- `GET /oauth/auth` - Authorization endpoint (302 redirect)
   - Supports PKCE (Proof Key for Code Exchange)
-  - Required parameters: client_id, response_type, scope, redirect_uri, code_challenge
+  - Required parameters: client_id, response_type (code or endorsement), scope, redirect_uri, code_challenge
 - `POST /oauth/token` - Token endpoint
   - Supports authorization_code and refresh_token grant types
 - `GET /oauth/introspect` - Token introspection (optional)
@@ -57,7 +63,8 @@ OpenID Connect discovery and registration endpoints:
 
 ### Authentication
 - OAuth 2.0 with OpenID Connect implementation
-- FAPI-compliant security profiles
+- FAPI-compliant security profiles with encrypted JWTs (JWE)
+- RSA-OAEP for key management and AES-GCM for content encryption
 - PKCE (Proof Key for Code Exchange) requirement for authorization code flow
 - JWT-based token format
 
@@ -99,6 +106,6 @@ For technical support or questions:
 
 ## License
 
-Copyright 2024 OFxPERA Contributors
+Copyright 2024-2025 OFxPERA Contributors
 
 Licensed under the Apache License 2.0 - See LICENSE file for details
