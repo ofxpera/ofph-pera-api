@@ -369,6 +369,8 @@ paths:
               required:
                 - participant_id
                 - response_type
+                - client_id
+                - redirect_uri
               properties:
                 participant_id:
                   type: string
@@ -408,7 +410,6 @@ paths:
                 nonce:
                   type: string
                   description: Random value used to prevent replay attacks
-       
       responses:
         "302":
           description: Redirect to authorization page
@@ -419,9 +420,17 @@ paths:
                 format: uri
               description: URI to redirect the user to for authorization
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: OAuth error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: Client authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
@@ -500,8 +509,6 @@ paths:
           schema:
             type: string
       responses:
-        "200":
-          description: Authorization successful
         "302":
           description: Redirect to client with authorization code
           headers:
@@ -511,9 +518,17 @@ paths:
                 format: uri
                 description: Redirect URI with authorization code
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: OAuth error response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: Client authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OAuthError"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
@@ -529,6 +544,7 @@ paths:
       tags:
         - OAuth
       summary: Token endpoint
+      description: OAuth 2.0 token endpoint for obtaining access tokens
       security:
         - SignedJWT: []
       requestBody:
@@ -571,31 +587,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - access_token
-                  - token_type
-                  - expires_in
-                properties:
-                  access_token:
-                    type: string
-                    description: Access token for the authenticated user
-                  token_type:
-                    type: string
-                    enum: [Bearer]
-                    description: Type of the token, always "Bearer"
-                  expires_in:
-                    type: integer
-                    description: Lifetime in seconds of the access token
-                  id_token:
-                    type: string
-                    description: ID Token value associated with the authenticated session
-                  refresh_token:
-                    type: string
-                    description: Refresh token used to obtain new access tokens
-                  scope:
-                    type: string
-                    description: Space-separated list of scopes associated with the access token
+                $ref: "#/components/schemas/TokenResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2639,6 +2631,53 @@ components:
           - product_description
           - product_risk_rating
           - product_kiid_uri
+
+    TokenResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          description: The access token string as issued by the authorization server
+        token_type:
+          type: string
+          enum: [Bearer]
+          description: Type of access token, fixed to Bearer
+        expires_in:
+          type: integer
+          description: Lifetime in seconds of the access token
+        refresh_token:
+          type: string
+          description: Refresh token used to obtain new access tokens
+        scope:
+          type: string
+          description: Space-separated list of scopes granted
+
+    OAuthError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - invalid_request
+            - invalid_client
+            - invalid_grant
+            - unauthorized_client
+            - unsupported_grant_type
+            - invalid_scope
+          description: Error code as defined in RFC 6749
+        error_description:
+          type: string
+          description: Human-readable error description
+        error_uri:
+          type: string
+          format: uri
+          description: URI to error documentation
 
   responses:
     NotFound:
