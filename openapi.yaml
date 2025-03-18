@@ -47,8 +47,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Register an OFxPERA Participant"
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -80,8 +78,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Update an OFxPERA Participant"
       description: API for updating the URIs and status of an OFxPERA Participant
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -113,8 +109,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
-      security:
-        - SignedJWT: []
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -144,8 +138,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Get an OFxPERA Participant's registration information"
       description: API for retrieving registration information for a specific OFxPERA Participant
-      security:
-        - SignedJWT: []
       parameters:
         - name: participant_id
           in: path
@@ -180,8 +172,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Register a PERA Admin Product"
       description: API that allows PERA Admin to register a PERA product. 
-      security:
-        - SignedJWT: []
       responses:
         "200":
           description: Product successfully registered
@@ -209,8 +199,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Update a PERA Admin Product"
       description: API that allows PERA Admin to update their product. 
-      security:
-        - SignedJWT: []
       parameters:
         - name: product_id
           in: path
@@ -245,8 +233,6 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of PERA products associated with PERA Admin"
       description: API for retrieving all registered products associated with the PERA Admin. 
-      security:
-        - SignedJWT: []
       parameters:
         - name: participant_id
           in: path
@@ -283,8 +269,6 @@ paths:
         - PERA
       summary: "[PHASE 1] Registers the result of a PERA account opening"
       description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -322,8 +306,6 @@ paths:
         - PERA
       summary: "[PHASE 2] Get the status of a PERA arrangement"
       description: API that allows FIs to retrieve the status of one or more PERA Arrangements
-      security:
-        - SignedJWT: []
       parameters:
         - name: arrangement_id
           in: path
@@ -358,8 +340,6 @@ paths:
         - OAuth
       summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow"
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -445,8 +425,6 @@ paths:
         - OAuth
       summary: "[PHASE 1] Authorization endpoint for Admin-initiated onboarding"
       description: OpenID Connect authorization endpoint that initiates the authorization flow
-      security:
-        - SignedJWT: []
       parameters:
         - name: client_id
           in: query
@@ -545,8 +523,6 @@ paths:
         - OAuth
       summary: "[PHASE 1] Token endpoint"
       description: OAuth 2.0 token endpoint for obtaining access tokens
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -612,8 +588,6 @@ paths:
       summary: Optional token introspection
       description: |
         Endpoint for validating and retrieving metadata about an access token. Returns information about whether the token is active, its associated client, user, scopes, and expiration details. This endpoint allows resource servers to verify tokens before granting access to protected resources.
-      security:
-        - OAuth2: []
       parameters:
         - name: token
           in: query
@@ -723,6 +697,8 @@ paths:
       tags:
         - Common
       summary: "[DEPRECATED] Forward customer endorsement"
+      security:
+        - OAuth2: []
       parameters:
         - name: endorsement
           in: query
@@ -730,8 +706,6 @@ paths:
           required: true
           schema:
             type: string
-      security:
-        - OAuth2: []
       responses:
         "200":
           description: Successfully forwarded customer endorsement
@@ -767,6 +741,13 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       responses:
         "200":
           description: Customer's Personal Information retrieved successfully
@@ -794,8 +775,6 @@ paths:
         - Discovery
       summary: Optional - OpenID Connect Discovery
       description: Retrieve OpenID Connect configuration information
-      security:
-        - SignedJWT: []
       responses:
         "200":
           description: OpenID Connect configuration retrieved
@@ -882,8 +861,6 @@ paths:
         - Discovery
       summary: "[PHASE 2] Dynamic Client Registration (configurable endpoint)"
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
-      security:
-        - SignedJWT: []
       requestBody:
         required: true
         content:
@@ -977,8 +954,6 @@ paths:
       tags:
         - Discovery
       summary: Delete Client Registration (configurable endpoint)
-      security:
-        - RegistrationAccessToken: []
       responses:
         "204":
           description: Client registration deleted
@@ -1001,8 +976,6 @@ paths:
         - Discovery
       summary: "[PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)"
       description: Returns the public keys used to verify JWT signatures
-      security:
-        - SignedJWT: []
       operationId: getJwks
       responses:
         '200':
@@ -1036,8 +1009,6 @@ paths:
         - UK Open Banking Consent API v3.1.10
         - Australia CDR Consent Management Standards v1.14.0
         - Singapore SGFinDex Consent Framework
-      security:
-        - OAuth2: []
       requestBody:
         required: true
         content:
@@ -1072,8 +1043,6 @@ paths:
         Based on:
         - UK Open Banking Account Access Consents API
         - Australia CDR Get Consent API
-      security:
-        - OAuth2: []
       parameters:
         - name: status
           in: query
@@ -1124,8 +1093,6 @@ paths:
         Based on:
         - UK Open Banking Account Access Consents API
         - Australia CDR Get Consent API
-      security:
-        - OAuth2: []
       parameters:
         - name: arrangement_id
           in: path
@@ -1164,8 +1131,6 @@ paths:
         - UK Open Banking Account Access Consents API
         - Australia CDR Revoke Consent API
         - Korea MyData Consent Revocation API
-      security:
-        - OAuth2: []
       parameters:
         - name: arrangement_id
           in: path
@@ -1199,8 +1164,6 @@ paths:
         Based on:
         - UK Open Banking Account Access Consents API
         - Australia CDR Update Consent API
-      security:
-        - OAuth2: []
       parameters:
         - name: arrangement_id
           in: path
@@ -1245,8 +1208,6 @@ paths:
         Based on:
         - Australia CDR Consent History API
         - UK Open Banking Consent Audit Requirements
-      security:
-        - OAuth2: []
       parameters:
         - name: arrangement_id
           in: path
@@ -1285,8 +1246,6 @@ paths:
         Based on:
         - Korea MyData Bulk Consent API
         - Singapore SGFinDex Multi-Institution Consent
-      security:
-        - OAuth2: []
       requestBody:
         required: true
         content:
@@ -1322,8 +1281,6 @@ paths:
         Based on:
         - Australia CDR Consent Taxonomy
         - UK Open Banking Standard Permissions
-      security:
-        - OAuth2: []
       parameters:
         - name: category
           in: query
@@ -1413,8 +1370,6 @@ paths:
         - UK Open Banking Customer Consent Management
         - Australia CDR Consumer Dashboard APIs
         - Singapore SGFinDex Customer Consent View
-      security:
-        - OAuth2: []
       parameters:
         - name: customer_id
           in: path
@@ -1483,8 +1438,6 @@ paths:
         Based on:
         - Australia CDR Bulk Consumer Update
         - Korea MyData Consent Management
-      security:
-        - OAuth2: []
       parameters:
         - name: customer_id
           in: path
@@ -1578,8 +1531,6 @@ paths:
         - Australia CDR Consumer Dashboard
         - UK Open Banking Consent Dashboard
         - Singapore SGFinDex Customer Portal
-      security:
-        - OAuth2: []
       parameters:
         - name: customer_id
           in: path
@@ -1606,6 +1557,9 @@ paths:
           $ref: '#/components/responses/TooManyRequests'
         '500':
           $ref: '#/components/responses/InternalServerError'
+
+security:
+  - SignedJWT: []
 
 components:
   parameters:
@@ -1663,6 +1617,25 @@ components:
       schema:
         type: string
         format: base64
+    
+    ClientUserAgent:
+      name: x-client-user-agent
+      in: header
+      required: false
+      description: The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+      schema:
+        type: string
+        format: base64
+
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: Bearer token for authentication. Must be in the format 'Bearer <token>'
+      schema:
+        type: string
+        pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
+        example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 
   schemas:
     Address:
@@ -2660,7 +2633,7 @@ components:
           description: Lifetime in seconds of the access token
         refresh_token:
           type: string
-          description: Refresh token used to obtain new access tokens
+          description: Refresh token used to obtain a new access token.
         id_token:
           type: string
           description: ID Token value associated with the authenticated session
@@ -2740,9 +2713,11 @@ components:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: /oauth/authorize
-          tokenUrl: /oauth/token
-          scopes: {}
+          authorizationUrl: https://yourserver.com/oauth/authorize
+          tokenUrl: https://yourserver.com/oauth/token
+          scopes: 
+            read: Read access
+            write: Write access
     SignedJWT:
       type: http
       scheme: bearer
@@ -2757,8 +2732,10 @@ components:
 
 x-global-headers:
   - $ref: "#/components/parameters/ParticipantId"
+  - $ref: "#/components/parameters/Authorization"
   - $ref: "#/components/parameters/ApiVersion"
   - $ref: "#/components/parameters/FapiInteractionId"
   - $ref: "#/components/parameters/FapiAuthDate"
   - $ref: "#/components/parameters/FapiCustomerIpAddress"
   - $ref: "#/components/parameters/ClientHeaders"
+  - $ref: "#/components/parameters/ClientUserAgent"
