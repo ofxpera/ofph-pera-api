@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.7 - Draft
+  version: 0.0.7-Draft
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
