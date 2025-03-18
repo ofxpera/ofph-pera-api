@@ -47,6 +47,10 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Register an OFxPERA Participant"
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       requestBody:
         required: true
         content:
@@ -145,6 +149,9 @@ paths:
           description: Participant identifier issued during participant registration
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Successfully retrieved participant information
@@ -172,6 +179,10 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Register a PERA Admin Product"
       description: API that allows PERA Admin to register a PERA product. 
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Product successfully registered
@@ -206,6 +217,9 @@ paths:
           description: Product identifier issued during product registration
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Product successfully updated
@@ -240,6 +254,9 @@ paths:
           description: Participant identifier issued during Participant registration
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Successfully retrieved the list of registered products associated with the PERA Admin.
@@ -275,6 +292,10 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PeraArrangement"
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "201":
           description: Successfully registered the status of a PERA onboarding process.
@@ -313,6 +334,9 @@ paths:
           description: The ID of the PERA Arrangement
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Successfully retrieved the status of the PERA Arrangement
@@ -340,6 +364,14 @@ paths:
         - OAuth
       summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow"
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       requestBody:
         required: true
         content:
@@ -523,6 +555,14 @@ paths:
         - OAuth
       summary: "[PHASE 1] Token endpoint"
       description: OAuth 2.0 token endpoint for obtaining access tokens
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       requestBody:
         required: true
         content:
@@ -594,6 +634,13 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       responses:
         "200":
           description: Token information retrieved
@@ -645,6 +692,14 @@ paths:
         OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
       security:
         - OAuth2: []
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       responses:
         "200":
           description: User information retrieved
@@ -706,6 +761,13 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
       responses:
         "200":
           description: Successfully forwarded customer endorsement
@@ -741,11 +803,11 @@ paths:
           required: true
           schema:
             type: string
-        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
       responses:
@@ -1612,7 +1674,7 @@ components:
     ClientHeaders:
       name: x-client-headers
       in: header
-      required: false
+      required: true
       description: The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
       schema:
         type: string
@@ -1621,7 +1683,7 @@ components:
     ClientUserAgent:
       name: x-client-user-agent
       in: header
-      required: false
+      required: true
       description: The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
       schema:
         type: string
