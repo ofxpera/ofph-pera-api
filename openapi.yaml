@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.6
+  version: 0.0.7 - Draft
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.5
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.6
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -45,7 +45,7 @@ paths:
       operationId: registerParticipant
       tags:
         - Bootstrap
-      summary: Register an OFxPERA Participant
+      summary: "[PHASE 2] Register an OFxPERA Participant"
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
       security:
         - SignedJWT: []
@@ -78,7 +78,7 @@ paths:
       operationId: updateParticipant
       tags:
         - Bootstrap
-      summary: Update an OFxPERA Participant
+      summary: "[PHASE 2] Update an OFxPERA Participant"
       description: API for updating the URIs and status of an OFxPERA Participant
       security:
         - SignedJWT: []
@@ -111,7 +111,7 @@ paths:
       operationId: listParticipants
       tags:
         - Bootstrap
-      summary: Get a list of registered OFxPERA Participants
+      summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
       security:
         - SignedJWT: []
@@ -142,7 +142,7 @@ paths:
       operationId: getParticipant
       tags:
         - Bootstrap
-      summary: Get an OFxPERA Participant's registration information
+      summary: "[PHASE 2] Get an OFxPERA Participant's registration information"
       description: API for retrieving registration information for a specific OFxPERA Participant
       security:
         - SignedJWT: []
@@ -178,7 +178,7 @@ paths:
       operationId: registerProduct
       tags:
         - Bootstrap
-      summary: Register a PERA Admin Product
+      summary: "[PHASE 2] Register a PERA Admin Product"
       description: API that allows PERA Admin to register a PERA product. 
       security:
         - SignedJWT: []
@@ -207,7 +207,7 @@ paths:
       operationId: updateProduct
       tags:
         - Bootstrap
-      summary: Update a PERA Admin Product
+      summary: "[PHASE 2] Update a PERA Admin Product"
       description: API that allows PERA Admin to update their product. 
       security:
         - SignedJWT: []
@@ -243,7 +243,7 @@ paths:
       operationId: listProductByParticipant
       tags:
         - Bootstrap
-      summary: Get a list of PERA products associated with PERA Admin
+      summary: "[PHASE 1] Get a list of PERA products associated with PERA Admin"
       description: API for retrieving all registered products associated with the PERA Admin. 
       security:
         - SignedJWT: []
@@ -281,7 +281,7 @@ paths:
       operationId: peraArrangementRegistration
       tags:
         - PERA
-      summary: Registers the result of a PERA account opening
+      summary: "[PHASE 1] Registers the result of a PERA account opening"
       description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
       security:
         - SignedJWT: []
@@ -320,7 +320,7 @@ paths:
       operationId: getArrangementStatus
       tags:
         - PERA
-      summary: Get the status of a PERA arrangement
+      summary: "[PHASE 2] Get the status of a PERA arrangement"
       description: API that allows FIs to retrieve the status of one or more PERA Arrangements
       security:
         - SignedJWT: []
@@ -356,7 +356,7 @@ paths:
       operationId: OAuthPAR
       tags:
         - OAuth
-      summary: "[Phase 2] PAR-based Authorization API for FI-initiated onboarding"
+      summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow"
       security:
         - SignedJWT: []
@@ -443,7 +443,7 @@ paths:
       operationId: authorizeOAuth
       tags:
         - OAuth
-      summary: Authorization endpoint
+      summary: "[PHASE 1] Authorization endpoint for Admin-initiated onboarding"
       description: OpenID Connect authorization endpoint that initiates the authorization flow
       security:
         - SignedJWT: []
@@ -543,7 +543,7 @@ paths:
       operationId: getOAuthToken
       tags:
         - OAuth
-      summary: Token endpoint
+      summary: "[PHASE 1] Token endpoint"
       description: OAuth 2.0 token endpoint for obtaining access tokens
       security:
         - SignedJWT: []
@@ -558,6 +558,8 @@ paths:
                 - code
                 - redirect_uri
                 - client_id
+                - client_assertion
+                - client_assertion_type
               properties:
                 grant_type:
                   type: string
@@ -577,7 +579,8 @@ paths:
                   description: Refresh token used to obtain a new access token.
                 client_assertion_type:
                   type: string
-                  enum: [urn:ietf:params:oauth:assertion-type:jwt-bearer]
+                  enum: [urn:ietf:params:oauth:assertion-type:jwt-bearer] 
+                  description: value must be "urn:ietf:params:oauth:assertion-type:jwt-bearer"
                 client_assertion:
                   type: string
                   description: JWT assertion containing client credentials.
@@ -719,7 +722,7 @@ paths:
       operationId: forwardCustomerEndorsement
       tags:
         - Common
-      summary: Forward customer endorsement
+      summary: "[DEPRECATED] Forward customer endorsement"
       parameters:
         - name: endorsement
           in: query
@@ -754,7 +757,7 @@ paths:
       operationId: getCustomerDetail
       tags:
         - Common
-      summary: Get detailed customer information
+      summary: "[PHASE 1] Get detailed customer information"
       security:
         - OAuth2: []
       parameters:
@@ -877,7 +880,7 @@ paths:
       operationId: registerClient
       tags:
         - Discovery
-      summary: Dynamic Client Registration (configurable endpoint)
+      summary: "[PHASE 2] Dynamic Client Registration (configurable endpoint)"
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
       security:
         - SignedJWT: []
@@ -941,7 +944,7 @@ paths:
       operationId: updateClientRegistration
       tags:
         - Discovery
-      summary: Update Client Registration (configurable endpoint)
+      summary: "[PHASE 2] Update Client Registration (configurable endpoint)"
       security:
         - RegistrationAccessToken: []
       requestBody:
@@ -996,7 +999,7 @@ paths:
     get:
       tags:
         - Discovery
-      summary: Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
+      summary: "[PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)"
       description: Returns the public keys used to verify JWT signatures
       security:
         - SignedJWT: []
@@ -1667,6 +1670,8 @@ components:
       required:
         - region
         - province
+        - barangay
+        - street_address
         - city
         - country
         - postal_code
@@ -1730,6 +1735,7 @@ components:
         - email
         - birthdate
         - nationality
+        - residential_address
       properties:
         sub:
           type: string
@@ -1773,6 +1779,8 @@ components:
           type: string
           maxLength: 3
           description: ISO 3166 Code
+        residential_address:
+          $ref: "#/components/schemas/Address"
         tin:
           type: string
           maxLength: 15
@@ -2047,11 +2055,11 @@ components:
           type: array
           items:
             type: string
-            enum: ["code","id_token"]
-          description: Allowed OAuth response types, OFxPERA requires code and id_token.
-          example: ["code","id_token"]
-          minItems: 2
-          maxItems: 2
+            enum: ["code"]
+          description: Allowed OAuth response types, OFxPERA requires code.
+          example: ["code"]
+          minItems: 1
+          maxItems: 1
         scope:
           type: string
           description: Space-separated list of requested scopes (e.g. openid profile email address phone)
@@ -2638,6 +2646,7 @@ components:
         - access_token
         - token_type
         - expires_in
+        - id_token
       properties:
         access_token:
           type: string
@@ -2652,6 +2661,9 @@ components:
         refresh_token:
           type: string
           description: Refresh token used to obtain new access tokens
+        id_token:
+          type: string
+          description: ID Token value associated with the authenticated session
         scope:
           type: string
           description: Space-separated list of scopes granted
