@@ -1705,7 +1705,6 @@ components:
       required:
         - address_format
         - city_municipality
-        - barangay
         - street_address
         - country
         - postal_code
