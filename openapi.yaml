@@ -1703,6 +1703,7 @@ components:
     Address:
       type: object
       required:
+        - address_format
         - region
         - province
         - barangay
@@ -1711,22 +1712,80 @@ components:
         - country
         - postal_code
       properties:
+        address_format:
+          type: string
+          enum: ["PSGC"]
+          maxLength: 4
+          description: Format of address values
         region:
           type: string
           maxLength: 10
           description: PSGC Code for Region
+          example: "0400000000"
         province:
           type: string
           maxLength: 10
           description: PSGC Code for Province
+          example: "0405800000"
         city:
           type: string
           maxLength: 10
           description: PSGC Code for City
+          example: "0405812000"
         barangay:
           type: string
           maxLength: 10
           description: PSGC Code for Barangay
+          example: "0405812016"
+        street_address:
+          type: string
+          maxLength: 200
+          description: Street Address
+          example: "Yakal Street cor Lawaan Street"
+        country:
+          type: string
+          maxLength: 3
+          description: ISO 3166 Code
+          example: "PHL"
+          pattern: "^[A-Z]{3}$"
+        postal_code:
+          type: string
+          maxLength: 10
+          description: Postal Code
+          example: "1635"
+    AddressString:
+      type: object
+      required:
+        - address_format
+        - region
+        - province
+        - barangay
+        - street_address
+        - city
+        - country
+        - postal_code
+      properties:
+        address_format:
+          type: string
+          enum: ["TEXT"]
+          maxLength: 4
+          description: Format of address values
+        region:
+          type: string
+          maxLength: 140
+          description: Region
+        province:
+          type: string
+          maxLength: 140
+          description: Province
+        city:
+          type: string
+          maxLength: 140
+          description: City
+        barangay:
+          type: string
+          maxLength: 140
+          description: Barangay
         street_address:
           type: string
           maxLength: 200
@@ -1740,7 +1799,6 @@ components:
           type: string
           maxLength: 10
           description: Postal Code
-    
     IdType:
       type: object
       required:
@@ -1815,7 +1873,9 @@ components:
           maxLength: 3
           description: ISO 3166 Code
         residential_address:
-          $ref: "#/components/schemas/Address"
+          oneOf:
+            - $ref: "#/components/schemas/Address"
+            - $ref: "#/components/schemas/AddressString"
         tin:
           type: string
           maxLength: 15
@@ -1874,7 +1934,9 @@ components:
           type: string
           maxLength: 255
         employerAddress:
-          $ref: "#/components/schemas/Address"
+          oneOf:
+            - $ref: "#/components/schemas/Address"
+            - $ref: "#/components/schemas/AddressString"
         pepIndicator:
           type: boolean
           default: false
@@ -2046,7 +2108,7 @@ components:
           minItems: 1
           description: Array of redirect URIs to be used in OAuth 2.0 flows
 
-    endpointURIs:
+    EndpointURIs:
       oneOf:
         - $ref: "#/components/schemas/OAuthClientURIs"
         - $ref: "#/components/schemas/AuthServerURIs"
