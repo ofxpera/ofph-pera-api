@@ -1704,11 +1704,9 @@ components:
       type: object
       required:
         - address_format
-        - region
-        - province
+        - city_municipality
         - barangay
         - street_address
-        - city
         - country
         - postal_code
       properties:
@@ -1717,17 +1715,7 @@ components:
           enum: ["PSGC"]
           maxLength: 4
           description: Format of address values
-        region:
-          type: string
-          maxLength: 10
-          description: PSGC Code for Region
-          example: "0400000000"
-        province:
-          type: string
-          maxLength: 10
-          description: PSGC Code for Province
-          example: "0405800000"
-        city:
+        city_municipality:
           type: string
           maxLength: 10
           description: PSGC Code for City
@@ -1738,21 +1726,14 @@ components:
           description: PSGC Code for Barangay
           example: "0405812016"
         street_address:
-          type: string
-          maxLength: 200
-          description: Street Address
-          example: "Yakal Street cor Lawaan Street"
+          $ref: "#/components/schemas/StreetAddress"
+        building_unit_number:
+          $ref: "#/components/schemas/BuildingUnitNumber"
         country:
-          type: string
-          maxLength: 3
-          description: ISO 3166 Code
-          example: "PHL"
-          pattern: "^[A-Z]{3}$"
+          $ref: "#/components/schemas/CountryCode"
         postal_code:
-          type: string
-          maxLength: 10
-          description: Postal Code
-          example: "1635"
+          $ref: "#/components/schemas/PostalCode"
+
     AddressString:
       type: object
       required:
@@ -1774,31 +1755,56 @@ components:
           type: string
           maxLength: 140
           description: Region
+          example: "Region IV-A (CALABARZON)"
         province:
           type: string
           maxLength: 140
           description: Province
-        city:
+          example: "Rizal"
+        city_municipality:
           type: string
           maxLength: 140
           description: City
+          example: "Tanay"
         barangay:
           type: string
           maxLength: 140
           description: Barangay
+          example: "Santo Niño"
         street_address:
-          type: string
-          maxLength: 200
+          $ref: "#/components/schemas/StreetAddress"
+        building_unit_number:
+          $ref: "#/components/schemas/BuildingUnitNumber"
         country:
-          type: string
-          maxLength: 3
-          description: ISO 3166 Code
-          example: "PHL"
-          pattern: "^[A-Z]{3}$"
+          $ref: "#/components/schemas/CountryCode"
         postal_code:
-          type: string
-          maxLength: 10
-          description: Postal Code
+          $ref: "#/components/schemas/PostalCode"
+
+    StreetAddress:
+      type: string
+      maxLength: 200
+      description: Street Address
+      example: "Yakal Street cor Lawaan Street"
+
+    BuildingUnitNumber:
+      type: string
+      maxLength: 200
+      description: Building and/or Unit Number
+      example: "#357 Barbie's Townhouse"
+
+    PostalCode:
+      type: string
+      maxLength: 10
+      description: Postal Code
+      example: "1635"
+
+    CountryCode:
+      type: string
+      maxLength: 3
+      description: ISO 3166 Code
+      example: "PHL"
+      pattern: "^[A-Z]{3}$"
+
     IdType:
       type: object
       required:
@@ -1887,7 +1893,7 @@ components:
       required:
         - sub
         - arrangementId
-        - pii
+        - personalInformation
         - cdd
         - presentedIds
       properties:
