@@ -12,6 +12,11 @@ This release introduces implementation phase classification for API endpoints an
   - **[PHASE 1]**: Endpoints prioritized for initial implementation
   - **[PHASE 2]**: Endpoints scheduled for subsequent development phases
 
+### Address Formats
+- **Introduced 'dual-mode' address format** to support both PSGC and plain text address formats
+  - Applicable to both residential and business addresses
+  - `address_format` parameter is used to specify the format of the address
+
 ### Security Enhancements
 
 - **Refined security requirements** for Bootstrap endpoints:
