@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.6
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.7-Draft
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -48,7 +48,6 @@ paths:
       summary: "[PHASE 2] Register an OFxPERA Participant"
       description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
       requestBody:
@@ -82,6 +81,10 @@ paths:
         - Bootstrap
       summary: "[PHASE 2] Update an OFxPERA Participant"
       description: API for updating the URIs and status of an OFxPERA Participant
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       requestBody:
         required: true
         content:
@@ -113,6 +116,10 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -172,7 +179,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
  
-  /ofxpera/product:
+  /ofxpera/products:
    post:
       operationId: registerProduct
       tags:
@@ -203,7 +210,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
   
-  /ofxpera/product/{product_id}:
+  /ofxpera/products/{product_id}:
    put:
       operationId: updateProduct
       tags:
@@ -240,7 +247,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /ofxpera/product/{participant_id}:
+  /ofxpera/products/{participant_id}:
    get:
       operationId: listProductByParticipant
       tags:
@@ -285,7 +292,7 @@ paths:
       tags:
         - PERA
       summary: "[PHASE 1] Registers the result of a PERA account opening"
-      description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
+      description: API that allows PERA Admins to register the result of PERA account opening
       requestBody:
         required: true
         content:
@@ -363,7 +370,7 @@ paths:
       tags:
         - OAuth
       summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
-      description: POST version of the authorization API that initiates the authorization flow"
+      description: POST version of the authorization API that initiates the authorization flow
       parameters:
         - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
@@ -1703,18 +1710,18 @@ components:
     Address:
       type: object
       required:
-        - address_format
-        - city_municipality
-        - street_address
+        - addressFormat
+        - cityMunicipality
+        - streetAddress
         - country
-        - postal_code
+        - postalCode
       properties:
-        address_format:
+        addressFormat:
           type: string
           enum: ["PSGC"]
           maxLength: 4
           description: Format of address values
-        city_municipality:
+        cityMunicipality:
           type: string
           maxLength: 10
           description: PSGC Code for City
@@ -1724,13 +1731,13 @@ components:
           maxLength: 10
           description: PSGC Code for Barangay
           example: "0405812016"
-        street_address:
+        streetAddress:
           $ref: "#/components/schemas/StreetAddress"
-        building_unit_number:
+        buildingUnitNumber:
           $ref: "#/components/schemas/BuildingUnitNumber"
         country:
           $ref: "#/components/schemas/CountryCode"
-        postal_code:
+        postalCode:
           $ref: "#/components/schemas/PostalCode"
 
     AddressString:
@@ -1739,7 +1746,6 @@ components:
         - address_format
         - region
         - province
-        - barangay
         - street_address
         - city
         - country
@@ -1833,7 +1839,7 @@ components:
         - email
         - birthdate
         - nationality
-        - residential_address
+        - residentialAddress
       properties:
         sub:
           type: string
@@ -1877,7 +1883,7 @@ components:
           type: string
           maxLength: 3
           description: ISO 3166 Code
-        residential_address:
+        residentialAddress:
           oneOf:
             - $ref: "#/components/schemas/Address"
             - $ref: "#/components/schemas/AddressString"
@@ -1965,23 +1971,23 @@ components:
         - participant_type
         - jwks
       properties:
-        participant_id:
+        participantId:
           type: string
           description: Unique identifier for the participant
-        participant_name:
+        participantName:
           type: string
           description: Trading name of the participant
-        participant_type:
+        participantType:
           type: array
           items:
             type: string
             enum: ["oauth_client", "auth_server"]
           minItems: 1
           description: Types of roles this participant can perform
-        participant_description:
+        participantDescription:
           type: string
           description: Short Description of the participant (Required for PERA Admin)
-        participant_logo_uri:
+        participantLogoUri:
           type: string
           description: logo uri of the participant
         status:
@@ -2010,11 +2016,11 @@ components:
       type: object
       required:
         - participant
-        - client_config
+        - clientConfig
       properties:
         participant:
           $ref: "#/components/schemas/Participant"
-        client_config:
+        clientConfig:
           type: array
           items:
             $ref: "#/components/schemas/ClientRegistration"
@@ -2024,21 +2030,21 @@ components:
     ClientRegistrationResponse:
       type: object
       required:
-        - client_id
-        - registration_access_token
-        - client_id_issued_at
+        - clientId
+        - registrationAccessToken
+        - clientIdIssuedAt
       properties:
-        client_id:
+        clientId:
           type: string
           description: Issued client identifier
-        registration_access_token:
+        registrationAccessToken:
           type: string
           description: Registration access token for subsequent operations
-        registration_client_uri:
+        registrationClientUri:
           type: string
           format: uri
           description: URI for managing the client registration
-        client_id_issued_at:
+        clientIdIssuedAt:
           type: integer
           description: Time at which the client identifier was issued, in seconds since Unix epoch (1970-01-01T00:00:00Z UTC)
 
@@ -2051,11 +2057,11 @@ components:
       type: object
       required:
         - participant
-        - authserver_config
+        - authserverConfig
       properties:
         participant:
           $ref: "#/components/schemas/Participant"
-        authserver_config:
+        authserverConfig:
           $ref: "#/components/schemas/AuthServerURIs"
 
     jwksConfiguration:
@@ -2071,30 +2077,30 @@ components:
       description: Endpoints of the OFxPERA Participant as an Authorization Server
       required:
         - issuer
-        - authorization_endpoint
-        - token_endpoint
+        - authorizationEndpoint
+        - tokenEndpoint
       properties:
         issuer:
           type: string
           format: uri
           description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
-        authorization_endpoint:
+        authorizationEndpoint:
           type: string
           format: uri
           description: URL of the OP's OAuth 2.0 Authorization Endpoint
-        token_endpoint:
+        tokenEndpoint:
           type: string
           format: uri
           description: URL of the OP's OAuth 2.0 Token Endpoint
-        userinfo_endpoint:
+        userInfoEndpoint:
           type: string
           format: uri
           description: URL of the OP's UserInfo Endpoint
-        end_session_endpoint:
+        endSessionEndpoint:
           type: string
           format: uri
           description: URL at the OP to which an RP can perform a redirect to
-        registration_endpoint:
+        registrationEndpoint:
           type: string
           format: uri
           description: URL of the OP's Dynamic Client Registration Endpoint
@@ -2121,39 +2127,39 @@ components:
     ClientRegistration:
       type: object
       required:
-        - application_type
-        - client_name
-        - redirect_uris
-        - token_endpoint_auth_method
-        - grant_types
-        - response_types
+        - applicationType
+        - clientName
+        - redirectUris
+        - tokenEndpointAuthMethod
+        - grantTypes
+        - responseTypes
       properties:
-        application_type:
+        applicationType:
           type: string
           enum: ["web", "native", "hybrid"]
           description: Type of application
-        client_id:
+        clientId:
           type: string
           description: Client identifier
-        client_name:
+        clientName:
           type: string
           description: Name of the client
-        redirect_uris:
+        redirectUris:
           type: array
           items:
             type: string
             format: uri
           description: Array of redirect URIs for use in OAuth flows
-        token_endpoint_auth_method:
+        tokenEndpointAuthMethod:
           type: string
           enum: ["private_key_jwt"]
           description: Authentication method for token endpoint, OFxPERA Phase 1 requires private_key_jwt
-        grant_types:
+        grantTypes:
           type: array
           items:
             type: string
             enum: ["authorization_code", "refresh_token"]
-        response_types:
+        responseTypes:
           type: array
           items:
             type: string
@@ -2165,16 +2171,16 @@ components:
         scope:
           type: string
           description: Space-separated list of requested scopes (e.g. openid profile email address phone)
-        software_statement:
+        softwareStatement:
           type: string
           description: JWT containing software statement from trusted authority
         jwks:
           $ref: "#/components/schemas/JWKSet"
-        jwks_uri:
+        jwksUri:
           type: string
           format: uri
           description: URI for JSON Web Key Set containing public keys
-        organization_name:
+        organizationName:
           type: string
           description: Legal name of the PERA Participant organization
         contacts:
@@ -2677,37 +2683,39 @@ components:
       type: object
       required:
         - id
-        - admin_id
-        - customer_id
+        - adminId
+        - customerId
         - sub
-        - consent_id
+        - consentId
         - status
-        - creation_date
+        - creationDate
       properties:
         id:
           type: string
           description: Generated by the PERA admin, this is the unique identifier for the PERA arrangement
-        admin_id:
+        adminId:
           type: string
           description: Participant Identifier of the PERA Administrator managing this arrangement
-        customer_id:
+        customerId:
           type: string
           description: PERA Administrator's unique identifier of the customer who owns the PERA arrangement
         sub:
           type: string
           maxLength: 50
           description: Subject – FI's unique identifier for the End-User
-        consent_id:
+        consentId:
           type: string
           description: Unique identifier of the consent provided by the Customer to the FI
         status:
           type: string
-          enum: [ACTIVE, DECLINED, CLOSED]
+          enum: [active, declined, closed]
           description: Current status of the PERA arrangement
         reason:
           type: string
+          enum: [invalid_tin,existing_account,incomplete_info,failed_dd,failed_cc, others]
+          default: null
           description: Reason for the resulting status of the arrangement, mostly used for DECLINED status.
-        creation_date:
+        creationDate:
           type: string
           format: date-time
           description: Date and time when the PERA arrangement was created
@@ -2715,23 +2723,23 @@ components:
     PeraProduct:
         type: object
         properties:
-          product_id:
+          productId:
             type: string
             description: Unique Identifier for the product
-          product_name:
+          productName:
             type: string
             description: The name of the product
-          product_description:
+          productDescription:
             type: string
             description: A detailed description of the product
-          product_risk_rating:
+          productRiskRating:
             type: string
             description: The risk rating of the product
             enum:
-              - Conservative
-              - Moderate
-              - Aggressive
-          product_kiid_uri:
+              - conservative
+              - moderate
+              - aggressive
+          productKiidUri:
             type: string
             description: URI to the KIID (Key Investor Information Document) for the product
         required:
