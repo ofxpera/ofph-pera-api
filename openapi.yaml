@@ -570,6 +570,7 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
@@ -631,6 +632,7 @@ paths:
       security:
         - OAuth2: []
       parameters:
+        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
@@ -745,6 +747,7 @@ paths:
           required: true
           schema:
             type: string
+        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -2929,15 +2932,3 @@ components:
       type: http
       scheme: bearer
       description: Registration Access Token for managing client registration
-
-x-global-headers:
-  - $ref: "#/components/parameters/ParticipantId"
-  - $ref: "#/components/parameters/Authorization"
-  - $ref: "#/components/parameters/ApiVersion"
-  - $ref: "#/components/parameters/FapiInteractionId"
-  - $ref: "#/components/parameters/FapiAuthDate"
-  - $ref: "#/components/parameters/FapiCustomerIpAddress"
-  - $ref: "#/components/parameters/ClientHeaders"
-  - $ref: "#/components/parameters/ClientUserAgent"
-  - $ref: "#/components/parameters/IdempotencyKey"
-  - $ref: "#/components/parameters/FapiCustomerLastLoggedTime"

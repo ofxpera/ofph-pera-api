@@ -16,6 +16,7 @@ This release introduces implementation phase classification for API endpoints, e
 - **Simplified OAuth response types**:
   - Changed from requiring both `code` and `id_token` to only requiring `code`
   - Updated response type array constraints (minItems: 1, maxItems: 1)
+  - Added missing authorization header for customer endpoints
 - **Added new schemas**:
   - `TokenResponse`: Comprehensive schema for OAuth token responses
   - `OAuthError`: Standardized OAuth error response format following RFC 6749
