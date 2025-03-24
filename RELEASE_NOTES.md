@@ -1,43 +1,50 @@
 # OFxPERA API Release Notes
 
-## Version 0.0.7-Draft
+## Version 0.0.7
 
-*Release Date: March 19, 2025*
+*Release Date: March 25, 2025*
 
-This release introduces implementation phase classification for API endpoints and refines security requirements across the API.
+This release introduces implementation phase classification for API endpoints, enhances OAuth flows, and refines the PERA arrangement schema.
 
 ### API Implementation Phasing
 
 - **Added explicit phase markers** to all endpoint summaries:
-  - **[PHASE 1]**: Endpoints prioritized for initial implementation
-  - **[PHASE 2]**: Endpoints scheduled for subsequent development phases
+  - **[PHASE 1]**: Endpoints prioritized for initial implementation (e.g., list participants, list products)
+  - **[PHASE 2]**: Endpoints scheduled for subsequent development phases (e.g., participant registration, product management)
 
-### Address Formats
-- **Introduced 'dual-mode' address format** to support both PSGC and plain text address formats
-  - Applicable to both residential and business addresses
-  - `address_format` parameter is used to specify the format of the address
+### OAuth and Security Updates
+- **Simplified OAuth response types**:
+  - Changed from requiring both `code` and `id_token` to only requiring `code`
+  - Updated response type array constraints (minItems: 1, maxItems: 1)
+- **Added new schemas**:
+  - `TokenResponse`: Comprehensive schema for OAuth token responses
+  - `OAuthError`: Standardized OAuth error response format following RFC 6749
 
-### Security Enhancements
+### PERA Arrangement Enhancements
+- **Updated PeraArrangement schema**:
+  - Added `reason` field to capture status context (especially for DECLINED status)
+  - Changed `customer_id` to `account_id` in related schemas for clarity
+  - Enhanced response codes (201 for successful registration)
 
-- **Refined security requirements** for Bootstrap endpoints:
-  - Removed global SignedJWT security requirement for most Bootstrap endpoints
-  - Added explicit parameter references for headers (ParticipantId, ApiVersion, FapiInteractionId)
-  - Security is now controlled via header parameters rather than OAuth bearer tokens
+### Address Schema Updates
+- **Enhanced Address handling**:
+  - Added `residential_address` field to relevant schemas
+  - Improved address format documentation and validation
 
 ### Documentation Updates
-
 - **Updated SwaggerHub API Auto Mocking URL** from version 0.0.5 to 0.0.6
-- **Updated API version** to 0.0.7-Draft
+- **Updated API version** to 0.0.7
 
 ### Migration Notes
-- Applications using SignedJWT for Bootstrap endpoints should update to use header-based authentication
+- Applications using both `code` and `id_token` response types should update to use only `code`
+- Review and update any implementations using `customer_id` to use `account_id` instead
 - Implementers should prioritize PHASE 1 endpoints in their development roadmaps
 
 ---
 
-*These release notes document changes from version 0.0.6 to version 0.0.7-Draft of the OFxPERA API.*
+*These release notes document changes from version 0.0.6 to version 0.0.7 of the OFxPERA API.*
 
-Cascade [2025-03-19T05:48:44+08:00]
+Cascade [2025-03-25T06:25:24+08:00]
 
 ## Version 0.0.6
 

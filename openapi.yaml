@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.7-Draft
+  version: 0.0.7
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -286,84 +286,6 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /ofxpera/arrangements:
-    post:
-      operationId: peraArrangementRegistration
-      tags:
-        - PERA
-      summary: "[PHASE 1] Registers the result of a PERA account opening"
-      description: API that allows PERA Admins to register the result of PERA account opening
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PeraArrangement"
-      parameters:
-        - $ref: '#/components/parameters/ParticipantId'
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-      responses:
-        "201":
-          description: Successfully registered the status of a PERA onboarding process.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - id
-                properties:
-                  id:
-                    type: string
-                    description: The unique identifier of the PERA arrangement that was registered.
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
-  /ofxpera/arrangements/{arrangement_id}:
-    get:
-      operationId: getArrangementStatus
-      tags:
-        - PERA
-      summary: "[PHASE 2] Get the status of a PERA arrangement"
-      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the PERA Arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ParticipantId'
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-      responses:
-        "200":
-          description: Successfully retrieved the status of the PERA Arrangement
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PeraArrangement"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-          
   /oauth/auth:
     post:
       operationId: OAuthPAR
@@ -379,6 +301,8 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -525,6 +449,9 @@ paths:
           description: Random value used to prevent replay attacks
           schema:
             type: string
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "302":
           description: Redirect to client with authorization code
@@ -570,6 +497,8 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -648,6 +577,8 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: Token information retrieved
@@ -707,6 +638,8 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: User information retrieved
@@ -775,6 +708,8 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: Successfully forwarded customer endorsement
@@ -817,6 +752,8 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: Customer's Personal Information retrieved successfully
@@ -1078,6 +1015,16 @@ paths:
         - UK Open Banking Consent API v3.1.10
         - Australia CDR Consent Management Standards v1.14.0
         - Singapore SGFinDex Consent Framework
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -1131,6 +1078,15 @@ paths:
           schema:
             type: string
             format: date-time
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: List of consent arrangements
@@ -1169,6 +1125,15 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: Consent arrangement details
@@ -1207,6 +1172,15 @@ paths:
           description: The ID of the consent arrangement to revoke
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '204':
           description: Consent arrangement successfully revoked
@@ -1240,6 +1214,15 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -1284,6 +1267,15 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: Consent arrangement history
@@ -1315,6 +1307,16 @@ paths:
         Based on:
         - Korea MyData Bulk Consent API
         - Singapore SGFinDex Multi-Institution Consent
+      parameters:
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -1361,6 +1363,15 @@ paths:
           description: Filter templates by purpose
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: List of consent templates
@@ -1401,6 +1412,15 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -1462,6 +1482,15 @@ paths:
           description: Filter by consent purpose
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: Customer's consent arrangements
@@ -1514,6 +1543,15 @@ paths:
           description: The customer's unique identifier
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -1607,6 +1645,15 @@ paths:
           description: The customer's unique identifier
           schema:
             type: string
+        - $ref: '#/components/parameters/ParticipantId'
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiAuthDate'
+        - $ref: '#/components/parameters/FapiCustomerIpAddress'
+        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/ClientUserAgent'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         '200':
           description: Customer's consent dashboard
@@ -1705,6 +1752,24 @@ components:
         type: string
         pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
         example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+    IdempotencyKey:
+      name: x-idempotency-key
+      in: header
+      required: true
+      description: Unique idempotency key for the request as per FAPI Advanced requirements
+      schema:
+        type: string
+        format: uuid
+
+    FapiCustomerLastLoggedTime:
+      name: x-fapi-customer-last-logged-time
+      in: header
+      required: true
+      description: The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+      schema:
+        type: string
+        format: date-time
 
   schemas:
     Address:
@@ -2261,7 +2326,7 @@ components:
                 description: X.509 certificate chain
                 items:
                   type: string
-                example: ["MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA=="]
+                example: ["MIIDQjCCAiqgAwIBAgIGATz/FuLiMA0GCSqGSIb3DQEBBQUAMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDAeFw0xMzAyMjEyMzI5MTVaFw0xODA4MTQyMjI5MTVaMGIxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDTzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNQaW5nIElkZW50aXR5IENvcnAuMRcwFQYDVQQDEw5CcmlhbiBDYW1wYmVsbDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL64zn8/QnHYMeZ0LncoXaEde1fiLm1jHjmQsF/449IYALM9if6amFtPDy2yvz3YlRij66s5gyLCyO7ANuVRJx1NbgizcAblIgjtdf/u3WG7K+IiZhtELto/A7Fck9Ws6SQvzRvOE8uSirYbgmj6He4iO8NCyvaK0jIQRMMGQwsU1quGmFgHIXPLfnpnfajr1rVTAwtgV5LEZ4Iel+W1GC8ugMhyr4/p1MtcIM42EA8BzE6ZQqC7VPqPvEjZ2dbZkaBhPbiZAS3YeYBRDWm1p1OZtWamT3cEvqqPpnjL1XyW+oyVVkaZdklLQp2Btgt9qr21m42f4wTw+Xrp6rCKNb0CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAh8zGlfSlcI0o3rYDPBB07aXNswb4ECNIKG0CETTUxmXl9KUL+9gGlqCz5iWLOgWsnrcKcY0vXPG9J1r9AqBNTqNgHq2G03X09266X5CpOe1zFo+Owb1zxtp3PehFdfQJ610CDLEaS9V9Rqp17hCyybEpOGVwe8fnk+fbEL2Bo3UPGrpsHzUoaGpDftmWssZkhpBJKVMJyf/RuP2SmmaIzmnw9JiSlYhzo4tpzd5rFXhjRbg4zW9C+2qok+2+qDM1iJ684gPHMIY8aLWrdgQTxkumGmTqgawR+N5MDtdPTEQ0XfIBc2cJEUyMTY5MPvACWpkA6SdS4xSvdXK3IVfOWA=="]
               x5t:
                 type: string
                 description: X.509 certificate SHA-1 thumbprint
@@ -2874,3 +2939,5 @@ x-global-headers:
   - $ref: "#/components/parameters/FapiCustomerIpAddress"
   - $ref: "#/components/parameters/ClientHeaders"
   - $ref: "#/components/parameters/ClientUserAgent"
+  - $ref: "#/components/parameters/IdempotencyKey"
+  - $ref: "#/components/parameters/FapiCustomerLastLoggedTime"
