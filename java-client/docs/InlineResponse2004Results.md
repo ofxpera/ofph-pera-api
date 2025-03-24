@@ -1,4 +1,4 @@
-# InlineResponse2006Results
+# InlineResponse2004Results
 
 ## Properties
 Name | Type | Description | Notes

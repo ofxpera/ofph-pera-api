@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class ClientRegistration  implements AnyOfClientRegistration {
@@ -58,21 +58,21 @@ public class ClientRegistration  implements AnyOfClientRegistration {
       return null;
     }
   }
-  @JsonProperty("application_type")
+  @JsonProperty("applicationType")
 
   private ApplicationTypeEnum applicationType = null;
 
-  @JsonProperty("client_id")
+  @JsonProperty("clientId")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String clientId = null;
 
-  @JsonProperty("client_name")
+  @JsonProperty("clientName")
 
   private String clientName = null;
 
-  @JsonProperty("redirect_uris")
+  @JsonProperty("redirectUris")
   @Valid
   private List<String> redirectUris = new ArrayList<String>();
   /**
@@ -103,7 +103,7 @@ public class ClientRegistration  implements AnyOfClientRegistration {
       return null;
     }
   }
-  @JsonProperty("token_endpoint_auth_method")
+  @JsonProperty("tokenEndpointAuthMethod")
 
   private TokenEndpointAuthMethodEnum tokenEndpointAuthMethod = null;
 
@@ -137,16 +137,14 @@ public class ClientRegistration  implements AnyOfClientRegistration {
       return null;
     }
   }
-  @JsonProperty("grant_types")
+  @JsonProperty("grantTypes")
   @Valid
   private List<GrantTypesEnum> grantTypes = new ArrayList<GrantTypesEnum>();
   /**
    * Gets or Sets responseTypes
    */
   public enum ResponseTypesEnum {
-    CODE("code"),
-    
-    ID_TOKEN("id_token");
+    CODE("code");
 
     private String value;
 
@@ -170,7 +168,7 @@ public class ClientRegistration  implements AnyOfClientRegistration {
       return null;
     }
   }
-  @JsonProperty("response_types")
+  @JsonProperty("responseTypes")
   @Valid
   private List<ResponseTypesEnum> responseTypes = new ArrayList<ResponseTypesEnum>();
   @JsonProperty("scope")
@@ -179,7 +177,7 @@ public class ClientRegistration  implements AnyOfClientRegistration {
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String scope = null;
 
-  @JsonProperty("software_statement")
+  @JsonProperty("softwareStatement")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
@@ -191,13 +189,13 @@ public class ClientRegistration  implements AnyOfClientRegistration {
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private JWKSet jwks = null;
 
-  @JsonProperty("jwks_uri")
+  @JsonProperty("jwksUri")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String jwksUri = null;
 
-  @JsonProperty("organization_name")
+  @JsonProperty("organizationName")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
@@ -377,14 +375,14 @@ public class ClientRegistration  implements AnyOfClientRegistration {
   }
 
   /**
-   * Allowed OAuth response types, OFxPERA requires code and id_token.
+   * Allowed OAuth response types, OFxPERA requires code.
    * @return responseTypes
    **/
   
-  @Schema(example = "[\"code\",\"id_token\"]", required = true, description = "Allowed OAuth response types, OFxPERA requires code and id_token.")
+  @Schema(example = "[\"code\"]", required = true, description = "Allowed OAuth response types, OFxPERA requires code.")
   
   @NotNull
-@Size(min=2,max=2)   public List<ResponseTypesEnum> getResponseTypes() {  
+@Size(min=1,max=1)   public List<ResponseTypesEnum> getResponseTypes() {  
     return responseTypes;
   }
 

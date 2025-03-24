@@ -8,7 +8,7 @@ package io.swagger.api;
 import io.swagger.model.ClientRegistration;
 import io.swagger.model.ClientRegistrationResponse;
 import io.swagger.model.Error;
-import io.swagger.model.InlineResponse2004;
+import io.swagger.model.InlineResponse2002;
 import io.swagger.model.JWKSet;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,12 +36,12 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 @Validated
 public interface WellKnownApi {
 
     @Operation(summary = "Delete Client Registration (configurable endpoint)", description = "", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Discovery" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Discovery" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "204", description = "Client registration deleted"),
         
@@ -84,7 +84,7 @@ public interface WellKnownApi {
     ResponseEntity<ClientRegistration> getClientRegistration();
 
 
-    @Operation(summary = "Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)", description = "Returns the public keys used to verify JWT signatures", security = {
+    @Operation(summary = "[PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)", description = "Returns the public keys used to verify JWT signatures", security = {
         @SecurityRequirement(name = "SignedJWT")    }, tags={ "Discovery" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = JWKSet.class))),
@@ -109,7 +109,7 @@ public interface WellKnownApi {
     @Operation(summary = "Optional - OpenID Connect Discovery", description = "Retrieve OpenID Connect configuration information", security = {
         @SecurityRequirement(name = "SignedJWT")    }, tags={ "Discovery" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "OpenID Connect configuration retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2004.class))),
+        @ApiResponse(responseCode = "200", description = "OpenID Connect configuration retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2002.class))),
         
         @ApiResponse(responseCode = "400", description = "Bad Request - The server cannot process the request due to a client error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
@@ -125,10 +125,10 @@ public interface WellKnownApi {
     @RequestMapping(value = "/.well-known/openid-configuration",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<InlineResponse2004> getOpenIdConfiguration();
+    ResponseEntity<InlineResponse2002> getOpenIdConfiguration();
 
 
-    @Operation(summary = "Dynamic Client Registration (configurable endpoint)", description = "Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.", security = {
+    @Operation(summary = "[PHASE 2] Dynamic Client Registration (configurable endpoint)", description = "Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.", security = {
         @SecurityRequirement(name = "SignedJWT")    }, tags={ "Discovery" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Client registration successful", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientRegistrationResponse.class))),
@@ -152,7 +152,7 @@ public interface WellKnownApi {
 );
 
 
-    @Operation(summary = "Update Client Registration (configurable endpoint)", description = "", security = {
+    @Operation(summary = "[PHASE 2] Update Client Registration (configurable endpoint)", description = "", security = {
         @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Discovery" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Client configuration updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientRegistration.class))),

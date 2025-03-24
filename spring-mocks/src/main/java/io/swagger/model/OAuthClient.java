@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class OAuthClient  implements ParticipantConfig {
@@ -30,7 +30,7 @@ public class OAuthClient  implements ParticipantConfig {
 
   private Participant participant = null;
 
-  @JsonProperty("client_config")
+  @JsonProperty("clientConfig")
   @Valid
   private List<ClientRegistration> clientConfig = new ArrayList<ClientRegistration>();
 

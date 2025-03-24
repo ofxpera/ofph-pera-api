@@ -22,7 +22,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class OauthAuthBody   {
@@ -46,7 +46,9 @@ public class OauthAuthBody   {
    * Must be set to \"code\" for authorization code flow
    */
   public enum ResponseTypeEnum {
-    CODE("code");
+    CODE("code"),
+    
+    ENDORSEMENT("endorsement");
 
     private String value;
 

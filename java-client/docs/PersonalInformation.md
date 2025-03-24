@@ -14,4 +14,5 @@ Name | Type | Description | Notes
 **email** | **String** |  | 
 **birthdate** | [**LocalDate**](LocalDate.md) | Format YYYY-MM-DD | 
 **nationality** | **String** | ISO 3166 Code | 
+**residentialAddress** | **OneOfPersonalInformationResidentialAddress** |  | 
 **tin** | **String** | Format NNN-NNN-NNN-000 |  [optional]

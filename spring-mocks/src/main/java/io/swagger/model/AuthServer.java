@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class AuthServer  implements ParticipantConfig {
@@ -28,7 +28,7 @@ public class AuthServer  implements ParticipantConfig {
 
   private Participant participant = null;
 
-  @JsonProperty("authserver_config")
+  @JsonProperty("authserverConfig")
 
   private AuthServerURIs authserverConfig = null;
 

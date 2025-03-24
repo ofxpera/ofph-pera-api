@@ -16,9 +16,10 @@ import io.swagger.model.ConsentHistory;
 import io.swagger.model.ConsentStatusUpdate;
 import io.swagger.model.ConsentTemplate;
 import io.swagger.model.Error;
-import io.swagger.model.InlineResponse2005;
-import io.swagger.model.InlineResponse2006;
+import io.swagger.model.InlineResponse2003;
+import io.swagger.model.InlineResponse2004;
 import org.threeten.bp.OffsetDateTime;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -45,15 +46,14 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 @Validated
 public interface ConsentApi {
 
     @Operation(summary = "Bulk update customer's consent arrangements", description = "Update multiple consent arrangements for a specific customer in a single request. Based on: - Australia CDR Bulk Consumer Update - Korea MyData Consent Management ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Bulk update results", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2006.class))),
+        @ApiResponse(responseCode = "200", description = "Bulk update results", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2004.class))),
         
         @ApiResponse(responseCode = "400", description = "Bad Request - The server cannot process the request due to a client error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
@@ -70,14 +70,23 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<InlineResponse2006> bulkUpdateCustomerConsents(@Parameter(in = ParameterIn.PATH, description = "The customer's unique identifier", required=true, schema=@Schema()) @PathVariable("customer_id") String customerId
+    ResponseEntity<InlineResponse2004> bulkUpdateCustomerConsents(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.PATH, description = "The customer's unique identifier", required=true, schema=@Schema()) @PathVariable("customer_id") String customerId
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ArrangementsBulkupdateBody body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Create bulk consent arrangements", description = "Create multiple consent arrangements in a single request. Based on: - Korea MyData Bulk Consent API - Singapore SGFinDex Multi-Institution Consent ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Bulk consent arrangements created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BulkConsentResponse.class))),
         
@@ -94,13 +103,22 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<BulkConsentResponse> createBulkConsent(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody BulkConsentRequest body
+    ResponseEntity<BulkConsentResponse> createBulkConsent(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody BulkConsentRequest body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Create a consent arrangement", description = "Create a new consent arrangement between a data holder and data recipient. Based on: - UK Open Banking Consent API v3.1.10 - Australia CDR Consent Management Standards v1.14.0 - Singapore SGFinDex Consent Framework ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Consent arrangement created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentArrangementResponse.class))),
         
@@ -117,13 +135,24 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<ConsentArrangementResponse> createConsentArrangement(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ConsentArrangementRequest body
+    ResponseEntity<ConsentArrangementResponse> createConsentArrangement(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ConsentArrangementRequest body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Extend consent arrangement duration", description = "Extend the duration of an existing consent arrangement. Based on: - Australia CDR Consent Amendment - UK Open Banking Re-authentication ", security = {
         @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+            "read",
+"write"        })    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Consent duration extended successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentArrangementResponse.class))),
         
@@ -142,14 +171,23 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<ConsentArrangementResponse> extendConsentDuration(@Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
+    ResponseEntity<ConsentArrangementResponse> extendConsentDuration(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ConsentExtensionRequest body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Get consent arrangement details", description = "Retrieve details of a specific consent arrangement. Based on: - UK Open Banking Account Access Consents API - Australia CDR Get Consent API ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Consent arrangement details", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentArrangementResponse.class))),
         
@@ -168,12 +206,21 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ConsentArrangementResponse> getConsentArrangement(@Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Get consent arrangement history", description = "Retrieve the full history of changes to a consent arrangement. Based on: - Australia CDR Consent History API - UK Open Banking Consent Audit Requirements ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Consent arrangement history", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentHistory.class))),
         
@@ -192,12 +239,21 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ConsentHistory> getConsentHistory(@Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Get customer's consent dashboard", description = "Retrieve a comprehensive view of customer's consent arrangements and data sharing. Based on: - Australia CDR Consumer Dashboard - UK Open Banking Consent Dashboard - Singapore SGFinDex Customer Portal ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Customer's consent dashboard", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentDashboard.class))),
         
@@ -216,14 +272,23 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ConsentDashboard> getCustomerConsentDashboard(@Parameter(in = ParameterIn.PATH, description = "The customer's unique identifier", required=true, schema=@Schema()) @PathVariable("customer_id") String customerId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Get customer's consent arrangements", description = "Retrieve all consent arrangements for a specific customer. Based on: - UK Open Banking Customer Consent Management - Australia CDR Consumer Dashboard APIs - Singapore SGFinDex Customer Consent View ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Customer's consent arrangements", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2005.class))),
+        @ApiResponse(responseCode = "200", description = "Customer's consent arrangements", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InlineResponse2003.class))),
         
         @ApiResponse(responseCode = "400", description = "Bad Request - The server cannot process the request due to a client error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
@@ -239,17 +304,26 @@ public interface ConsentApi {
     @RequestMapping(value = "/consent/customers/{customer_id}/arrangements",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<InlineResponse2005> getCustomerConsents(@Parameter(in = ParameterIn.PATH, description = "The customer's unique identifier", required=true, schema=@Schema()) @PathVariable("customer_id") String customerId
+    ResponseEntity<InlineResponse2003> getCustomerConsents(@Parameter(in = ParameterIn.PATH, description = "The customer's unique identifier", required=true, schema=@Schema()) @PathVariable("customer_id") String customerId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
 , @Parameter(in = ParameterIn.QUERY, description = "Filter consents by status" ,schema=@Schema(allowableValues={ "active", "expired", "revoked", "suspended" }
 )) @Valid @RequestParam(value = "status", required = false) String status
 , @Parameter(in = ParameterIn.QUERY, description = "Filter by specific data holder/institution" ,schema=@Schema()) @Valid @RequestParam(value = "data_holder_id", required = false) String dataHolderId
 , @Parameter(in = ParameterIn.QUERY, description = "Filter by consent purpose" ,schema=@Schema()) @Valid @RequestParam(value = "purpose", required = false) String purpose
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "List consent arrangements", description = "Retrieve a list of active consent arrangements for the authenticated user. Based on: - UK Open Banking Account Access Consents API - Australia CDR Get Consent API ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "List of consent arrangements", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ConsentArrangementResponse.class)))),
         
@@ -265,16 +339,25 @@ public interface ConsentApi {
     @RequestMapping(value = "/consent/arrangements",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<ConsentArrangementResponse>> listConsentArrangements(@Parameter(in = ParameterIn.QUERY, description = "Filter consents by status" ,schema=@Schema(allowableValues={ "active", "expired", "revoked", "suspended" }
+    ResponseEntity<List<ConsentArrangementResponse>> listConsentArrangements(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.QUERY, description = "Filter consents by status" ,schema=@Schema(allowableValues={ "active", "expired", "revoked", "suspended" }
 )) @Valid @RequestParam(value = "status", required = false) String status
 , @Parameter(in = ParameterIn.QUERY, description = "Filter consents created after this date" ,schema=@Schema()) @Valid @RequestParam(value = "from_date", required = false) OffsetDateTime fromDate
 , @Parameter(in = ParameterIn.QUERY, description = "Filter consents created before this date" ,schema=@Schema()) @Valid @RequestParam(value = "to_date", required = false) OffsetDateTime toDate
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "List available consent templates", description = "Retrieve available consent templates that can be used to create new arrangements. Based on: - Australia CDR Consent Taxonomy - UK Open Banking Standard Permissions ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "List of consent templates", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ConsentTemplate.class)))),
         
@@ -290,14 +373,23 @@ public interface ConsentApi {
     @RequestMapping(value = "/consent/templates",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<ConsentTemplate>> listConsentTemplates(@Parameter(in = ParameterIn.QUERY, description = "Filter templates by category" ,schema=@Schema()) @Valid @RequestParam(value = "category", required = false) String category
+    ResponseEntity<List<ConsentTemplate>> listConsentTemplates(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.QUERY, description = "Filter templates by category" ,schema=@Schema()) @Valid @RequestParam(value = "category", required = false) String category
 , @Parameter(in = ParameterIn.QUERY, description = "Filter templates by purpose" ,schema=@Schema()) @Valid @RequestParam(value = "purpose", required = false) String purpose
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Revoke consent arrangement", description = "Revoke an existing consent arrangement. Based on: - UK Open Banking Account Access Consents API - Australia CDR Revoke Consent API - Korea MyData Consent Revocation API ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "204", description = "Consent arrangement successfully revoked"),
         
@@ -316,12 +408,21 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> revokeConsentArrangement(@Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement to revoke", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
     @Operation(summary = "Update consent arrangement status", description = "Update the status of a consent arrangement (e.g., suspend, resume). Based on: - UK Open Banking Account Access Consents API - Australia CDR Update Consent API ", security = {
-        @SecurityRequirement(name = "OAuth2", scopes = {
-                    })    }, tags={ "Consent" })
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Consent" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Consent status updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConsentArrangementResponse.class))),
         
@@ -340,8 +441,18 @@ public interface ConsentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<ConsentArrangementResponse> updateConsentStatus(@Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
+    ResponseEntity<ConsentArrangementResponse> updateConsentStatus(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-headers", required=true) String xClientHeaders
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
+, @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.PATH, description = "The ID of the consent arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ConsentStatusUpdate body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 }

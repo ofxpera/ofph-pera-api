@@ -4,8 +4,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **participantId** | **String** | Unique identifier for the participant |  [optional]
-**participantName** | **String** | Trading name of the participant | 
-**participantType** | [**List&lt;ParticipantTypeEnum&gt;**](#List&lt;ParticipantTypeEnum&gt;) | Types of roles this participant can perform | 
+**participantName** | **String** | Trading name of the participant |  [optional]
+**participantType** | [**List&lt;ParticipantTypeEnum&gt;**](#List&lt;ParticipantTypeEnum&gt;) | Types of roles this participant can perform |  [optional]
 **participantDescription** | **String** | Short Description of the participant (Required for PERA Admin) |  [optional]
 **participantLogoUri** | **String** | logo uri of the participant |  [optional]
 **status** | [**StatusEnum**](#StatusEnum) |  |  [optional]

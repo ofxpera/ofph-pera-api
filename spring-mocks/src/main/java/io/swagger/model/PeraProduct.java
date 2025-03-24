@@ -19,33 +19,37 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class PeraProduct   {
-  @JsonProperty("product_id")
+  @JsonProperty("productId")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String productId = null;
 
-  @JsonProperty("product_name")
+  @JsonProperty("productName")
 
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String productName = null;
 
-  @JsonProperty("product_description")
+  @JsonProperty("productDescription")
 
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String productDescription = null;
 
   /**
    * The risk rating of the product
    */
   public enum ProductRiskRatingEnum {
-    CONSERVATIVE("Conservative"),
+    CONSERVATIVE("conservative"),
     
-    MODERATE("Moderate"),
+    MODERATE("moderate"),
     
-    AGGRESSIVE("Aggressive");
+    AGGRESSIVE("aggressive");
 
     private String value;
 
@@ -69,12 +73,16 @@ public class PeraProduct   {
       return null;
     }
   }
-  @JsonProperty("product_risk_rating")
+  @JsonProperty("productRiskRating")
 
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private ProductRiskRatingEnum productRiskRating = null;
 
-  @JsonProperty("product_kiid_uri")
+  @JsonProperty("productKiidUri")
 
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String productKiidUri = null;
 
 
@@ -112,9 +120,8 @@ public class PeraProduct   {
    * @return productName
    **/
   
-  @Schema(required = true, description = "The name of the product")
+  @Schema(description = "The name of the product")
   
-  @NotNull
   public String getProductName() {  
     return productName;
   }
@@ -122,7 +129,6 @@ public class PeraProduct   {
 
 
   public void setProductName(String productName) { 
-
     this.productName = productName;
   }
 
@@ -137,9 +143,8 @@ public class PeraProduct   {
    * @return productDescription
    **/
   
-  @Schema(required = true, description = "A detailed description of the product")
+  @Schema(description = "A detailed description of the product")
   
-  @NotNull
   public String getProductDescription() {  
     return productDescription;
   }
@@ -147,7 +152,6 @@ public class PeraProduct   {
 
 
   public void setProductDescription(String productDescription) { 
-
     this.productDescription = productDescription;
   }
 
@@ -162,9 +166,8 @@ public class PeraProduct   {
    * @return productRiskRating
    **/
   
-  @Schema(required = true, description = "The risk rating of the product")
+  @Schema(description = "The risk rating of the product")
   
-  @NotNull
   public ProductRiskRatingEnum getProductRiskRating() {  
     return productRiskRating;
   }
@@ -172,7 +175,6 @@ public class PeraProduct   {
 
 
   public void setProductRiskRating(ProductRiskRatingEnum productRiskRating) { 
-
     this.productRiskRating = productRiskRating;
   }
 
@@ -187,9 +189,8 @@ public class PeraProduct   {
    * @return productKiidUri
    **/
   
-  @Schema(required = true, description = "URI to the KIID (Key Investor Information Document) for the product")
+  @Schema(description = "URI to the KIID (Key Investor Information Document) for the product")
   
-  @NotNull
   public String getProductKiidUri() {  
     return productKiidUri;
   }
@@ -197,7 +198,6 @@ public class PeraProduct   {
 
 
   public void setProductKiidUri(String productKiidUri) { 
-
     this.productKiidUri = productKiidUri;
   }
 

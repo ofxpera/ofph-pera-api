@@ -24,18 +24,20 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class Participant   {
-  @JsonProperty("participant_id")
+  @JsonProperty("participantId")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String participantId = null;
 
-  @JsonProperty("participant_name")
+  @JsonProperty("participantName")
 
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String participantName = null;
 
   /**
@@ -68,16 +70,16 @@ public class Participant   {
       return null;
     }
   }
-  @JsonProperty("participant_type")
+  @JsonProperty("participantType")
   @Valid
-  private List<ParticipantTypeEnum> participantType = new ArrayList<ParticipantTypeEnum>();
-  @JsonProperty("participant_description")
+  private List<ParticipantTypeEnum> participantType = null;
+  @JsonProperty("participantDescription")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String participantDescription = null;
 
-  @JsonProperty("participant_logo_uri")
+  @JsonProperty("participantLogoUri")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
@@ -172,9 +174,8 @@ public class Participant   {
    * @return participantName
    **/
   
-  @Schema(required = true, description = "Trading name of the participant")
+  @Schema(description = "Trading name of the participant")
   
-  @NotNull
   public String getParticipantName() {  
     return participantName;
   }
@@ -182,7 +183,6 @@ public class Participant   {
 
 
   public void setParticipantName(String participantName) { 
-
     this.participantName = participantName;
   }
 
@@ -193,6 +193,9 @@ public class Participant   {
   }
 
   public Participant addParticipantTypeItem(ParticipantTypeEnum participantTypeItem) {
+    if (this.participantType == null) {
+      this.participantType = new ArrayList<ParticipantTypeEnum>();
+    }
     this.participantType.add(participantTypeItem);
     return this;
   }
@@ -202,9 +205,8 @@ public class Participant   {
    * @return participantType
    **/
   
-  @Schema(required = true, description = "Types of roles this participant can perform")
+  @Schema(description = "Types of roles this participant can perform")
   
-  @NotNull
 @Size(min=1)   public List<ParticipantTypeEnum> getParticipantType() {  
     return participantType;
   }
@@ -212,7 +214,6 @@ public class Participant   {
 
 
   public void setParticipantType(List<ParticipantTypeEnum> participantType) { 
-
     this.participantType = participantType;
   }
 

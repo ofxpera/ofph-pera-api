@@ -1,6 +1,6 @@
 # ConsentApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.5*
+All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/0.0.7*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -19,7 +19,7 @@ Method | HTTP request | Description
 
 <a name="bulkUpdateCustomerConsents"></a>
 # **bulkUpdateCustomerConsents**
-> InlineResponse2006 bulkUpdateCustomerConsents(body, customerId)
+> InlineResponse2004 bulkUpdateCustomerConsents(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, customerId, xFapiInteractionId)
 
 Bulk update customer&#x27;s consent arrangements
 
@@ -36,15 +36,21 @@ Update multiple consent arrangements for a specific customer in a single request
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 ArrangementsBulkupdateBody body = new ArrangementsBulkupdateBody(); // ArrangementsBulkupdateBody | 
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String customerId = "customerId_example"; // String | The customer's unique identifier
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    InlineResponse2006 result = apiInstance.bulkUpdateCustomerConsents(body, customerId);
+    InlineResponse2004 result = apiInstance.bulkUpdateCustomerConsents(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, customerId, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#bulkUpdateCustomerConsents");
@@ -57,15 +63,24 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ArrangementsBulkupdateBody**](ArrangementsBulkupdateBody.md)|  |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 100, 1]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **customerId** | **String**| The customer&#x27;s unique identifier |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
-[**InlineResponse2006**](InlineResponse2006.md)
+[**InlineResponse2004**](InlineResponse2004.md)
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -74,7 +89,7 @@ Name | Type | Description  | Notes
 
 <a name="createBulkConsent"></a>
 # **createBulkConsent**
-> BulkConsentResponse createBulkConsent(body)
+> BulkConsentResponse createBulkConsent(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Create bulk consent arrangements
 
@@ -91,14 +106,20 @@ Create multiple consent arrangements in a single request. Based on: - Korea MyDa
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 BulkConsentRequest body = new BulkConsentRequest(); // BulkConsentRequest | 
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    BulkConsentResponse result = apiInstance.createBulkConsent(body);
+    BulkConsentResponse result = apiInstance.createBulkConsent(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#createBulkConsent");
@@ -111,6 +132,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**BulkConsentRequest**](BulkConsentRequest.md)|  |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 100, 1]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -118,7 +148,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -127,7 +157,7 @@ Name | Type | Description  | Notes
 
 <a name="createConsentArrangement"></a>
 # **createConsentArrangement**
-> ConsentArrangementResponse createConsentArrangement(body)
+> ConsentArrangementResponse createConsentArrangement(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Create a consent arrangement
 
@@ -144,14 +174,20 @@ Create a new consent arrangement between a data holder and data recipient. Based
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 ConsentArrangementRequest body = new ConsentArrangementRequest(); // ConsentArrangementRequest | 
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentArrangementResponse result = apiInstance.createConsentArrangement(body);
+    ConsentArrangementResponse result = apiInstance.createConsentArrangement(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#createConsentArrangement");
@@ -164,6 +200,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ConsentArrangementRequest**](ConsentArrangementRequest.md)|  |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 100, 1]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -171,7 +216,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -180,7 +225,7 @@ Name | Type | Description  | Notes
 
 <a name="extendConsentDuration"></a>
 # **extendConsentDuration**
-> ConsentArrangementResponse extendConsentDuration(body, arrangementId)
+> ConsentArrangementResponse extendConsentDuration(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId)
 
 Extend consent arrangement duration
 
@@ -203,9 +248,18 @@ OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 ConsentExtensionRequest body = new ConsentExtensionRequest(); // ConsentExtensionRequest | 
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String arrangementId = "arrangementId_example"; // String | The ID of the consent arrangement
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentArrangementResponse result = apiInstance.extendConsentDuration(body, arrangementId);
+    ConsentArrangementResponse result = apiInstance.extendConsentDuration(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#extendConsentDuration");
@@ -218,7 +272,16 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ConsentExtensionRequest**](ConsentExtensionRequest.md)|  |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 100, 1]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **arrangementId** | **String**| The ID of the consent arrangement |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -235,7 +298,7 @@ Name | Type | Description  | Notes
 
 <a name="getConsentArrangement"></a>
 # **getConsentArrangement**
-> ConsentArrangementResponse getConsentArrangement(arrangementId)
+> ConsentArrangementResponse getConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Get consent arrangement details
 
@@ -252,14 +315,20 @@ Retrieve details of a specific consent arrangement. Based on: - UK Open Banking 
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 String arrangementId = "arrangementId_example"; // String | The ID of the consent arrangement
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentArrangementResponse result = apiInstance.getConsentArrangement(arrangementId);
+    ConsentArrangementResponse result = apiInstance.getConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#getConsentArrangement");
@@ -272,6 +341,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **arrangementId** | **String**| The ID of the consent arrangement |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -279,7 +357,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -288,7 +366,7 @@ Name | Type | Description  | Notes
 
 <a name="getConsentHistory"></a>
 # **getConsentHistory**
-> ConsentHistory getConsentHistory(arrangementId)
+> ConsentHistory getConsentHistory(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Get consent arrangement history
 
@@ -305,14 +383,20 @@ Retrieve the full history of changes to a consent arrangement. Based on: - Austr
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 String arrangementId = "arrangementId_example"; // String | The ID of the consent arrangement
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentHistory result = apiInstance.getConsentHistory(arrangementId);
+    ConsentHistory result = apiInstance.getConsentHistory(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#getConsentHistory");
@@ -325,6 +409,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **arrangementId** | **String**| The ID of the consent arrangement |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -332,7 +425,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -341,7 +434,7 @@ Name | Type | Description  | Notes
 
 <a name="getCustomerConsentDashboard"></a>
 # **getCustomerConsentDashboard**
-> ConsentDashboard getCustomerConsentDashboard(customerId)
+> ConsentDashboard getCustomerConsentDashboard(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Get customer&#x27;s consent dashboard
 
@@ -358,14 +451,20 @@ Retrieve a comprehensive view of customer&#x27;s consent arrangements and data s
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 String customerId = "customerId_example"; // String | The customer's unique identifier
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentDashboard result = apiInstance.getCustomerConsentDashboard(customerId);
+    ConsentDashboard result = apiInstance.getCustomerConsentDashboard(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#getCustomerConsentDashboard");
@@ -378,6 +477,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **customerId** | **String**| The customer&#x27;s unique identifier |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -385,7 +493,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -394,7 +502,7 @@ Name | Type | Description  | Notes
 
 <a name="getCustomerConsents"></a>
 # **getCustomerConsents**
-> InlineResponse2005 getCustomerConsents(customerId, status, dataHolderId, purpose)
+> InlineResponse2003 getCustomerConsents(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, dataHolderId, purpose, xFapiInteractionId)
 
 Get customer&#x27;s consent arrangements
 
@@ -411,17 +519,23 @@ Retrieve all consent arrangements for a specific customer. Based on: - UK Open B
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 String customerId = "customerId_example"; // String | The customer's unique identifier
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String status = "status_example"; // String | Filter consents by status
 String dataHolderId = "dataHolderId_example"; // String | Filter by specific data holder/institution
 String purpose = "purpose_example"; // String | Filter by consent purpose
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    InlineResponse2005 result = apiInstance.getCustomerConsents(customerId, status, dataHolderId, purpose);
+    InlineResponse2003 result = apiInstance.getCustomerConsents(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, dataHolderId, purpose, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#getCustomerConsents");
@@ -434,17 +548,26 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **customerId** | **String**| The customer&#x27;s unique identifier |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **status** | **String**| Filter consents by status | [optional] [enum: active, expired, revoked, suspended]
  **dataHolderId** | **String**| Filter by specific data holder/institution | [optional]
  **purpose** | **String**| Filter by consent purpose | [optional]
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
-[**InlineResponse2005**](InlineResponse2005.md)
+[**InlineResponse2003**](InlineResponse2003.md)
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -453,7 +576,7 @@ Name | Type | Description  | Notes
 
 <a name="listConsentArrangements"></a>
 # **listConsentArrangements**
-> List&lt;ConsentArrangementResponse&gt; listConsentArrangements(status, fromDate, toDate)
+> List&lt;ConsentArrangementResponse&gt; listConsentArrangements(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, fromDate, toDate, xFapiInteractionId)
 
 List consent arrangements
 
@@ -470,16 +593,22 @@ Retrieve a list of active consent arrangements for the authenticated user. Based
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String status = "status_example"; // String | Filter consents by status
 OffsetDateTime fromDate = new OffsetDateTime(); // OffsetDateTime | Filter consents created after this date
 OffsetDateTime toDate = new OffsetDateTime(); // OffsetDateTime | Filter consents created before this date
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    List<ConsentArrangementResponse> result = apiInstance.listConsentArrangements(status, fromDate, toDate);
+    List<ConsentArrangementResponse> result = apiInstance.listConsentArrangements(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, fromDate, toDate, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#listConsentArrangements");
@@ -491,9 +620,18 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **status** | **String**| Filter consents by status | [optional] [enum: active, expired, revoked, suspended]
  **fromDate** | **OffsetDateTime**| Filter consents created after this date | [optional]
  **toDate** | **OffsetDateTime**| Filter consents created before this date | [optional]
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -501,7 +639,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -510,7 +648,7 @@ Name | Type | Description  | Notes
 
 <a name="listConsentTemplates"></a>
 # **listConsentTemplates**
-> List&lt;ConsentTemplate&gt; listConsentTemplates(category, purpose)
+> List&lt;ConsentTemplate&gt; listConsentTemplates(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, category, purpose, xFapiInteractionId)
 
 List available consent templates
 
@@ -527,15 +665,21 @@ Retrieve available consent templates that can be used to create new arrangements
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String category = "category_example"; // String | Filter templates by category
 String purpose = "purpose_example"; // String | Filter templates by purpose
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    List<ConsentTemplate> result = apiInstance.listConsentTemplates(category, purpose);
+    List<ConsentTemplate> result = apiInstance.listConsentTemplates(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, category, purpose, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#listConsentTemplates");
@@ -547,8 +691,17 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **category** | **String**| Filter templates by category | [optional]
  **purpose** | **String**| Filter templates by purpose | [optional]
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -556,7 +709,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -565,7 +718,7 @@ Name | Type | Description  | Notes
 
 <a name="revokeConsentArrangement"></a>
 # **revokeConsentArrangement**
-> revokeConsentArrangement(arrangementId)
+> revokeConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId)
 
 Revoke consent arrangement
 
@@ -582,14 +735,20 @@ Revoke an existing consent arrangement. Based on: - UK Open Banking Account Acce
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 String arrangementId = "arrangementId_example"; // String | The ID of the consent arrangement to revoke
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    apiInstance.revokeConsentArrangement(arrangementId);
+    apiInstance.revokeConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#revokeConsentArrangement");
     e.printStackTrace();
@@ -601,6 +760,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **arrangementId** | **String**| The ID of the consent arrangement to revoke |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 1, 100]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -608,7 +776,7 @@ null (empty response body)
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -617,7 +785,7 @@ null (empty response body)
 
 <a name="updateConsentStatus"></a>
 # **updateConsentStatus**
-> ConsentArrangementResponse updateConsentStatus(body, arrangementId)
+> ConsentArrangementResponse updateConsentStatus(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId)
 
 Update consent arrangement status
 
@@ -634,15 +802,21 @@ Update the status of a consent arrangement (e.g., suspend, resume). Based on: - 
 
 ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-// Configure OAuth2 access token for authorization: OAuth2
-OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-OAuth2.setAccessToken("YOUR ACCESS TOKEN");
 
 ConsentApi apiInstance = new ConsentApi();
 ConsentStatusUpdate body = new ConsentStatusUpdate(); // ConsentStatusUpdate | 
+String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
+Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
+OffsetDateTime xFapiAuthDate = new OffsetDateTime(); // OffsetDateTime | The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+String xFapiCustomerIpAddress = "xFapiCustomerIpAddress_example"; // String | The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+String xClientHeaders = "xClientHeaders_example"; // String | The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+String xClientUserAgent = "xClientUserAgent_example"; // String | The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+UUID xIdempotencyKey = new UUID(); // UUID | Unique idempotency key for the request as per FAPI Advanced requirements
+OffsetDateTime xFapiCustomerLastLoggedTime = new OffsetDateTime(); // OffsetDateTime | The time when the PSU last logged in to the client software as per FAPI Advanced requirements
 String arrangementId = "arrangementId_example"; // String | The ID of the consent arrangement
+UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 try {
-    ConsentArrangementResponse result = apiInstance.updateConsentStatus(body, arrangementId);
+    ConsentArrangementResponse result = apiInstance.updateConsentStatus(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling ConsentApi#updateConsentStatus");
@@ -655,7 +829,16 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**ConsentStatusUpdate**](ConsentStatusUpdate.md)|  |
+ **participantId** | **String**| Field referencing the unique identifier of the requesting participant. |
+ **xV** | **Integer**| Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. | [enum: 100, 1]
+ **xFapiAuthDate** | **OffsetDateTime**| The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls. |
+ **xFapiCustomerIpAddress** | **String**| The customer&#x27;s original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls. |
+ **xClientHeaders** | **String**| The customer&#x27;s original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xClientUserAgent** | **String**| The customer&#x27;s original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls. |
+ **xIdempotencyKey** | [**UUID**](.md)| Unique idempotency key for the request as per FAPI Advanced requirements |
+ **xFapiCustomerLastLoggedTime** | **OffsetDateTime**| The time when the PSU last logged in to the client software as per FAPI Advanced requirements |
  **arrangementId** | **String**| The ID of the consent arrangement |
+ **xFapiInteractionId** | [**UUID**](.md)| An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. | [optional]
 
 ### Return type
 
@@ -663,7 +846,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[OAuth2](../README.md#OAuth2)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 

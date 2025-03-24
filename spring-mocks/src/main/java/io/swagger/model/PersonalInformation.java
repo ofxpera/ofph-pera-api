@@ -19,7 +19,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class PersonalInformation   {
@@ -74,6 +74,10 @@ public class PersonalInformation   {
   @JsonProperty("nationality")
 
   private String nationality = null;
+
+  @JsonProperty("residentialAddress")
+
+  private OneOfPersonalInformationResidentialAddress residentialAddress = null;
 
   @JsonProperty("tin")
 
@@ -350,6 +354,31 @@ public class PersonalInformation   {
     this.nationality = nationality;
   }
 
+  public PersonalInformation residentialAddress(OneOfPersonalInformationResidentialAddress residentialAddress) { 
+
+    this.residentialAddress = residentialAddress;
+    return this;
+  }
+
+  /**
+   * Get residentialAddress
+   * @return residentialAddress
+   **/
+  
+  @Schema(required = true, description = "")
+  
+  @NotNull
+  public OneOfPersonalInformationResidentialAddress getResidentialAddress() {  
+    return residentialAddress;
+  }
+
+
+
+  public void setResidentialAddress(OneOfPersonalInformationResidentialAddress residentialAddress) { 
+
+    this.residentialAddress = residentialAddress;
+  }
+
   public PersonalInformation tin(String tin) { 
 
     this.tin = tin;
@@ -393,12 +422,13 @@ public class PersonalInformation   {
         Objects.equals(this.email, personalInformation.email) &&
         Objects.equals(this.birthdate, personalInformation.birthdate) &&
         Objects.equals(this.nationality, personalInformation.nationality) &&
+        Objects.equals(this.residentialAddress, personalInformation.residentialAddress) &&
         Objects.equals(this.tin, personalInformation.tin);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sub, title, givenName, middleName, lastName, suffix, phoneNumber, mobileNumber, email, birthdate, nationality, tin);
+    return Objects.hash(sub, title, givenName, middleName, lastName, suffix, phoneNumber, mobileNumber, email, birthdate, nationality, residentialAddress, tin);
   }
 
   @Override
@@ -417,6 +447,7 @@ public class PersonalInformation   {
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    birthdate: ").append(toIndentedString(birthdate)).append("\n");
     sb.append("    nationality: ").append(toIndentedString(nationality)).append("\n");
+    sb.append("    residentialAddress: ").append(toIndentedString(residentialAddress)).append("\n");
     sb.append("    tin: ").append(toIndentedString(tin)).append("\n");
     sb.append("}");
     return sb.toString();

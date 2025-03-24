@@ -8,8 +8,8 @@ package io.swagger.api;
 import io.swagger.model.ClientRegistrationResponse;
 import io.swagger.model.Error;
 import io.swagger.model.ParticipantConfig;
-import io.swagger.model.PeraArrangement;
 import io.swagger.model.PeraProduct;
+import java.util.UUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -36,34 +36,12 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 @Validated
 public interface OfxperaApi {
 
-    @Operation(summary = "Get the status of a PERA arrangement", description = "API that allows FIs to retrieve the status of one or more PERA Arrangements", tags={ "PERA" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved the status of the PERA Arrangement", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PeraArrangement.class))),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request - The server cannot process the request due to a client error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Unauthorized - Authentication is required and has failed or not been provided", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "403", description = "Forbidden - The server understood the request but refuses to authorize it", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Not Found - The requested resource could not be found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "429", description = "Too Many Requests - The client has sent too many requests in a given amount of time", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "500", description = "Internal Server Error - The server encountered an unexpected condition", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/ofxpera/arrangements/{arrangement_id}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<PeraArrangement> getArrangementStatus(@Parameter(in = ParameterIn.PATH, description = "The ID of the PERA Arrangement", required=true, schema=@Schema()) @PathVariable("arrangement_id") String arrangementId
-);
-
-
-    @Operation(summary = "Get an OFxPERA Participant's registration information", description = "API for retrieving registration information for a specific OFxPERA Participant", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 2] Get an OFxPERA Participant's registration information", description = "API for retrieving registration information for a specific OFxPERA Participant", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Successfully retrieved participant information", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantConfig.class))),
         
@@ -82,11 +60,15 @@ public interface OfxperaApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ParticipantConfig> getParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
-    @Operation(summary = "Get a list of registered OFxPERA Participants", description = "API for retrieving all registered OFxPERA Participants", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 1] Get a list of registered OFxPERA Participants", description = "API for retrieving all registered OFxPERA Participants", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Successfully retrieved OFxPERA Participants", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ParticipantConfig.class)))),
         
@@ -104,11 +86,15 @@ public interface OfxperaApi {
     @RequestMapping(value = "/ofxpera/participants",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<ParticipantConfig>> listParticipants();
+    ResponseEntity<List<ParticipantConfig>> listParticipants(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+);
 
 
-    @Operation(summary = "Get a list of PERA products associated with PERA Admin", description = "API for retrieving all registered products associated with the PERA Admin.", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 1] Get a list of PERA products associated with PERA Admin", description = "API for retrieving all registered products associated with the PERA Admin.", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of registered products associated with the PERA Admin.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PeraProduct.class)))),
         
@@ -123,33 +109,18 @@ public interface OfxperaApi {
         @ApiResponse(responseCode = "429", description = "Too Many Requests - The client has sent too many requests in a given amount of time", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
         @ApiResponse(responseCode = "500", description = "Internal Server Error - The server encountered an unexpected condition", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/ofxpera/product/{participant_id}",
+    @RequestMapping(value = "/ofxpera/products/{participant_id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<List<PeraProduct>> listProductByParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during Participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
-    @Operation(summary = "Registers a new PERA arrangement", description = "API that allows PERA Admins to register the successful creation of one or more new PERA Arrangements", tags={ "PERA" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Successfully created a new PERA Account", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PeraArrangement.class))),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request - The server cannot process the request due to a client error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "403", description = "Forbidden - The server understood the request but refuses to authorize it", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Not Found - The requested resource could not be found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "429", description = "Too Many Requests - The client has sent too many requests in a given amount of time", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "500", description = "Internal Server Error - The server encountered an unexpected condition", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/ofxpera/arrangements",
-        produces = { "application/json" }, 
-        method = RequestMethod.POST)
-    ResponseEntity<PeraArrangement> peraArrangementRegistration();
-
-
-    @Operation(summary = "Register an OFxPERA Participant", description = "API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements", security = {
+    @Operation(summary = "[PHASE 2] Register an OFxPERA Participant", description = "API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements", security = {
         @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Participant successfully registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientRegistrationResponse.class))),
@@ -169,12 +140,15 @@ public interface OfxperaApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<ClientRegistrationResponse> registerParticipant(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
+    ResponseEntity<ClientRegistrationResponse> registerParticipant(@Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
-    @Operation(summary = "Register a PERA Admin Product", description = "API that allows PERA Admin to register a PERA product.", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 2] Register a PERA Admin Product", description = "API that allows PERA Admin to register a PERA product.", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Product successfully registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PeraProduct.class))),
         
@@ -189,14 +163,18 @@ public interface OfxperaApi {
         @ApiResponse(responseCode = "429", description = "Too Many Requests - The client has sent too many requests in a given amount of time", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
         @ApiResponse(responseCode = "500", description = "Internal Server Error - The server encountered an unexpected condition", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/ofxpera/product",
+    @RequestMapping(value = "/ofxpera/products",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<PeraProduct> registerProduct();
+    ResponseEntity<PeraProduct> registerProduct(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+);
 
 
-    @Operation(summary = "Update an OFxPERA Participant", description = "API for updating the URIs and status of an OFxPERA Participant", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 2] Update an OFxPERA Participant", description = "API for updating the URIs and status of an OFxPERA Participant", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Participant successfully updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClientRegistrationResponse.class))),
         
@@ -215,12 +193,16 @@ public interface OfxperaApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<ClientRegistrationResponse> updateParticipant(@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
+    ResponseEntity<ClientRegistrationResponse> updateParticipant(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 
-    @Operation(summary = "Update a PERA Admin Product", description = "API that allows PERA Admin to update their product.", security = {
-        @SecurityRequirement(name = "RegistrationAccessToken")    }, tags={ "Bootstrap" })
+    @Operation(summary = "[PHASE 2] Update a PERA Admin Product", description = "API that allows PERA Admin to update their product.", security = {
+        @SecurityRequirement(name = "SignedJWT")    }, tags={ "Bootstrap" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Product successfully updated", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PeraProduct.class))),
         
@@ -235,10 +217,14 @@ public interface OfxperaApi {
         @ApiResponse(responseCode = "429", description = "Too Many Requests - The client has sent too many requests in a given amount of time", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
         
         @ApiResponse(responseCode = "500", description = "Internal Server Error - The server encountered an unexpected condition", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
-    @RequestMapping(value = "/ofxpera/product/{product_id}",
+    @RequestMapping(value = "/ofxpera/products/{product_id}",
         produces = { "application/json" }, 
         method = RequestMethod.PUT)
     ResponseEntity<PeraProduct> updateProduct(@Parameter(in = ParameterIn.PATH, description = "Product identifier issued during product registration", required=true, schema=@Schema()) @PathVariable("product_id") String productId
+, @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
+)) @RequestHeader(value="x-v", required=true) Integer xV
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
 
 }

@@ -3,6 +3,7 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -18,21 +19,45 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
-public class Address   {
-  @JsonProperty("region")
+public class Address  implements OneOfCustomerDueDiligenceEmployerAddress, OneOfPersonalInformationResidentialAddress {
+  /**
+   * Format of address values
+   */
+  public enum AddressFormatEnum {
+    PSGC("PSGC");
 
-  private String region = null;
+    private String value;
 
-  @JsonProperty("province")
+    AddressFormatEnum(String value) {
+      this.value = value;
+    }
 
-  private String province = null;
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
 
-  @JsonProperty("city")
+    @JsonCreator
+    public static AddressFormatEnum fromValue(String text) {
+      for (AddressFormatEnum b : AddressFormatEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("addressFormat")
 
-  private String city = null;
+  private AddressFormatEnum addressFormat = null;
+
+  @JsonProperty("cityMunicipality")
+
+  private String cityMunicipality = null;
 
   @JsonProperty("barangay")
 
@@ -40,94 +65,73 @@ public class Address   {
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String barangay = null;
 
-  @JsonProperty("street_address")
+  @JsonProperty("streetAddress")
+
+  private String streetAddress = null;
+
+  @JsonProperty("buildingUnitNumber")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String streetAddress = null;
+  private String buildingUnitNumber = null;
 
   @JsonProperty("country")
 
   private String country = null;
 
-  @JsonProperty("postal_code")
+  @JsonProperty("postalCode")
 
   private String postalCode = null;
 
 
-  public Address region(String region) { 
+  public Address addressFormat(AddressFormatEnum addressFormat) { 
 
-    this.region = region;
+    this.addressFormat = addressFormat;
     return this;
   }
 
   /**
-   * PSGC Code for Region
-   * @return region
+   * Format of address values
+   * @return addressFormat
    **/
   
-  @Schema(required = true, description = "PSGC Code for Region")
+  @Schema(required = true, description = "Format of address values")
   
   @NotNull
-@Size(max=10)   public String getRegion() {  
-    return region;
+@Size(max=4)   public AddressFormatEnum getAddressFormat() {  
+    return addressFormat;
   }
 
 
 
-  public void setRegion(String region) { 
+  public void setAddressFormat(AddressFormatEnum addressFormat) { 
 
-    this.region = region;
+    this.addressFormat = addressFormat;
   }
 
-  public Address province(String province) { 
+  public Address cityMunicipality(String cityMunicipality) { 
 
-    this.province = province;
-    return this;
-  }
-
-  /**
-   * PSGC Code for Province
-   * @return province
-   **/
-  
-  @Schema(required = true, description = "PSGC Code for Province")
-  
-  @NotNull
-@Size(max=10)   public String getProvince() {  
-    return province;
-  }
-
-
-
-  public void setProvince(String province) { 
-
-    this.province = province;
-  }
-
-  public Address city(String city) { 
-
-    this.city = city;
+    this.cityMunicipality = cityMunicipality;
     return this;
   }
 
   /**
    * PSGC Code for City
-   * @return city
+   * @return cityMunicipality
    **/
   
-  @Schema(required = true, description = "PSGC Code for City")
+  @Schema(example = "0405812000", required = true, description = "PSGC Code for City")
   
   @NotNull
-@Size(max=10)   public String getCity() {  
-    return city;
+@Size(max=10)   public String getCityMunicipality() {  
+    return cityMunicipality;
   }
 
 
 
-  public void setCity(String city) { 
+  public void setCityMunicipality(String cityMunicipality) { 
 
-    this.city = city;
+    this.cityMunicipality = cityMunicipality;
   }
 
   public Address barangay(String barangay) { 
@@ -141,7 +145,7 @@ public class Address   {
    * @return barangay
    **/
   
-  @Schema(description = "PSGC Code for Barangay")
+  @Schema(example = "0405812016", description = "PSGC Code for Barangay")
   
 @Size(max=10)   public String getBarangay() {  
     return barangay;
@@ -160,12 +164,13 @@ public class Address   {
   }
 
   /**
-   * Get streetAddress
+   * Street Address
    * @return streetAddress
    **/
   
-  @Schema(description = "")
+  @Schema(example = "Yakal Street cor Lawaan Street", required = true, description = "Street Address")
   
+  @NotNull
 @Size(max=200)   public String getStreetAddress() {  
     return streetAddress;
   }
@@ -173,7 +178,31 @@ public class Address   {
 
 
   public void setStreetAddress(String streetAddress) { 
+
     this.streetAddress = streetAddress;
+  }
+
+  public Address buildingUnitNumber(String buildingUnitNumber) { 
+
+    this.buildingUnitNumber = buildingUnitNumber;
+    return this;
+  }
+
+  /**
+   * Building and/or Unit Number
+   * @return buildingUnitNumber
+   **/
+  
+  @Schema(example = "#357 Barbie's Townhouse", description = "Building and/or Unit Number")
+  
+@Size(max=200)   public String getBuildingUnitNumber() {  
+    return buildingUnitNumber;
+  }
+
+
+
+  public void setBuildingUnitNumber(String buildingUnitNumber) { 
+    this.buildingUnitNumber = buildingUnitNumber;
   }
 
   public Address country(String country) { 
@@ -212,7 +241,7 @@ public class Address   {
    * @return postalCode
    **/
   
-  @Schema(required = true, description = "Postal Code")
+  @Schema(example = "1635", required = true, description = "Postal Code")
   
   @NotNull
 @Size(max=10)   public String getPostalCode() {  
@@ -235,18 +264,18 @@ public class Address   {
       return false;
     }
     Address address = (Address) o;
-    return Objects.equals(this.region, address.region) &&
-        Objects.equals(this.province, address.province) &&
-        Objects.equals(this.city, address.city) &&
+    return Objects.equals(this.addressFormat, address.addressFormat) &&
+        Objects.equals(this.cityMunicipality, address.cityMunicipality) &&
         Objects.equals(this.barangay, address.barangay) &&
         Objects.equals(this.streetAddress, address.streetAddress) &&
+        Objects.equals(this.buildingUnitNumber, address.buildingUnitNumber) &&
         Objects.equals(this.country, address.country) &&
         Objects.equals(this.postalCode, address.postalCode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(region, province, city, barangay, streetAddress, country, postalCode);
+    return Objects.hash(addressFormat, cityMunicipality, barangay, streetAddress, buildingUnitNumber, country, postalCode);
   }
 
   @Override
@@ -254,11 +283,11 @@ public class Address   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Address {\n");
     
-    sb.append("    region: ").append(toIndentedString(region)).append("\n");
-    sb.append("    province: ").append(toIndentedString(province)).append("\n");
-    sb.append("    city: ").append(toIndentedString(city)).append("\n");
+    sb.append("    addressFormat: ").append(toIndentedString(addressFormat)).append("\n");
+    sb.append("    cityMunicipality: ").append(toIndentedString(cityMunicipality)).append("\n");
     sb.append("    barangay: ").append(toIndentedString(barangay)).append("\n");
     sb.append("    streetAddress: ").append(toIndentedString(streetAddress)).append("\n");
+    sb.append("    buildingUnitNumber: ").append(toIndentedString(buildingUnitNumber)).append("\n");
     sb.append("    country: ").append(toIndentedString(country)).append("\n");
     sb.append("    postalCode: ").append(toIndentedString(postalCode)).append("\n");
     sb.append("}");

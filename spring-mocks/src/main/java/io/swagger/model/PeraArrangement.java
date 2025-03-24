@@ -4,7 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.model.PeraAccount;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +20,7 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class PeraArrangement   {
@@ -29,11 +28,11 @@ public class PeraArrangement   {
 
   private String id = null;
 
-  @JsonProperty("admin_id")
+  @JsonProperty("adminId")
 
   private String adminId = null;
 
-  @JsonProperty("customer_id")
+  @JsonProperty("customerId")
 
   private String customerId = null;
 
@@ -41,7 +40,7 @@ public class PeraArrangement   {
 
   private String sub = null;
 
-  @JsonProperty("consent_id")
+  @JsonProperty("consentId")
 
   private String consentId = null;
 
@@ -49,11 +48,11 @@ public class PeraArrangement   {
    * Current status of the PERA arrangement
    */
   public enum StatusEnum {
-    ACTIVE("ACTIVE"),
+    ACTIVE("active"),
     
-    SUSPENDED("SUSPENDED"),
+    DECLINED("declined"),
     
-    CLOSED("CLOSED");
+    CLOSED("closed");
 
     private String value;
 
@@ -81,15 +80,53 @@ public class PeraArrangement   {
 
   private StatusEnum status = null;
 
-  @JsonProperty("creation_date")
+  /**
+   * Reason for the resulting status of the arrangement, mostly used for DECLINED status.
+   */
+  public enum ReasonEnum {
+    INVALID_TIN("invalid_tin"),
+    
+    EXISTING_ACCOUNT("existing_account"),
+    
+    INCOMPLETE_INFO("incomplete_info"),
+    
+    FAILED_DD("failed_dd"),
+    
+    FAILED_CC("failed_cc"),
+    
+    OTHERS("others");
 
-  private OffsetDateTime creationDate = null;
+    private String value;
 
-  @JsonProperty("account")
+    ReasonEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ReasonEnum fromValue(String text) {
+      for (ReasonEnum b : ReasonEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("reason")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private PeraAccount account = null;
+  private ReasonEnum reason = null;
+
+  @JsonProperty("creationDate")
+
+  private OffsetDateTime creationDate = null;
 
 
   public PeraArrangement id(String id) { 
@@ -242,6 +279,29 @@ public class PeraArrangement   {
     this.status = status;
   }
 
+  public PeraArrangement reason(ReasonEnum reason) { 
+
+    this.reason = reason;
+    return this;
+  }
+
+  /**
+   * Reason for the resulting status of the arrangement, mostly used for DECLINED status.
+   * @return reason
+   **/
+  
+  @Schema(description = "Reason for the resulting status of the arrangement, mostly used for DECLINED status.")
+  
+  public ReasonEnum getReason() {  
+    return reason;
+  }
+
+
+
+  public void setReason(ReasonEnum reason) { 
+    this.reason = reason;
+  }
+
   public PeraArrangement creationDate(OffsetDateTime creationDate) { 
 
     this.creationDate = creationDate;
@@ -268,30 +328,6 @@ public class PeraArrangement   {
     this.creationDate = creationDate;
   }
 
-  public PeraArrangement account(PeraAccount account) { 
-
-    this.account = account;
-    return this;
-  }
-
-  /**
-   * Get account
-   * @return account
-   **/
-  
-  @Schema(description = "")
-  
-@Valid
-  public PeraAccount getAccount() {  
-    return account;
-  }
-
-
-
-  public void setAccount(PeraAccount account) { 
-    this.account = account;
-  }
-
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -307,13 +343,13 @@ public class PeraArrangement   {
         Objects.equals(this.sub, peraArrangement.sub) &&
         Objects.equals(this.consentId, peraArrangement.consentId) &&
         Objects.equals(this.status, peraArrangement.status) &&
-        Objects.equals(this.creationDate, peraArrangement.creationDate) &&
-        Objects.equals(this.account, peraArrangement.account);
+        Objects.equals(this.reason, peraArrangement.reason) &&
+        Objects.equals(this.creationDate, peraArrangement.creationDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, adminId, customerId, sub, consentId, status, creationDate, account);
+    return Objects.hash(id, adminId, customerId, sub, consentId, status, reason, creationDate);
   }
 
   @Override
@@ -327,8 +363,8 @@ public class PeraArrangement   {
     sb.append("    sub: ").append(toIndentedString(sub)).append("\n");
     sb.append("    consentId: ").append(toIndentedString(consentId)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    reason: ").append(toIndentedString(reason)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
-    sb.append("    account: ").append(toIndentedString(account)).append("\n");
     sb.append("}");
     return sb.toString();
   }

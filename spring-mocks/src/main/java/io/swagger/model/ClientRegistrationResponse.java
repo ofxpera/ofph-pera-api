@@ -18,25 +18,25 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class ClientRegistrationResponse   {
-  @JsonProperty("client_id")
+  @JsonProperty("clientId")
 
   private String clientId = null;
 
-  @JsonProperty("registration_access_token")
+  @JsonProperty("registrationAccessToken")
 
   private String registrationAccessToken = null;
 
-  @JsonProperty("registration_client_uri")
+  @JsonProperty("registrationClientUri")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String registrationClientUri = null;
 
-  @JsonProperty("client_id_issued_at")
+  @JsonProperty("clientIdIssuedAt")
 
   private Integer clientIdIssuedAt = null;
 

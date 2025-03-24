@@ -1,15 +1,15 @@
 # DiscoveryApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.5*
+All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/0.0.7*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**deleteClientRegistration**](DiscoveryApi.md#deleteClientRegistration) | **DELETE** /.well-known/openid-registration | Delete Client Registration (configurable endpoint)
 [**getClientRegistration**](DiscoveryApi.md#getClientRegistration) | **GET** /.well-known/openid-registration | Get Client Registration (configurable endpoint)
-[**getJwks**](DiscoveryApi.md#getJwks) | **GET** /.well-known/jwks.json | Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
+[**getJwks**](DiscoveryApi.md#getJwks) | **GET** /.well-known/jwks.json | [PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
 [**getOpenIdConfiguration**](DiscoveryApi.md#getOpenIdConfiguration) | **GET** /.well-known/openid-configuration | Optional - OpenID Connect Discovery
-[**registerClient**](DiscoveryApi.md#registerClient) | **POST** /.well-known/openid-registration | Dynamic Client Registration (configurable endpoint)
-[**updateClientRegistration**](DiscoveryApi.md#updateClientRegistration) | **PUT** /.well-known/openid-registration | Update Client Registration (configurable endpoint)
+[**registerClient**](DiscoveryApi.md#registerClient) | **POST** /.well-known/openid-registration | [PHASE 2] Dynamic Client Registration (configurable endpoint)
+[**updateClientRegistration**](DiscoveryApi.md#updateClientRegistration) | **PUT** /.well-known/openid-registration | [PHASE 2] Update Client Registration (configurable endpoint)
 
 <a name="deleteClientRegistration"></a>
 # **deleteClientRegistration**
@@ -47,7 +47,7 @@ null (empty response body)
 
 ### Authorization
 
-[RegistrationAccessToken](../README.md#RegistrationAccessToken)
+[SignedJWT](../README.md#SignedJWT)
 
 ### HTTP request headers
 
@@ -102,7 +102,7 @@ This endpoint does not need any parameter.
 # **getJwks**
 > JWKSet getJwks()
 
-Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
+[PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
 
 Returns the public keys used to verify JWT signatures
 
@@ -146,7 +146,7 @@ This endpoint does not need any parameter.
 
 <a name="getOpenIdConfiguration"></a>
 # **getOpenIdConfiguration**
-> InlineResponse2004 getOpenIdConfiguration()
+> InlineResponse2002 getOpenIdConfiguration()
 
 Optional - OpenID Connect Discovery
 
@@ -166,7 +166,7 @@ ApiClient defaultClient = Configuration.getDefaultApiClient();
 
 DiscoveryApi apiInstance = new DiscoveryApi();
 try {
-    InlineResponse2004 result = apiInstance.getOpenIdConfiguration();
+    InlineResponse2002 result = apiInstance.getOpenIdConfiguration();
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DiscoveryApi#getOpenIdConfiguration");
@@ -179,7 +179,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**InlineResponse2004**](InlineResponse2004.md)
+[**InlineResponse2002**](InlineResponse2002.md)
 
 ### Authorization
 
@@ -194,7 +194,7 @@ This endpoint does not need any parameter.
 # **registerClient**
 > ClientRegistrationResponse registerClient(body)
 
-Dynamic Client Registration (configurable endpoint)
+[PHASE 2] Dynamic Client Registration (configurable endpoint)
 
 Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
 
@@ -244,7 +244,7 @@ Name | Type | Description  | Notes
 # **updateClientRegistration**
 > ClientRegistration updateClientRegistration(body)
 
-Update Client Registration (configurable endpoint)
+[PHASE 2] Update Client Registration (configurable endpoint)
 
 ### Example
 ```java

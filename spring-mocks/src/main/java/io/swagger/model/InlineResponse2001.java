@@ -3,7 +3,6 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -19,211 +18,241 @@ import javax.validation.constraints.*;
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class InlineResponse2001   {
-  @JsonProperty("access_token")
-
-  private String accessToken = null;
-
-  /**
-   * Type of the token, always \"Bearer\"
-   */
-  public enum TokenTypeEnum {
-    BEARER("Bearer");
-
-    private String value;
-
-    TokenTypeEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TokenTypeEnum fromValue(String text) {
-      for (TokenTypeEnum b : TokenTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("token_type")
-
-  private TokenTypeEnum tokenType = null;
-
-  @JsonProperty("expires_in")
-
-  private Integer expiresIn = null;
-
-  @JsonProperty("id_token")
+  @JsonProperty("sub")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String idToken = null;
+  private String sub = null;
 
-  @JsonProperty("refresh_token")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String refreshToken = null;
-
-  @JsonProperty("scope")
+  @JsonProperty("name")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String scope = null;
+  private String name = null;
+
+  @JsonProperty("given_name")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private String givenName = null;
+
+  @JsonProperty("family_name")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private String familyName = null;
+
+  @JsonProperty("email")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private String email = null;
+
+  @JsonProperty("email_verified")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private Boolean emailVerified = null;
+
+  @JsonProperty("phone_number")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private String phoneNumber = null;
+
+  @JsonProperty("phone_number_verified")
+
+  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
+  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
+  private Boolean phoneNumberVerified = null;
 
 
-  public InlineResponse2001 accessToken(String accessToken) { 
+  public InlineResponse2001 sub(String sub) { 
 
-    this.accessToken = accessToken;
+    this.sub = sub;
     return this;
   }
 
   /**
-   * Access token for the authenticated user
-   * @return accessToken
+   * Unique identifier for the user from the authentication provider's perspective.
+   * @return sub
    **/
   
-  @Schema(required = true, description = "Access token for the authenticated user")
+  @Schema(description = "Unique identifier for the user from the authentication provider's perspective.")
   
-  @NotNull
-  public String getAccessToken() {  
-    return accessToken;
+  public String getSub() {  
+    return sub;
   }
 
 
 
-  public void setAccessToken(String accessToken) { 
-
-    this.accessToken = accessToken;
+  public void setSub(String sub) { 
+    this.sub = sub;
   }
 
-  public InlineResponse2001 tokenType(TokenTypeEnum tokenType) { 
+  public InlineResponse2001 name(String name) { 
 
-    this.tokenType = tokenType;
+    this.name = name;
     return this;
   }
 
   /**
-   * Type of the token, always \"Bearer\"
-   * @return tokenType
+   * Full name of the user.
+   * @return name
    **/
   
-  @Schema(required = true, description = "Type of the token, always \"Bearer\"")
+  @Schema(description = "Full name of the user.")
   
-  @NotNull
-  public TokenTypeEnum getTokenType() {  
-    return tokenType;
+  public String getName() {  
+    return name;
   }
 
 
 
-  public void setTokenType(TokenTypeEnum tokenType) { 
-
-    this.tokenType = tokenType;
+  public void setName(String name) { 
+    this.name = name;
   }
 
-  public InlineResponse2001 expiresIn(Integer expiresIn) { 
+  public InlineResponse2001 givenName(String givenName) { 
 
-    this.expiresIn = expiresIn;
+    this.givenName = givenName;
     return this;
   }
 
   /**
-   * Lifetime in seconds of the access token
-   * @return expiresIn
+   * Given name of the user.
+   * @return givenName
    **/
   
-  @Schema(required = true, description = "Lifetime in seconds of the access token")
+  @Schema(description = "Given name of the user.")
   
-  @NotNull
-  public Integer getExpiresIn() {  
-    return expiresIn;
+  public String getGivenName() {  
+    return givenName;
   }
 
 
 
-  public void setExpiresIn(Integer expiresIn) { 
-
-    this.expiresIn = expiresIn;
+  public void setGivenName(String givenName) { 
+    this.givenName = givenName;
   }
 
-  public InlineResponse2001 idToken(String idToken) { 
+  public InlineResponse2001 familyName(String familyName) { 
 
-    this.idToken = idToken;
+    this.familyName = familyName;
     return this;
   }
 
   /**
-   * ID Token value associated with the authenticated session
-   * @return idToken
+   * Family name of the user.
+   * @return familyName
    **/
   
-  @Schema(description = "ID Token value associated with the authenticated session")
+  @Schema(description = "Family name of the user.")
   
-  public String getIdToken() {  
-    return idToken;
+  public String getFamilyName() {  
+    return familyName;
   }
 
 
 
-  public void setIdToken(String idToken) { 
-    this.idToken = idToken;
+  public void setFamilyName(String familyName) { 
+    this.familyName = familyName;
   }
 
-  public InlineResponse2001 refreshToken(String refreshToken) { 
+  public InlineResponse2001 email(String email) { 
 
-    this.refreshToken = refreshToken;
+    this.email = email;
     return this;
   }
 
   /**
-   * Refresh token used to obtain new access tokens
-   * @return refreshToken
+   * Email address of the user.
+   * @return email
    **/
   
-  @Schema(description = "Refresh token used to obtain new access tokens")
+  @Schema(description = "Email address of the user.")
   
-  public String getRefreshToken() {  
-    return refreshToken;
+  public String getEmail() {  
+    return email;
   }
 
 
 
-  public void setRefreshToken(String refreshToken) { 
-    this.refreshToken = refreshToken;
+  public void setEmail(String email) { 
+    this.email = email;
   }
 
-  public InlineResponse2001 scope(String scope) { 
+  public InlineResponse2001 emailVerified(Boolean emailVerified) { 
 
-    this.scope = scope;
+    this.emailVerified = emailVerified;
     return this;
   }
 
   /**
-   * Space-separated list of scopes associated with the access token
-   * @return scope
+   * Indicates whether the user's email address has been verified.
+   * @return emailVerified
    **/
   
-  @Schema(description = "Space-separated list of scopes associated with the access token")
+  @Schema(description = "Indicates whether the user's email address has been verified.")
   
-  public String getScope() {  
-    return scope;
+  public Boolean isEmailVerified() {  
+    return emailVerified;
   }
 
 
 
-  public void setScope(String scope) { 
-    this.scope = scope;
+  public void setEmailVerified(Boolean emailVerified) { 
+    this.emailVerified = emailVerified;
+  }
+
+  public InlineResponse2001 phoneNumber(String phoneNumber) { 
+
+    this.phoneNumber = phoneNumber;
+    return this;
+  }
+
+  /**
+   * Phone number of the user.
+   * @return phoneNumber
+   **/
+  
+  @Schema(description = "Phone number of the user.")
+  
+  public String getPhoneNumber() {  
+    return phoneNumber;
+  }
+
+
+
+  public void setPhoneNumber(String phoneNumber) { 
+    this.phoneNumber = phoneNumber;
+  }
+
+  public InlineResponse2001 phoneNumberVerified(Boolean phoneNumberVerified) { 
+
+    this.phoneNumberVerified = phoneNumberVerified;
+    return this;
+  }
+
+  /**
+   * Indicates whether the user's phone number has been verified.
+   * @return phoneNumberVerified
+   **/
+  
+  @Schema(description = "Indicates whether the user's phone number has been verified.")
+  
+  public Boolean isPhoneNumberVerified() {  
+    return phoneNumberVerified;
+  }
+
+
+
+  public void setPhoneNumberVerified(Boolean phoneNumberVerified) { 
+    this.phoneNumberVerified = phoneNumberVerified;
   }
 
   @Override
@@ -235,17 +264,19 @@ public class InlineResponse2001   {
       return false;
     }
     InlineResponse2001 inlineResponse2001 = (InlineResponse2001) o;
-    return Objects.equals(this.accessToken, inlineResponse2001.accessToken) &&
-        Objects.equals(this.tokenType, inlineResponse2001.tokenType) &&
-        Objects.equals(this.expiresIn, inlineResponse2001.expiresIn) &&
-        Objects.equals(this.idToken, inlineResponse2001.idToken) &&
-        Objects.equals(this.refreshToken, inlineResponse2001.refreshToken) &&
-        Objects.equals(this.scope, inlineResponse2001.scope);
+    return Objects.equals(this.sub, inlineResponse2001.sub) &&
+        Objects.equals(this.name, inlineResponse2001.name) &&
+        Objects.equals(this.givenName, inlineResponse2001.givenName) &&
+        Objects.equals(this.familyName, inlineResponse2001.familyName) &&
+        Objects.equals(this.email, inlineResponse2001.email) &&
+        Objects.equals(this.emailVerified, inlineResponse2001.emailVerified) &&
+        Objects.equals(this.phoneNumber, inlineResponse2001.phoneNumber) &&
+        Objects.equals(this.phoneNumberVerified, inlineResponse2001.phoneNumberVerified);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(accessToken, tokenType, expiresIn, idToken, refreshToken, scope);
+    return Objects.hash(sub, name, givenName, familyName, email, emailVerified, phoneNumber, phoneNumberVerified);
   }
 
   @Override
@@ -253,12 +284,14 @@ public class InlineResponse2001   {
     StringBuilder sb = new StringBuilder();
     sb.append("class InlineResponse2001 {\n");
     
-    sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
-    sb.append("    tokenType: ").append(toIndentedString(tokenType)).append("\n");
-    sb.append("    expiresIn: ").append(toIndentedString(expiresIn)).append("\n");
-    sb.append("    idToken: ").append(toIndentedString(idToken)).append("\n");
-    sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
-    sb.append("    scope: ").append(toIndentedString(scope)).append("\n");
+    sb.append("    sub: ").append(toIndentedString(sub)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    givenName: ").append(toIndentedString(givenName)).append("\n");
+    sb.append("    familyName: ").append(toIndentedString(familyName)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    emailVerified: ").append(toIndentedString(emailVerified)).append("\n");
+    sb.append("    phoneNumber: ").append(toIndentedString(phoneNumber)).append("\n");
+    sb.append("    phoneNumberVerified: ").append(toIndentedString(phoneNumberVerified)).append("\n");
     sb.append("}");
     return sb.toString();
   }

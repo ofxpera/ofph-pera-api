@@ -19,7 +19,7 @@ import javax.validation.constraints.*;
 @Schema(description = "Endpoints of the OFxPERA Participant as an Authorization Server")
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class AuthServerURIs  implements EndpointURIs {
@@ -27,27 +27,27 @@ public class AuthServerURIs  implements EndpointURIs {
 
   private String issuer = null;
 
-  @JsonProperty("authorization_endpoint")
+  @JsonProperty("authorizationEndpoint")
 
   private String authorizationEndpoint = null;
 
-  @JsonProperty("token_endpoint")
+  @JsonProperty("tokenEndpoint")
 
   private String tokenEndpoint = null;
 
-  @JsonProperty("userinfo_endpoint")
+  @JsonProperty("userInfoEndpoint")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String userinfoEndpoint = null;
+  private String userInfoEndpoint = null;
 
-  @JsonProperty("end_session_endpoint")
+  @JsonProperty("endSessionEndpoint")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String endSessionEndpoint = null;
 
-  @JsonProperty("registration_endpoint")
+  @JsonProperty("registrationEndpoint")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
@@ -129,27 +129,27 @@ public class AuthServerURIs  implements EndpointURIs {
     this.tokenEndpoint = tokenEndpoint;
   }
 
-  public AuthServerURIs userinfoEndpoint(String userinfoEndpoint) { 
+  public AuthServerURIs userInfoEndpoint(String userInfoEndpoint) { 
 
-    this.userinfoEndpoint = userinfoEndpoint;
+    this.userInfoEndpoint = userInfoEndpoint;
     return this;
   }
 
   /**
    * URL of the OP's UserInfo Endpoint
-   * @return userinfoEndpoint
+   * @return userInfoEndpoint
    **/
   
   @Schema(description = "URL of the OP's UserInfo Endpoint")
   
-  public String getUserinfoEndpoint() {  
-    return userinfoEndpoint;
+  public String getUserInfoEndpoint() {  
+    return userInfoEndpoint;
   }
 
 
 
-  public void setUserinfoEndpoint(String userinfoEndpoint) { 
-    this.userinfoEndpoint = userinfoEndpoint;
+  public void setUserInfoEndpoint(String userInfoEndpoint) { 
+    this.userInfoEndpoint = userInfoEndpoint;
   }
 
   public AuthServerURIs endSessionEndpoint(String endSessionEndpoint) { 
@@ -210,14 +210,14 @@ public class AuthServerURIs  implements EndpointURIs {
     return Objects.equals(this.issuer, authServerURIs.issuer) &&
         Objects.equals(this.authorizationEndpoint, authServerURIs.authorizationEndpoint) &&
         Objects.equals(this.tokenEndpoint, authServerURIs.tokenEndpoint) &&
-        Objects.equals(this.userinfoEndpoint, authServerURIs.userinfoEndpoint) &&
+        Objects.equals(this.userInfoEndpoint, authServerURIs.userInfoEndpoint) &&
         Objects.equals(this.endSessionEndpoint, authServerURIs.endSessionEndpoint) &&
         Objects.equals(this.registrationEndpoint, authServerURIs.registrationEndpoint);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(issuer, authorizationEndpoint, tokenEndpoint, userinfoEndpoint, endSessionEndpoint, registrationEndpoint);
+    return Objects.hash(issuer, authorizationEndpoint, tokenEndpoint, userInfoEndpoint, endSessionEndpoint, registrationEndpoint);
   }
 
   @Override
@@ -228,7 +228,7 @@ public class AuthServerURIs  implements EndpointURIs {
     sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
     sb.append("    authorizationEndpoint: ").append(toIndentedString(authorizationEndpoint)).append("\n");
     sb.append("    tokenEndpoint: ").append(toIndentedString(tokenEndpoint)).append("\n");
-    sb.append("    userinfoEndpoint: ").append(toIndentedString(userinfoEndpoint)).append("\n");
+    sb.append("    userInfoEndpoint: ").append(toIndentedString(userInfoEndpoint)).append("\n");
     sb.append("    endSessionEndpoint: ").append(toIndentedString(endSessionEndpoint)).append("\n");
     sb.append("    registrationEndpoint: ").append(toIndentedString(registrationEndpoint)).append("\n");
     sb.append("}");
