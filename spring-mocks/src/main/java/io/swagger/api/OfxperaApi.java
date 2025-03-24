@@ -31,12 +31,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.CookieValue;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 @Validated
 public interface OfxperaApi {
 
@@ -59,7 +59,7 @@ public interface OfxperaApi {
     @RequestMapping(value = "/ofxpera/participants/{participant_id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ParticipantConfig> getParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String participantId
+    ResponseEntity<ParticipantConfig> getParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String pathParticipantId
 , @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
 , @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
 )) @RequestHeader(value="x-v", required=true) Integer xV
@@ -112,7 +112,7 @@ public interface OfxperaApi {
     @RequestMapping(value = "/ofxpera/products/{participant_id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<PeraProduct>> listProductByParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during Participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String participantId
+    ResponseEntity<List<PeraProduct>> listProductByParticipant(@Parameter(in = ParameterIn.PATH, description = "Participant identifier issued during Participant registration", required=true, schema=@Schema()) @PathVariable("participant_id") String pathParticipantId
 , @Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
 , @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
 )) @RequestHeader(value="x-v", required=true) Integer xV
@@ -228,4 +228,3 @@ public interface OfxperaApi {
 );
 
 }
-
