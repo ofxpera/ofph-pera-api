@@ -17,16 +17,13 @@ This release marks the first stable version of the OFxPERA API, signifying produ
 
 ### FAPI Compliance Updates
 - **Header Standardization**:
-  - Renamed `participant-id` header to `x-participant-id` for alignment with FAPI standards
-  - Later replaced `x-participant-id` with `x-fapi-financial-id` to fully comply with FAPI standards
   - Added new FAPI Advanced headers:
     - `x-jws-signature`: For detached JWS signatures for request integrity
     - `Digest`: For request body hash verification
-  - Subsequently removed `x-fapi-financial-id` header based on updated requirements
 
 ### API Cleanup
 - **Removed Redundant Parameters**:
-  - Removed `ParticipantId` parameter from multiple endpoints to reduce duplication
+  - Removed `ParticipantId` parameter from multiple endpoints to reduce duplication and avoid confusion
   - Streamlined header requirements across all endpoints
 
 ### Compatibility Notes
