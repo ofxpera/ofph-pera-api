@@ -50,6 +50,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -82,9 +83,9 @@ paths:
       summary: "[PHASE 2] Update an OFxPERA Participant"
       description: API for updating the URIs and status of an OFxPERA Participant
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -117,9 +118,9 @@ paths:
       summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -156,9 +157,9 @@ paths:
           description: Participant identifier issued during participant registration
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved participant information
@@ -187,9 +188,9 @@ paths:
       summary: "[PHASE 2] Register a PERA Admin Product"
       description: API that allows PERA Admin to register a PERA product. 
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Product successfully registered
@@ -224,9 +225,9 @@ paths:
           description: Product identifier issued during product registration
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Product successfully updated
@@ -261,9 +262,9 @@ paths:
           description: Participant identifier issued during Participant registration
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved the list of registered products associated with the PERA Admin.
@@ -294,7 +295,6 @@ paths:
       summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
       description: POST version of the authorization API that initiates the authorization flow
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -302,7 +302,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -452,6 +455,7 @@ paths:
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "302":
           description: Redirect to client with authorization code
@@ -490,7 +494,6 @@ paths:
       summary: "[PHASE 1] Token endpoint"
       description: OAuth 2.0 token endpoint for obtaining access tokens
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -498,7 +501,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -571,7 +577,6 @@ paths:
           schema:
             type: string
         - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -579,7 +584,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Token information retrieved
@@ -633,7 +641,6 @@ paths:
         - OAuth2: []
       parameters:
         - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -641,7 +648,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: User information retrieved
@@ -703,7 +713,6 @@ paths:
           required: true
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
@@ -711,7 +720,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully forwarded customer endorsement
@@ -748,7 +760,6 @@ paths:
           schema:
             type: string
         - $ref: '#/components/parameters/Authorization'
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
@@ -756,7 +767,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Customer's Personal Information retrieved successfully
@@ -1019,7 +1033,6 @@ paths:
         - Australia CDR Consent Management Standards v1.14.0
         - Singapore SGFinDex Consent Framework
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1027,7 +1040,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1081,7 +1097,6 @@ paths:
           schema:
             type: string
             format: date-time
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1089,7 +1104,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: List of consent arrangements
@@ -1128,7 +1146,6 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1136,7 +1153,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Consent arrangement details
@@ -1175,7 +1195,6 @@ paths:
           description: The ID of the consent arrangement to revoke
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1183,7 +1202,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '204':
           description: Consent arrangement successfully revoked
@@ -1217,7 +1239,6 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1225,7 +1246,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1270,7 +1294,6 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1278,7 +1301,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Consent arrangement history
@@ -1311,7 +1337,6 @@ paths:
         - Korea MyData Bulk Consent API
         - Singapore SGFinDex Multi-Institution Consent
       parameters:
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1319,7 +1344,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1366,7 +1394,6 @@ paths:
           description: Filter templates by purpose
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1374,7 +1401,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: List of consent templates
@@ -1415,7 +1445,6 @@ paths:
           description: The ID of the consent arrangement
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1423,7 +1452,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1485,7 +1517,6 @@ paths:
           description: Filter by consent purpose
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1493,7 +1524,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Customer's consent arrangements
@@ -1546,7 +1580,6 @@ paths:
           description: The customer's unique identifier
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1554,7 +1587,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1648,7 +1684,6 @@ paths:
           description: The customer's unique identifier
           schema:
             type: string
-        - $ref: '#/components/parameters/ParticipantId'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
@@ -1656,7 +1691,10 @@ paths:
         - $ref: '#/components/parameters/ClientHeaders'
         - $ref: '#/components/parameters/ClientUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/JwsSignature'
+        - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Customer's consent dashboard
@@ -1682,14 +1720,6 @@ security:
 
 components:
   parameters:
-    ParticipantId:
-      name: x-participant-id
-      in: header
-      required: true
-      description: Field referencing the unique identifier of the requesting participant.
-      schema:
-        type: string
-
     ApiVersion:
       name: x-v
       in: header
@@ -1703,7 +1733,7 @@ components:
     FapiInteractionId:
       name: x-fapi-interaction-id
       in: header
-      required: false
+      required: true
       description: An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
       schema:
         type: string
@@ -1714,7 +1744,7 @@ components:
       name: x-fapi-auth-date
       in: header
       required: true
-      description: The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-1.0-Baseline]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
+      description: The time when the customer last logged in to the Data Recipient Software Product as described in FAPI Advanced. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
       schema:
         type: string
         format: date-time
@@ -1722,12 +1752,20 @@ components:
     FapiCustomerIpAddress:
       name: x-fapi-customer-ip-address
       in: header
-      required: true
-      description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      required: false
+      description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Required for customer-triggered endpoints, not required for administrative endpoints or unauthenticated calls.
       schema:
         type: string
         format: ipv4
-
+    
+    FapiFinancialId:
+      name: x-fapi-financial-id
+      in: header
+      required: true
+      description: The unique identifier of the financial institution that the customer has a relationship with. Identifies a legal entity, which is a financial institution participating in an open banking ecosystem. This identifier is provisioned by an authority within a financial ecosystem.
+      schema:
+        type: string
+    
     ClientHeaders:
       name: x-client-headers
       in: header
@@ -1764,6 +1802,24 @@ components:
       schema:
         type: string
         format: uuid
+
+    JwsSignature:
+      name: x-jws-signature
+      in: header
+      required: false
+      description: Detached JWS signature for request integrity verification. Required for high-risk operations that require non-repudiation.
+      schema:
+        type: string
+
+    Digest:
+      name: Digest
+      in: header
+      required: false
+      description: HTTP Digest header as defined in RFC3230 and RFC5843. Contains a hash of the request body, used in conjunction with the x-jws-signature header for request integrity verification.
+      schema:
+        type: string
+        pattern: '^(SHA-256|SHA-512)=[A-Za-z0-9+/]+=*$'
+        example: 'SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE='
 
     FapiCustomerLastLoggedTime:
       name: x-fapi-customer-last-logged-time
