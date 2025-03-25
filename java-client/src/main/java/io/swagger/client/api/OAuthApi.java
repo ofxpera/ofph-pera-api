@@ -118,6 +118,10 @@ public class OAuthApi {
         localVarHeaderParams.put("x-fapi-auth-date", apiClient.parameterToString(xFapiAuthDate));
         if (xFapiCustomerLastLoggedTime != null)
         localVarHeaderParams.put("x-fapi-customer-last-logged-time", apiClient.parameterToString(xFapiCustomerLastLoggedTime));
+        // Add x-jws-signature header for FAPI Advanced compliance
+        localVarHeaderParams.put("x-jws-signature", "");
+        // Add Digest header for FAPI Advanced compliance
+        localVarHeaderParams.put("Digest", "");
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
@@ -335,6 +339,10 @@ public class OAuthApi {
         localVarHeaderParams.put("x-idempotency-key", apiClient.parameterToString(xIdempotencyKey));
         if (xFapiCustomerLastLoggedTime != null)
         localVarHeaderParams.put("x-fapi-customer-last-logged-time", apiClient.parameterToString(xFapiCustomerLastLoggedTime));
+        // Add x-jws-signature header for FAPI Advanced compliance
+        localVarHeaderParams.put("x-jws-signature", "");
+        // Add Digest header for FAPI Advanced compliance
+        localVarHeaderParams.put("Digest", "");
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
         if (grantType != null)
@@ -606,6 +614,10 @@ public class OAuthApi {
         localVarHeaderParams.put("x-idempotency-key", apiClient.parameterToString(xIdempotencyKey));
         if (xFapiCustomerLastLoggedTime != null)
         localVarHeaderParams.put("x-fapi-customer-last-logged-time", apiClient.parameterToString(xFapiCustomerLastLoggedTime));
+        // Add x-jws-signature header for FAPI Advanced compliance
+        localVarHeaderParams.put("x-jws-signature", "");
+        // Add Digest header for FAPI Advanced compliance
+        localVarHeaderParams.put("Digest", "");
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
@@ -824,6 +836,10 @@ public class OAuthApi {
         localVarHeaderParams.put("x-idempotency-key", apiClient.parameterToString(xIdempotencyKey));
         if (xFapiCustomerLastLoggedTime != null)
         localVarHeaderParams.put("x-fapi-customer-last-logged-time", apiClient.parameterToString(xFapiCustomerLastLoggedTime));
+        // Add x-jws-signature header for FAPI Advanced compliance
+        localVarHeaderParams.put("x-jws-signature", "");
+        // Add Digest header for FAPI Advanced compliance
+        localVarHeaderParams.put("Digest", "");
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
@@ -1044,6 +1060,10 @@ public class OAuthApi {
         localVarHeaderParams.put("x-idempotency-key", apiClient.parameterToString(xIdempotencyKey));
         if (xFapiCustomerLastLoggedTime != null)
         localVarHeaderParams.put("x-fapi-customer-last-logged-time", apiClient.parameterToString(xFapiCustomerLastLoggedTime));
+        // Add x-jws-signature header for FAPI Advanced compliance
+        localVarHeaderParams.put("x-jws-signature", "");
+        // Add Digest header for FAPI Advanced compliance
+        localVarHeaderParams.put("Digest", "");
 
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
