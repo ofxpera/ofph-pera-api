@@ -40,6 +40,87 @@ tags:
     description: Optional discovery endpoints for OpenID/OAuth configuration and key management
 
 paths:
+  /ofxpera/arrangements:
+    post:
+      operationId: peraArrangementRegistration
+      tags:
+        - PERA
+      summary: Registers the result of a PERA account opening
+      description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
+      security:
+        - SignedJWT: []
+      parameters:
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PeraArrangement"
+      responses:
+        "201":
+          description: Successfully registered the status of a PERA onboarding process.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    description: The unique identifier of the PERA arrangement that was registered.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /ofxpera/arrangements/{arrangement_id}:
+    get:
+      operationId: getArrangementStatus
+      tags:
+        - PERA
+      summary: Get the status of a PERA arrangement
+      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+      security:
+        - SignedJWT: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the PERA Arrangement
+          schema:
+            type: string
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+      responses:
+        "200":
+          description: Successfully retrieved the status of the PERA Arrangement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PeraArrangement"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+     
   /ofxpera/participants:
     post:
       operationId: registerParticipant
@@ -50,6 +131,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -84,6 +166,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -186,6 +269,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
       responses:
         "200":
           description: Product successfully registered
@@ -222,6 +306,7 @@ paths:
             type: string
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
       responses:
         "200":
           description: Product successfully updated
@@ -870,6 +955,8 @@ paths:
         - Discovery
       summary: "[PHASE 2] Dynamic Client Registration (configurable endpoint)"
       description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -933,6 +1020,8 @@ paths:
       summary: "[PHASE 2] Update Client Registration (configurable endpoint)"
       security:
         - RegistrationAccessToken: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -963,6 +1052,8 @@ paths:
       tags:
         - Discovery
       summary: Delete Client Registration (configurable endpoint)
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
       responses:
         "204":
           description: Client registration deleted
