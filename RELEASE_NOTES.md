@@ -15,17 +15,32 @@ This release marks the first stable version of the OFxPERA API, signifying produ
   - Spring mocks context path and documentation
   - SwaggerHub API Auto Mocking URL
 
+### FAPI Compliance Updates
+- **Header Standardization**:
+  - Renamed `participant-id` header to `x-participant-id` for alignment with FAPI standards
+  - Later replaced `x-participant-id` with `x-fapi-financial-id` to fully comply with FAPI standards
+  - Added new FAPI Advanced headers:
+    - `x-jws-signature`: For detached JWS signatures for request integrity
+    - `Digest`: For request body hash verification
+  - Subsequently removed `x-fapi-financial-id` header based on updated requirements
+
+### API Cleanup
+- **Removed Redundant Parameters**:
+  - Removed `ParticipantId` parameter from multiple endpoints to reduce duplication
+  - Streamlined header requirements across all endpoints
+
 ### Compatibility Notes
 
-- This version maintains full backward compatibility with version 0.0.7
-- No schema changes or endpoint modifications were made in this version
-- Client applications using version 0.0.7 should continue to function with 1.0.0
+- This version maintains functional backward compatibility with version 0.0.7
+- Client applications using version 0.0.7 should be updated to use the new header naming conventions
+- Implementations should remove any usage of the now-deprecated `participant-id` header
 
 ---
 
 *These release notes document changes from version 0.0.7 to version 1.0.0 of the OFxPERA API.*
 
-Cascade [2025-03-25T10:14:22+08:00]
+Signed-off-by: Cascade AI
+Timestamp: Tue Mar 25 13:19:21 PST 2025
 
 ## Version 0.0.7
 
