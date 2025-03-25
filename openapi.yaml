@@ -1683,7 +1683,7 @@ security:
 components:
   parameters:
     ParticipantId:
-      name: participant-id
+      name: x-participant-id
       in: header
       required: true
       description: Field referencing the unique identifier of the requesting participant.
