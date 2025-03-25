@@ -12,14 +12,13 @@
 
 package io.swagger.client.api;
 
+import io.swagger.client.ApiException;
 import io.swagger.client.model.CustomerInformation;
 import io.swagger.client.model.EndorsementResponse;
-import io.swagger.client.model.Error;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.threeten.bp.OffsetDateTime;
 import java.util.UUID;
-import org.junit.Test;
-import org.junit.Ignore;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,21 +29,22 @@ import java.util.Map;
 /**
  * API tests for CommonApi
  */
-@Ignore
+@Disabled
 public class CommonApiTest {
 
     private final CommonApi api = new CommonApi();
 
     /**
-     * [DEPRECATED] Forward customer endorsement
+     * Test case for forwardCustomerEndorsement
      *
-     * 
+     * API for forwarding customer endorsements.
      *
-     * @throws Exception
+     * @throws ApiException
      *          if the Api call fails
      */
     @Test
-    public void forwardCustomerEndorsementTest() throws Exception {
+    @Disabled
+    public void forwardCustomerEndorsementTest() throws ApiException {
         String endorsement = null;
         String participantId = null;
         Integer xV = null;
@@ -60,15 +60,16 @@ public class CommonApiTest {
         // TODO: test validations
     }
     /**
-     * [PHASE 1] Get detailed customer information
+     * Test case for getCustomerDetail
      *
-     * 
+     * API for retrieving customer details.
      *
-     * @throws Exception
+     * @throws ApiException
      *          if the Api call fails
      */
     @Test
-    public void getCustomerDetailTest() throws Exception {
+    @Disabled
+    public void getCustomerDetailTest() throws ApiException {
         String customerId = null;
         String authorization = null;
         String participantId = null;

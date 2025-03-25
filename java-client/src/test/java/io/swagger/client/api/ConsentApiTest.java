@@ -12,49 +12,35 @@
 
 package io.swagger.client.api;
 
-import io.swagger.client.model.ArrangementsBulkupdateBody;
-import io.swagger.client.model.BulkConsentRequest;
-import io.swagger.client.model.BulkConsentResponse;
-import io.swagger.client.model.ConsentArrangementRequest;
-import io.swagger.client.model.ConsentArrangementResponse;
-import io.swagger.client.model.ConsentDashboard;
-import io.swagger.client.model.ConsentExtensionRequest;
-import io.swagger.client.model.ConsentHistory;
-import io.swagger.client.model.ConsentStatusUpdate;
-import io.swagger.client.model.ConsentTemplate;
-import io.swagger.client.model.Error;
-import io.swagger.client.model.InlineResponse2003;
-import io.swagger.client.model.InlineResponse2004;
+import io.swagger.client.ApiException;
+import io.swagger.client.model.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.threeten.bp.OffsetDateTime;
-import java.util.UUID;
-import org.junit.Test;
-import org.junit.Ignore;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 
 /**
  * API tests for ConsentApi
  */
-@Ignore
+@Disabled
 public class ConsentApiTest {
 
     private final ConsentApi api = new ConsentApi();
 
     /**
-     * Bulk update customer&#x27;s consent arrangements
+     * Bulk update customer's consent arrangements
      *
-     * Update multiple consent arrangements for a specific customer in a single request. Based on: - Australia CDR Bulk Consumer Update - Korea MyData Consent Management 
+     * Update multiple consent arrangements for a specific customer in a single request
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void bulkUpdateCustomerConsentsTest() throws Exception {
+    public void bulkUpdateCustomerConsentsTest() throws ApiException {
         ArrangementsBulkupdateBody body = null;
         String participantId = null;
         Integer xV = null;
@@ -67,19 +53,18 @@ public class ConsentApiTest {
         String customerId = null;
         UUID xFapiInteractionId = null;
         InlineResponse2004 response = api.bulkUpdateCustomerConsents(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, customerId, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Create bulk consent arrangements
+     * Create bulk consent
      *
-     * Create multiple consent arrangements in a single request. Based on: - Korea MyData Bulk Consent API - Singapore SGFinDex Multi-Institution Consent 
+     * Create multiple consent arrangements in a single request
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void createBulkConsentTest() throws Exception {
+    public void createBulkConsentTest() throws ApiException {
         BulkConsentRequest body = null;
         String participantId = null;
         Integer xV = null;
@@ -91,19 +76,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         BulkConsentResponse response = api.createBulkConsent(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Create a consent arrangement
+     * Create consent arrangement
      *
-     * Create a new consent arrangement between a data holder and data recipient. Based on: - UK Open Banking Consent API v3.1.10 - Australia CDR Consent Management Standards v1.14.0 - Singapore SGFinDex Consent Framework 
+     * Create a new consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void createConsentArrangementTest() throws Exception {
+    public void createConsentArrangementTest() throws ApiException {
         ConsentArrangementRequest body = null;
         String participantId = null;
         Integer xV = null;
@@ -115,19 +99,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         ConsentArrangementResponse response = api.createConsentArrangement(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Extend consent arrangement duration
+     * Extend consent duration
      *
-     * Extend the duration of an existing consent arrangement. Based on: - Australia CDR Consent Amendment - UK Open Banking Re-authentication 
+     * Extend the duration of a consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void extendConsentDurationTest() throws Exception {
+    public void extendConsentDurationTest() throws ApiException {
         ConsentExtensionRequest body = null;
         String participantId = null;
         Integer xV = null;
@@ -140,19 +123,18 @@ public class ConsentApiTest {
         String arrangementId = null;
         UUID xFapiInteractionId = null;
         ConsentArrangementResponse response = api.extendConsentDuration(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Get consent arrangement details
+     * Get consent arrangement
      *
-     * Retrieve details of a specific consent arrangement. Based on: - UK Open Banking Account Access Consents API - Australia CDR Get Consent API 
+     * Retrieve details of a specific consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getConsentArrangementTest() throws Exception {
+    public void getConsentArrangementTest() throws ApiException {
         String arrangementId = null;
         String participantId = null;
         Integer xV = null;
@@ -164,19 +146,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         ConsentArrangementResponse response = api.getConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Get consent arrangement history
+     * Get consent history
      *
-     * Retrieve the full history of changes to a consent arrangement. Based on: - Australia CDR Consent History API - UK Open Banking Consent Audit Requirements 
+     * Retrieve the history of a consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getConsentHistoryTest() throws Exception {
+    public void getConsentHistoryTest() throws ApiException {
         String arrangementId = null;
         String participantId = null;
         Integer xV = null;
@@ -188,19 +169,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         ConsentHistory response = api.getConsentHistory(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Get customer&#x27;s consent dashboard
+     * Get customer consent dashboard
      *
-     * Retrieve a comprehensive view of customer&#x27;s consent arrangements and data sharing. Based on: - Australia CDR Consumer Dashboard - UK Open Banking Consent Dashboard - Singapore SGFinDex Customer Portal 
+     * Retrieve the consent dashboard for a customer
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getCustomerConsentDashboardTest() throws Exception {
+    public void getCustomerConsentDashboardTest() throws ApiException {
         String customerId = null;
         String participantId = null;
         Integer xV = null;
@@ -212,19 +192,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         ConsentDashboard response = api.getCustomerConsentDashboard(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Get customer&#x27;s consent arrangements
+     * Get customer consents
      *
-     * Retrieve all consent arrangements for a specific customer. Based on: - UK Open Banking Customer Consent Management - Australia CDR Consumer Dashboard APIs - Singapore SGFinDex Customer Consent View 
+     * Retrieve all consents for a customer
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getCustomerConsentsTest() throws Exception {
+    public void getCustomerConsentsTest() throws ApiException {
         String customerId = null;
         String participantId = null;
         Integer xV = null;
@@ -239,19 +218,18 @@ public class ConsentApiTest {
         String purpose = null;
         UUID xFapiInteractionId = null;
         InlineResponse2003 response = api.getCustomerConsents(customerId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, dataHolderId, purpose, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
      * List consent arrangements
      *
-     * Retrieve a list of active consent arrangements for the authenticated user. Based on: - UK Open Banking Account Access Consents API - Australia CDR Get Consent API 
+     * Retrieve a list of consent arrangements
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void listConsentArrangementsTest() throws Exception {
+    public void listConsentArrangementsTest() throws ApiException {
         String participantId = null;
         Integer xV = null;
         OffsetDateTime xFapiAuthDate = null;
@@ -265,19 +243,18 @@ public class ConsentApiTest {
         OffsetDateTime toDate = null;
         UUID xFapiInteractionId = null;
         List<ConsentArrangementResponse> response = api.listConsentArrangements(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, status, fromDate, toDate, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * List available consent templates
+     * List consent templates
      *
-     * Retrieve available consent templates that can be used to create new arrangements. Based on: - Australia CDR Consent Taxonomy - UK Open Banking Standard Permissions 
+     * Retrieve a list of available consent templates
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void listConsentTemplatesTest() throws Exception {
+    public void listConsentTemplatesTest() throws ApiException {
         String participantId = null;
         Integer xV = null;
         OffsetDateTime xFapiAuthDate = null;
@@ -290,19 +267,18 @@ public class ConsentApiTest {
         String purpose = null;
         UUID xFapiInteractionId = null;
         List<ConsentTemplate> response = api.listConsentTemplates(participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, category, purpose, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
      * Revoke consent arrangement
      *
-     * Revoke an existing consent arrangement. Based on: - UK Open Banking Account Access Consents API - Australia CDR Revoke Consent API - Korea MyData Consent Revocation API 
+     * Revoke a consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void revokeConsentArrangementTest() throws Exception {
+    public void revokeConsentArrangementTest() throws ApiException {
         String arrangementId = null;
         String participantId = null;
         Integer xV = null;
@@ -314,19 +290,18 @@ public class ConsentApiTest {
         OffsetDateTime xFapiCustomerLastLoggedTime = null;
         UUID xFapiInteractionId = null;
         api.revokeConsentArrangement(arrangementId, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * Update consent arrangement status
+     * Update consent status
      *
-     * Update the status of a consent arrangement (e.g., suspend, resume). Based on: - UK Open Banking Account Access Consents API - Australia CDR Update Consent API 
+     * Update the status of a consent arrangement
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void updateConsentStatusTest() throws Exception {
+    public void updateConsentStatusTest() throws ApiException {
         ConsentStatusUpdate body = null;
         String participantId = null;
         Integer xV = null;
@@ -339,7 +314,6 @@ public class ConsentApiTest {
         String arrangementId = null;
         UUID xFapiInteractionId = null;
         ConsentArrangementResponse response = api.updateConsentStatus(body, participantId, xV, xFapiAuthDate, xFapiCustomerIpAddress, xClientHeaders, xClientUserAgent, xIdempotencyKey, xFapiCustomerLastLoggedTime, arrangementId, xFapiInteractionId);
-
         // TODO: test validations
     }
 }

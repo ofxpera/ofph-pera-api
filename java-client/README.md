@@ -13,7 +13,7 @@ Philippines Open Finance API Implementation for PERA
 ## Requirements
 
 Building the API client library requires:
-1. Java 1.7+
+1. Java 17
 2. Maven/Gradle
 
 ## Installation
@@ -50,7 +50,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "io.swagger:swagger-java-client:1.0.0"
+implementation "io.swagger:swagger-java-client:1.0.0"
 ```
 
 ### Others
@@ -70,6 +70,8 @@ Then manually install the following JARs:
 
 Please follow the [installation](#installation) instruction and execute the following Java code:
 
+### Bootstrap API Example
+
 ```java
 import io.swagger.client.*;
 import io.swagger.client.auth.*;
@@ -84,39 +86,11 @@ public class BootstrapApiExample {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-
         BootstrapApi apiInstance = new BootstrapApi();
-        String participantId = "participantId_example"; // String | Participant identifier issued during participant registration
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-        try {
-            ParticipantConfig result = apiInstance.getParticipant(participantId, participantId, xV, xFapiInteractionId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#getParticipant");
-            e.printStackTrace();
-        }
-    }
-}
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BootstrapApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+        String participantId = "participant123"; // String | Participant identifier
+        Integer xV = 1; // Integer | API version
+        UUID xFapiInteractionId = UUID.randomUUID(); // UUID | Correlation ID
+        
         try {
             List<ParticipantConfig> result = apiInstance.listParticipants(participantId, xV, xFapiInteractionId);
             System.out.println(result);
@@ -126,140 +100,37 @@ public class BootstrapApiExample {
         }
     }
 }
+```
+
+### OAuth API Example
+
+```java
 import io.swagger.client.*;
 import io.swagger.client.auth.*;
 import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
+import io.swagger.client.api.OAuthApi;
 
-import java.io.File;
 import java.util.*;
 
-public class BootstrapApiExample {
+public class OAuthApiExample {
 
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
 
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        String participantId = "participantId_example"; // String | Participant identifier issued during Participant registration
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+        OAuthApi apiInstance = new OAuthApi();
+        String grantType = "authorization_code";
+        String code = "auth_code_123";
+        String redirectUri = "https://example.com/callback";
+        String clientId = "client123";
+        
         try {
-            List<PeraProduct> result = apiInstance.listProductByParticipant(participantId, participantId, xV, xFapiInteractionId);
-            System.out.println(result);
+            TokenResponse response = apiInstance.getOAuthToken(
+                grantType, code, redirectUri, clientId, 
+                null, null, null, "participant123", 1, 
+                null, null, null, null, null, null, null);
+            System.out.println(response);
         } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#listProductByParticipant");
-            e.printStackTrace();
-        }
-    }
-}
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BootstrapApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        ParticipantConfig body = new ParticipantConfig(); // ParticipantConfig | 
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-        try {
-            ClientRegistrationResponse result = apiInstance.registerParticipant(body, xV, xFapiInteractionId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#registerParticipant");
-            e.printStackTrace();
-        }
-    }
-}
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BootstrapApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-        try {
-            PeraProduct result = apiInstance.registerProduct(participantId, xV, xFapiInteractionId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#registerProduct");
-            e.printStackTrace();
-        }
-    }
-}
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BootstrapApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        ParticipantConfig body = new ParticipantConfig(); // ParticipantConfig | 
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-        try {
-            ClientRegistrationResponse result = apiInstance.updateParticipant(body, participantId, xV, xFapiInteractionId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#updateParticipant");
-            e.printStackTrace();
-        }
-    }
-}
-import io.swagger.client.*;
-import io.swagger.client.auth.*;
-import io.swagger.client.model.*;
-import io.swagger.client.api.BootstrapApi;
-
-import java.io.File;
-import java.util.*;
-
-public class BootstrapApiExample {
-
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-
-
-        BootstrapApi apiInstance = new BootstrapApi();
-        String productId = "productId_example"; // String | Product identifier issued during product registration
-        String participantId = "participantId_example"; // String | Field referencing the unique identifier of the requesting participant.
-        Integer xV = 56; // Integer | Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
-        UUID xFapiInteractionId = new UUID(); // UUID | An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-        try {
-            PeraProduct result = apiInstance.updateProduct(productId, participantId, xV, xFapiInteractionId);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling BootstrapApi#updateProduct");
+            System.err.println("Exception when calling OAuthApi#getOAuthToken");
             e.printStackTrace();
         }
     }
@@ -272,127 +143,58 @@ All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/O
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*BootstrapApi* | [**getParticipant**](docs/BootstrapApi.md#getParticipant) | **GET** /ofxpera/participants/{participant_id} | [PHASE 2] Get an OFxPERA Participant&#x27;s registration information
-*BootstrapApi* | [**listParticipants**](docs/BootstrapApi.md#listParticipants) | **GET** /ofxpera/participants | [PHASE 1] Get a list of registered OFxPERA Participants
-*BootstrapApi* | [**listProductByParticipant**](docs/BootstrapApi.md#listProductByParticipant) | **GET** /ofxpera/products/{participant_id} | [PHASE 1] Get a list of PERA products associated with PERA Admin
-*BootstrapApi* | [**registerParticipant**](docs/BootstrapApi.md#registerParticipant) | **POST** /ofxpera/participants | [PHASE 2] Register an OFxPERA Participant
-*BootstrapApi* | [**registerProduct**](docs/BootstrapApi.md#registerProduct) | **POST** /ofxpera/products | [PHASE 2] Register a PERA Admin Product
-*BootstrapApi* | [**updateParticipant**](docs/BootstrapApi.md#updateParticipant) | **PUT** /ofxpera/participants | [PHASE 2] Update an OFxPERA Participant
-*BootstrapApi* | [**updateProduct**](docs/BootstrapApi.md#updateProduct) | **PUT** /ofxpera/products/{product_id} | [PHASE 2] Update a PERA Admin Product
-*CommonApi* | [**forwardCustomerEndorsement**](docs/CommonApi.md#forwardCustomerEndorsement) | **GET** /common/customers/endorse | [DEPRECATED] Forward customer endorsement
-*CommonApi* | [**getCustomerDetail**](docs/CommonApi.md#getCustomerDetail) | **GET** /common/customers/{customer_id}/detail | [PHASE 1] Get detailed customer information
-*ConsentApi* | [**bulkUpdateCustomerConsents**](docs/ConsentApi.md#bulkUpdateCustomerConsents) | **POST** /consent/customers/{customer_id}/arrangements/bulk-update | Bulk update customer&#x27;s consent arrangements
+*BootstrapApi* | [**getParticipant**](docs/BootstrapApi.md#getParticipant) | **GET** /ofxpera/participants/{participant_id} | Get an OFxPERA Participant's registration information
+*BootstrapApi* | [**listParticipants**](docs/BootstrapApi.md#listParticipants) | **GET** /ofxpera/participants | Get a list of registered OFxPERA Participants
+*BootstrapApi* | [**listProductByParticipant**](docs/BootstrapApi.md#listProductByParticipant) | **GET** /ofxpera/products/{participant_id} | Get a list of PERA products associated with PERA Admin
+*BootstrapApi* | [**registerParticipant**](docs/BootstrapApi.md#registerParticipant) | **POST** /ofxpera/participants | Register an OFxPERA Participant
+*BootstrapApi* | [**registerProduct**](docs/BootstrapApi.md#registerProduct) | **POST** /ofxpera/products | Register a PERA Admin Product
+*BootstrapApi* | [**updateParticipant**](docs/BootstrapApi.md#updateParticipant) | **PUT** /ofxpera/participants | Update an OFxPERA Participant
+*BootstrapApi* | [**updateProduct**](docs/BootstrapApi.md#updateProduct) | **PUT** /ofxpera/products/{product_id} | Update a PERA Admin Product
+*CommonApi* | [**getCustomerDetail**](docs/CommonApi.md#getCustomerDetail) | **GET** /common/customers/{customer_id}/detail | Get detailed customer information
+*ConsentApi* | [**bulkUpdateCustomerConsents**](docs/ConsentApi.md#bulkUpdateCustomerConsents) | **POST** /consent/customers/{customer_id}/arrangements/bulk-update | Bulk update customer's consent arrangements
 *ConsentApi* | [**createBulkConsent**](docs/ConsentApi.md#createBulkConsent) | **POST** /consent/bulk | Create bulk consent arrangements
 *ConsentApi* | [**createConsentArrangement**](docs/ConsentApi.md#createConsentArrangement) | **POST** /consent/arrangements | Create a consent arrangement
 *ConsentApi* | [**extendConsentDuration**](docs/ConsentApi.md#extendConsentDuration) | **POST** /consent/arrangements/{arrangement_id}/extend | Extend consent arrangement duration
 *ConsentApi* | [**getConsentArrangement**](docs/ConsentApi.md#getConsentArrangement) | **GET** /consent/arrangements/{arrangement_id} | Get consent arrangement details
 *ConsentApi* | [**getConsentHistory**](docs/ConsentApi.md#getConsentHistory) | **GET** /consent/arrangements/{arrangement_id}/history | Get consent arrangement history
-*ConsentApi* | [**getCustomerConsentDashboard**](docs/ConsentApi.md#getCustomerConsentDashboard) | **GET** /consent/customers/{customer_id}/dashboard | Get customer&#x27;s consent dashboard
-*ConsentApi* | [**getCustomerConsents**](docs/ConsentApi.md#getCustomerConsents) | **GET** /consent/customers/{customer_id}/arrangements | Get customer&#x27;s consent arrangements
+*ConsentApi* | [**getCustomerConsentDashboard**](docs/ConsentApi.md#getCustomerConsentDashboard) | **GET** /consent/customers/{customer_id}/dashboard | Get customer's consent dashboard
+*ConsentApi* | [**getCustomerConsents**](docs/ConsentApi.md#getCustomerConsents) | **GET** /consent/customers/{customer_id}/arrangements | Get customer's consent arrangements
 *ConsentApi* | [**listConsentArrangements**](docs/ConsentApi.md#listConsentArrangements) | **GET** /consent/arrangements | List consent arrangements
 *ConsentApi* | [**listConsentTemplates**](docs/ConsentApi.md#listConsentTemplates) | **GET** /consent/templates | List available consent templates
 *ConsentApi* | [**revokeConsentArrangement**](docs/ConsentApi.md#revokeConsentArrangement) | **DELETE** /consent/arrangements/{arrangement_id} | Revoke consent arrangement
 *ConsentApi* | [**updateConsentStatus**](docs/ConsentApi.md#updateConsentStatus) | **PUT** /consent/arrangements/{arrangement_id} | Update consent arrangement status
-*DiscoveryApi* | [**deleteClientRegistration**](docs/DiscoveryApi.md#deleteClientRegistration) | **DELETE** /.well-known/openid-registration | Delete Client Registration (configurable endpoint)
-*DiscoveryApi* | [**getClientRegistration**](docs/DiscoveryApi.md#getClientRegistration) | **GET** /.well-known/openid-registration | Get Client Registration (configurable endpoint)
-*DiscoveryApi* | [**getJwks**](docs/DiscoveryApi.md#getJwks) | **GET** /.well-known/jwks.json | [PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
-*DiscoveryApi* | [**getOpenIdConfiguration**](docs/DiscoveryApi.md#getOpenIdConfiguration) | **GET** /.well-known/openid-configuration | Optional - OpenID Connect Discovery
-*DiscoveryApi* | [**registerClient**](docs/DiscoveryApi.md#registerClient) | **POST** /.well-known/openid-registration | [PHASE 2] Dynamic Client Registration (configurable endpoint)
-*DiscoveryApi* | [**updateClientRegistration**](docs/DiscoveryApi.md#updateClientRegistration) | **PUT** /.well-known/openid-registration | [PHASE 2] Update Client Registration (configurable endpoint)
-*OAuthApi* | [**authorizeOAuth**](docs/OAuthApi.md#authorizeOAuth) | **GET** /oauth/auth | [PHASE 1] Authorization endpoint for Admin-initiated onboarding
-*OAuthApi* | [**getOAuthToken**](docs/OAuthApi.md#getOAuthToken) | **POST** /oauth/token | [PHASE 1] Token endpoint
-*OAuthApi* | [**getUserInfo**](docs/OAuthApi.md#getUserInfo) | **GET** /oauth/userinfo | Optional OpenID Connect UserInfo Endpoint
-*OAuthApi* | [**introspectToken**](docs/OAuthApi.md#introspectToken) | **GET** /oauth/introspect | Optional token introspection
-*OAuthApi* | [**oAuthPAR**](docs/OAuthApi.md#oAuthPAR) | **POST** /oauth/auth | [PHASE 1] PAR-based Authorization API for FI-initiated onboarding
+*DiscoveryApi* | [**getClientRegistration**](docs/DiscoveryApi.md#getClientRegistration) | **GET** /.well-known/openid-registration | Get Client Registration
+*DiscoveryApi* | [**getJwks**](docs/DiscoveryApi.md#getJwks) | **GET** /.well-known/jwks.json | Retrieve JSON Web Key Set (JWKS)
+*DiscoveryApi* | [**getOpenIdConfiguration**](docs/DiscoveryApi.md#getOpenIdConfiguration) | **GET** /.well-known/openid-configuration | OpenID Connect Discovery
+*DiscoveryApi* | [**registerClient**](docs/DiscoveryApi.md#registerClient) | **POST** /.well-known/openid-registration | Dynamic Client Registration
+*DiscoveryApi* | [**updateClientRegistration**](docs/DiscoveryApi.md#updateClientRegistration) | **PUT** /.well-known/openid-registration | Update Client Registration
+*OAuthApi* | [**authorizeOAuth**](docs/OAuthApi.md#authorizeOAuth) | **GET** /oauth/auth | Authorization endpoint for Admin-initiated onboarding
+*OAuthApi* | [**getOAuthToken**](docs/OAuthApi.md#getOAuthToken) | **POST** /oauth/token | Token endpoint
+*OAuthApi* | [**getUserInfo**](docs/OAuthApi.md#getUserInfo) | **GET** /oauth/userinfo | OpenID Connect UserInfo Endpoint
+*OAuthApi* | [**introspectToken**](docs/OAuthApi.md#introspectToken) | **GET** /oauth/introspect | Token introspection
+*OAuthApi* | [**oAuthPAR**](docs/OAuthApi.md#oAuthPAR) | **POST** /oauth/auth | PAR-based Authorization API for FI-initiated onboarding
 
-## Documentation for Models
+## Testing
 
- - [Address](docs/Address.md)
- - [AddressString](docs/AddressString.md)
- - [AnyOfClientRegistration](docs/AnyOfClientRegistration.md)
- - [ArrangementsBulkupdateBody](docs/ArrangementsBulkupdateBody.md)
- - [AuthServer](docs/AuthServer.md)
- - [AuthServerURIs](docs/AuthServerURIs.md)
- - [BulkConsentRequest](docs/BulkConsentRequest.md)
- - [BulkConsentResponse](docs/BulkConsentResponse.md)
- - [BulkConsentResponseError](docs/BulkConsentResponseError.md)
- - [BulkConsentResponseResults](docs/BulkConsentResponseResults.md)
- - [ClientRegistration](docs/ClientRegistration.md)
- - [ClientRegistrationResponse](docs/ClientRegistrationResponse.md)
- - [ConsentArrangementRequest](docs/ConsentArrangementRequest.md)
- - [ConsentArrangementRequestAdditionalTerms](docs/ConsentArrangementRequestAdditionalTerms.md)
- - [ConsentArrangementRequestSharingDuration](docs/ConsentArrangementRequestSharingDuration.md)
- - [ConsentArrangementResponse](docs/ConsentArrangementResponse.md)
- - [ConsentArrangementResponseRevocationInfo](docs/ConsentArrangementResponseRevocationInfo.md)
- - [ConsentArrangementResponseSharingDuration](docs/ConsentArrangementResponseSharingDuration.md)
- - [ConsentDashboard](docs/ConsentDashboard.md)
- - [ConsentDashboardSummary](docs/ConsentDashboardSummary.md)
- - [ConsentDashboardSummaryArrangementsByPurpose](docs/ConsentDashboardSummaryArrangementsByPurpose.md)
- - [ConsentDashboardSummaryArrangementsByStatus](docs/ConsentDashboardSummaryArrangementsByStatus.md)
- - [ConsentDashboardSummaryDataHolders](docs/ConsentDashboardSummaryDataHolders.md)
- - [ConsentExtensionRequest](docs/ConsentExtensionRequest.md)
- - [ConsentHistory](docs/ConsentHistory.md)
- - [ConsentHistoryEvents](docs/ConsentHistoryEvents.md)
- - [ConsentStatusUpdate](docs/ConsentStatusUpdate.md)
- - [ConsentTemplate](docs/ConsentTemplate.md)
- - [ConsentTemplateDefaultDuration](docs/ConsentTemplateDefaultDuration.md)
- - [ConsentcustomerscustomerIdarrangementsbulkupdateUpdates](docs/ConsentcustomerscustomerIdarrangementsbulkupdateUpdates.md)
- - [CustomerDueDiligence](docs/CustomerDueDiligence.md)
- - [CustomerInformation](docs/CustomerInformation.md)
- - [EndorsementDetails](docs/EndorsementDetails.md)
- - [EndorsementResponse](docs/EndorsementResponse.md)
- - [EndpointURIs](docs/EndpointURIs.md)
- - [Error](docs/Error.md)
- - [IdType](docs/IdType.md)
- - [InlineResponse200](docs/InlineResponse200.md)
- - [InlineResponse2001](docs/InlineResponse2001.md)
- - [InlineResponse2002](docs/InlineResponse2002.md)
- - [InlineResponse2003](docs/InlineResponse2003.md)
- - [InlineResponse2004](docs/InlineResponse2004.md)
- - [InlineResponse2004Results](docs/InlineResponse2004Results.md)
- - [JWKSet](docs/JWKSet.md)
- - [JWKSetKeys](docs/JWKSetKeys.md)
- - [JwksConfiguration](docs/JwksConfiguration.md)
- - [OAuthClient](docs/OAuthClient.md)
- - [OAuthClientURIs](docs/OAuthClientURIs.md)
- - [OAuthError](docs/OAuthError.md)
- - [OauthAuthBody](docs/OauthAuthBody.md)
- - [OauthTokenBody](docs/OauthTokenBody.md)
- - [OneOfCustomerDueDiligenceEmployerAddress](docs/OneOfCustomerDueDiligenceEmployerAddress.md)
- - [OneOfPersonalInformationResidentialAddress](docs/OneOfPersonalInformationResidentialAddress.md)
- - [Participant](docs/Participant.md)
- - [ParticipantConfig](docs/ParticipantConfig.md)
- - [ParticipantContact](docs/ParticipantContact.md)
- - [PeraAccount](docs/PeraAccount.md)
- - [PeraAccountBalance](docs/PeraAccountBalance.md)
- - [PeraArrangement](docs/PeraArrangement.md)
- - [PeraProduct](docs/PeraProduct.md)
- - [PersonalInformation](docs/PersonalInformation.md)
- - [TokenResponse](docs/TokenResponse.md)
+Test cases are located in the `src/test/java` directory. To run tests:
 
-## Documentation for Authorization
+```shell
+mvn test
+```
 
-Authentication schemes defined for the API:
-### OAuth2
+Note that all tests are currently disabled with the `@Disabled` annotation. Remove this annotation from specific test methods to enable them.
 
-- **Type**: OAuth
-- **Flow**: accessCode
-- **Authorization URL**: https://yourserver.com/oauth/authorize
-- **Scopes**: 
-  - read: Read access
-  - write: Write access
+## Known Issues
 
-### RegistrationAccessToken
-
-
-### SignedJWT
-
-
-
-## Recommendation
-
-It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issues.
+- All test methods currently have the `@Disabled` annotation and contain TODO comments for validations.
+- API documentation may not perfectly match the implementation in some cases.
 
 ## Author
+
+Philippines Open Finance Team
+
+## License
+
+Unlicense - https://www.apache.org/licenses/LICENSE-2.0.html
 
 

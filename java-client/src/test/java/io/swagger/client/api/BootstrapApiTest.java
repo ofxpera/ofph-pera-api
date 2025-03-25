@@ -12,25 +12,24 @@
 
 package io.swagger.client.api;
 
+import io.swagger.client.ApiException;
 import io.swagger.client.model.ClientRegistrationResponse;
 import io.swagger.client.model.Error;
 import io.swagger.client.model.ParticipantConfig;
 import io.swagger.client.model.PeraProduct;
-import java.util.UUID;
-import org.junit.Test;
-import org.junit.Ignore;
-
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 
 /**
  * API tests for BootstrapApi
  */
-@Ignore
+@Disabled
 public class BootstrapApiTest {
 
     private final BootstrapApi api = new BootstrapApi();
@@ -40,122 +39,114 @@ public class BootstrapApiTest {
      *
      * API for retrieving registration information for a specific OFxPERA Participant
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getParticipantTest() throws Exception {
-        String participantId = null;
-        String participantId = null;
+    public void getParticipantTest() throws ApiException {
+        String targetParticipantId = null;
+        String requestingParticipantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
-        ParticipantConfig response = api.getParticipant(participantId, participantId, xV, xFapiInteractionId);
-
+        ParticipantConfig response = api.getParticipant(targetParticipantId, requestingParticipantId, xV, xFapiInteractionId);
         // TODO: test validations
     }
+
     /**
-     * [PHASE 1] Get a list of registered OFxPERA Participants
+     * [PHASE 2] Get a list of OFxPERA Participants
      *
      * API for retrieving all registered OFxPERA Participants
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void listParticipantsTest() throws Exception {
+    public void listParticipantsTest() throws ApiException {
         String participantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
         List<ParticipantConfig> response = api.listParticipants(participantId, xV, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
      * [PHASE 1] Get a list of PERA products associated with PERA Admin
      *
      * API for retrieving all registered products associated with the PERA Admin.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void listProductByParticipantTest() throws Exception {
-        String participantId = null;
-        String participantId = null;
+    public void listProductByParticipantTest() throws ApiException {
+        String targetParticipantId = null;
+        String requestingParticipantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
-        List<PeraProduct> response = api.listProductByParticipant(participantId, participantId, xV, xFapiInteractionId);
-
+        List<PeraProduct> response = api.listProductByParticipant(targetParticipantId, requestingParticipantId, xV, xFapiInteractionId);
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Register an OFxPERA Participant
+     * [PHASE 2] Register a new OFxPERA Participant
      *
-     * API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
+     * API for registering a new OFxPERA Participant
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void registerParticipantTest() throws Exception {
+    public void registerParticipantTest() throws ApiException {
         ParticipantConfig body = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
         ClientRegistrationResponse response = api.registerParticipant(body, xV, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Register a PERA Admin Product
+     * [PHASE 1] Register a new PERA product
      *
-     * API that allows PERA Admin to register a PERA product.
+     * API for registering a new PERA product
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void registerProductTest() throws Exception {
+    public void registerProductTest() throws ApiException {
         String participantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
         PeraProduct response = api.registerProduct(participantId, xV, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Update an OFxPERA Participant
+     * [PHASE 2] Update an OFxPERA Participant&#x27;s registration information
      *
-     * API for updating the URIs and status of an OFxPERA Participant
+     * API for updating registration information for a specific OFxPERA Participant
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void updateParticipantTest() throws Exception {
+    public void updateParticipantTest() throws ApiException {
         ParticipantConfig body = null;
         String participantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
         ClientRegistrationResponse response = api.updateParticipant(body, participantId, xV, xFapiInteractionId);
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Update a PERA Admin Product
+     * [PHASE 1] Update a PERA product
      *
-     * API that allows PERA Admin to update their product.
+     * API for updating a PERA product
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void updateProductTest() throws Exception {
+    public void updateProductTest() throws ApiException {
         String productId = null;
         String participantId = null;
         Integer xV = null;
         UUID xFapiInteractionId = null;
         PeraProduct response = api.updateProduct(productId, participantId, xV, xFapiInteractionId);
-
         // TODO: test validations
     }
 }

@@ -65,7 +65,7 @@ public class BootstrapApi {
     /**
      * Build call for getParticipant
      * @param participantId Participant identifier issued during participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @param progressListener Progress listener
@@ -73,7 +73,7 @@ public class BootstrapApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call getParticipantCall(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call getParticipantCall(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -84,8 +84,8 @@ public class BootstrapApi {
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        if (participantId != null)
-        localVarHeaderParams.put("participant-id", apiClient.parameterToString(participantId));
+        if (requestingParticipantId != null)
+        localVarHeaderParams.put("participant-id", apiClient.parameterToString(requestingParticipantId));
         if (xV != null)
         localVarHeaderParams.put("x-v", apiClient.parameterToString(xV));
         if (xFapiInteractionId != null)
@@ -125,21 +125,21 @@ public class BootstrapApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call getParticipantValidateBeforeCall(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call getParticipantValidateBeforeCall(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'participantId' is set
         if (participantId == null) {
             throw new ApiException("Missing the required parameter 'participantId' when calling getParticipant(Async)");
         }
-        // verify the required parameter 'participantId' is set
-        if (participantId == null) {
-            throw new ApiException("Missing the required parameter 'participantId' when calling getParticipant(Async)");
+        // verify the required parameter 'requestingParticipantId' is set
+        if (requestingParticipantId == null) {
+            throw new ApiException("Missing the required parameter 'requestingParticipantId' when calling getParticipant(Async)");
         }
         // verify the required parameter 'xV' is set
         if (xV == null) {
             throw new ApiException("Missing the required parameter 'xV' when calling getParticipant(Async)");
         }
         
-        com.squareup.okhttp.Call call = getParticipantCall(participantId, participantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getParticipantCall(participantId, requestingParticipantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
         return call;
 
         
@@ -152,14 +152,14 @@ public class BootstrapApi {
      * [PHASE 2] Get an OFxPERA Participant&#x27;s registration information
      * API for retrieving registration information for a specific OFxPERA Participant
      * @param participantId Participant identifier issued during participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @return ParticipantConfig
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ParticipantConfig getParticipant(String participantId, String participantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
-        ApiResponse<ParticipantConfig> resp = getParticipantWithHttpInfo(participantId, participantId, xV, xFapiInteractionId);
+    public ParticipantConfig getParticipant(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
+        ApiResponse<ParticipantConfig> resp = getParticipantWithHttpInfo(participantId, requestingParticipantId, xV, xFapiInteractionId);
         return resp.getData();
     }
 
@@ -167,14 +167,14 @@ public class BootstrapApi {
      * [PHASE 2] Get an OFxPERA Participant&#x27;s registration information
      * API for retrieving registration information for a specific OFxPERA Participant
      * @param participantId Participant identifier issued during participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @return ApiResponse&lt;ParticipantConfig&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<ParticipantConfig> getParticipantWithHttpInfo(String participantId, String participantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
-        com.squareup.okhttp.Call call = getParticipantValidateBeforeCall(participantId, participantId, xV, xFapiInteractionId, null, null);
+    public ApiResponse<ParticipantConfig> getParticipantWithHttpInfo(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
+        com.squareup.okhttp.Call call = getParticipantValidateBeforeCall(participantId, requestingParticipantId, xV, xFapiInteractionId, null, null);
         Type localVarReturnType = new TypeToken<ParticipantConfig>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -183,14 +183,14 @@ public class BootstrapApi {
      * [PHASE 2] Get an OFxPERA Participant&#x27;s registration information (asynchronously)
      * API for retrieving registration information for a specific OFxPERA Participant
      * @param participantId Participant identifier issued during participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call getParticipantAsync(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ApiCallback<ParticipantConfig> callback) throws ApiException {
+    public com.squareup.okhttp.Call getParticipantAsync(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ApiCallback<ParticipantConfig> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -211,7 +211,7 @@ public class BootstrapApi {
             };
         }
 
-        com.squareup.okhttp.Call call = getParticipantValidateBeforeCall(participantId, participantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = getParticipantValidateBeforeCall(participantId, requestingParticipantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<ParticipantConfig>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -363,8 +363,8 @@ public class BootstrapApi {
     }
     /**
      * Build call for listProductByParticipant
-     * @param participantId Participant identifier issued during Participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param participantId Participant identifier issued during participant registration (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @param progressListener Progress listener
@@ -372,7 +372,7 @@ public class BootstrapApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call listProductByParticipantCall(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public com.squareup.okhttp.Call listProductByParticipantCall(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
         
         // create path and map variables
@@ -383,8 +383,8 @@ public class BootstrapApi {
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        if (participantId != null)
-        localVarHeaderParams.put("participant-id", apiClient.parameterToString(participantId));
+        if (requestingParticipantId != null)
+        localVarHeaderParams.put("participant-id", apiClient.parameterToString(requestingParticipantId));
         if (xV != null)
         localVarHeaderParams.put("x-v", apiClient.parameterToString(xV));
         if (xFapiInteractionId != null)
@@ -424,21 +424,21 @@ public class BootstrapApi {
     }
     
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call listProductByParticipantValidateBeforeCall(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private com.squareup.okhttp.Call listProductByParticipantValidateBeforeCall(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         // verify the required parameter 'participantId' is set
         if (participantId == null) {
             throw new ApiException("Missing the required parameter 'participantId' when calling listProductByParticipant(Async)");
         }
-        // verify the required parameter 'participantId' is set
-        if (participantId == null) {
-            throw new ApiException("Missing the required parameter 'participantId' when calling listProductByParticipant(Async)");
+        // verify the required parameter 'requestingParticipantId' is set
+        if (requestingParticipantId == null) {
+            throw new ApiException("Missing the required parameter 'requestingParticipantId' when calling listProductByParticipant(Async)");
         }
         // verify the required parameter 'xV' is set
         if (xV == null) {
             throw new ApiException("Missing the required parameter 'xV' when calling listProductByParticipant(Async)");
         }
         
-        com.squareup.okhttp.Call call = listProductByParticipantCall(participantId, participantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = listProductByParticipantCall(participantId, requestingParticipantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
         return call;
 
         
@@ -450,30 +450,30 @@ public class BootstrapApi {
     /**
      * [PHASE 1] Get a list of PERA products associated with PERA Admin
      * API for retrieving all registered products associated with the PERA Admin.
-     * @param participantId Participant identifier issued during Participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param participantId Participant identifier issued during participant registration (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @return List&lt;PeraProduct&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public List<PeraProduct> listProductByParticipant(String participantId, String participantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
-        ApiResponse<List<PeraProduct>> resp = listProductByParticipantWithHttpInfo(participantId, participantId, xV, xFapiInteractionId);
+    public List<PeraProduct> listProductByParticipant(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
+        ApiResponse<List<PeraProduct>> resp = listProductByParticipantWithHttpInfo(participantId, requestingParticipantId, xV, xFapiInteractionId);
         return resp.getData();
     }
 
     /**
      * [PHASE 1] Get a list of PERA products associated with PERA Admin
      * API for retrieving all registered products associated with the PERA Admin.
-     * @param participantId Participant identifier issued during Participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param participantId Participant identifier issued during participant registration (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @return ApiResponse&lt;List&lt;PeraProduct&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
-    public ApiResponse<List<PeraProduct>> listProductByParticipantWithHttpInfo(String participantId, String participantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
-        com.squareup.okhttp.Call call = listProductByParticipantValidateBeforeCall(participantId, participantId, xV, xFapiInteractionId, null, null);
+    public ApiResponse<List<PeraProduct>> listProductByParticipantWithHttpInfo(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId) throws ApiException {
+        com.squareup.okhttp.Call call = listProductByParticipantValidateBeforeCall(participantId, requestingParticipantId, xV, xFapiInteractionId, null, null);
         Type localVarReturnType = new TypeToken<List<PeraProduct>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -481,15 +481,15 @@ public class BootstrapApi {
     /**
      * [PHASE 1] Get a list of PERA products associated with PERA Admin (asynchronously)
      * API for retrieving all registered products associated with the PERA Admin.
-     * @param participantId Participant identifier issued during Participant registration (required)
-     * @param participantId Field referencing the unique identifier of the requesting participant. (required)
+     * @param participantId Participant identifier issued during participant registration (required)
+     * @param requestingParticipantId Field referencing the unique identifier of the requesting participant. (required)
      * @param xV Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable. (required)
      * @param xFapiInteractionId An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction. (optional)
      * @param callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call listProductByParticipantAsync(String participantId, String participantId, Integer xV, UUID xFapiInteractionId, final ApiCallback<List<PeraProduct>> callback) throws ApiException {
+    public com.squareup.okhttp.Call listProductByParticipantAsync(String participantId, String requestingParticipantId, Integer xV, UUID xFapiInteractionId, final ApiCallback<List<PeraProduct>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -510,7 +510,7 @@ public class BootstrapApi {
             };
         }
 
-        com.squareup.okhttp.Call call = listProductByParticipantValidateBeforeCall(participantId, participantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
+        com.squareup.okhttp.Call call = listProductByParticipantValidateBeforeCall(participantId, requestingParticipantId, xV, xFapiInteractionId, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<PeraProduct>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;

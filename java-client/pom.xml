@@ -14,7 +14,7 @@
     <url>https://github.com/swagger-api/swagger-codegen</url>
   </scm>
   <prerequisites>
-    <maven>2.2.0</maven>
+    <maven>3.6.0</maven>
   </prerequisites>
 
   <licenses>
@@ -38,8 +38,28 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.6.0</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12</version>
+        <version>3.2.3</version>
         <configuration>
           <systemProperties>
             <property>
@@ -49,7 +69,6 @@
           </systemProperties>
           <argLine>-Xms512m -Xmx1500m</argLine>
           <parallel>methods</parallel>
-          <forkMode>pertest</forkMode>
         </configuration>
       </plugin>
       <plugin>
@@ -71,23 +90,26 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.2</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
+            <id>default-jar</id>
+            <phase>package</phase>
             <goals>
               <goal>jar</goal>
               <goal>test-jar</goal>
             </goals>
+            <configuration>
+              <testClassifier>tests</testClassifier>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-        </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.10</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>add_sources</id>
@@ -118,7 +140,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -131,7 +153,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -140,6 +162,19 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <compilerArgs>
+            <arg>--add-modules</arg>
+            <arg>java.base</arg>
+          </compilerArgs>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -152,7 +187,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -173,6 +208,11 @@
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-annotations</artifactId>
       <version>${swagger-core-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp</groupId>
@@ -201,23 +241,35 @@
     </dependency>
     <!-- test dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <version>${junit-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit-version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <version>1.10.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
   <properties>
-    <java.version>1.7</java.version>
+    <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <swagger-core-version>2.0.0</swagger-core-version>
+    <swagger-core-version>2.2.20</swagger-core-version>
     <okhttp-version>2.7.5</okhttp-version>
-    <gson-version>2.8.1</gson-version>
-    <gson-fire-version>1.8.3</gson-fire-version>
-    <threetenbp-version>1.3.5</threetenbp-version>
+    <gson-version>2.10.1</gson-version>
+    <gson-fire-version>1.8.5</gson-fire-version>
+    <threetenbp-version>1.6.8</threetenbp-version>
     <maven-plugin-version>1.0.0</maven-plugin-version>
-    <junit-version>4.13.1</junit-version>
+    <junit-version>5.10.1</junit-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

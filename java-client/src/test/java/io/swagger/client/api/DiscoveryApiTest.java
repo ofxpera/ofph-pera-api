@@ -12,113 +12,107 @@
 
 package io.swagger.client.api;
 
+import io.swagger.client.ApiException;
 import io.swagger.client.model.ClientRegistration;
 import io.swagger.client.model.ClientRegistrationResponse;
-import io.swagger.client.model.Error;
-import io.swagger.client.model.InlineResponse2002;
 import io.swagger.client.model.JWKSet;
-import org.junit.Test;
-import org.junit.Ignore;
-
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import io.swagger.client.model.InlineResponse2002;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.threeten.bp.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * API tests for DiscoveryApi
  */
-@Ignore
+@Disabled
 public class DiscoveryApiTest {
 
     private final DiscoveryApi api = new DiscoveryApi();
 
     /**
-     * Delete Client Registration (configurable endpoint)
+     * Test case for deleteClientRegistration
      *
-     * 
+     * Delete client registration.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void deleteClientRegistrationTest() throws Exception {
+    @Disabled
+    public void deleteClientRegistrationTest() throws ApiException {
         api.deleteClientRegistration();
-
         // TODO: test validations
     }
+
     /**
-     * Get Client Registration (configurable endpoint)
+     * Test case for getClientRegistration
      *
-     * 
+     * Get client registration.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getClientRegistrationTest() throws Exception {
+    @Disabled
+    public void getClientRegistrationTest() throws ApiException {
         ClientRegistration response = api.getClientRegistration();
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 1] Retrieve JSON Web Key Set (JWKS) containing public keys for JWT signature verification (configurable endpoint)
+     * Test case for getJwks
      *
-     * Returns the public keys used to verify JWT signatures
+     * Get JWKS.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getJwksTest() throws Exception {
+    @Disabled
+    public void getJwksTest() throws ApiException {
         JWKSet response = api.getJwks();
-
         // TODO: test validations
     }
+
     /**
-     * Optional - OpenID Connect Discovery
+     * Test case for getOpenIdConfiguration
      *
-     * Retrieve OpenID Connect configuration information
+     * Get OpenID Configuration.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void getOpenIdConfigurationTest() throws Exception {
+    @Disabled
+    public void getOpenIdConfigurationTest() throws ApiException {
         InlineResponse2002 response = api.getOpenIdConfiguration();
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Dynamic Client Registration (configurable endpoint)
+     * Test case for registerClient
      *
-     * Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
+     * Register client.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void registerClientTest() throws Exception {
+    @Disabled
+    public void registerClientTest() throws ApiException {
         ClientRegistration body = null;
         ClientRegistrationResponse response = api.registerClient(body);
-
         // TODO: test validations
     }
+
     /**
-     * [PHASE 2] Update Client Registration (configurable endpoint)
+     * Test case for updateClientRegistration
      *
-     * 
+     * Update client registration.
      *
-     * @throws Exception
-     *          if the Api call fails
+     * @throws ApiException if the Api call fails
      */
     @Test
-    public void updateClientRegistrationTest() throws Exception {
+    @Disabled
+    public void updateClientRegistrationTest() throws ApiException {
         ClientRegistration body = null;
         ClientRegistration response = api.updateClientRegistration(body);
-
         // TODO: test validations
     }
 }
