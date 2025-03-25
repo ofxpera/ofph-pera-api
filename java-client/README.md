@@ -13,7 +13,7 @@ Philippines Open Finance API Implementation for PERA
 ## Requirements
 
 Building the API client library requires:
-1. Java 17
+1. Java 21
 2. Maven/Gradle
 
 ## Installation
@@ -184,10 +184,22 @@ mvn test
 
 Note that all tests are currently disabled with the `@Disabled` annotation. Remove this annotation from specific test methods to enable them.
 
+## Technology Stack
+
+The client is built using the following technologies:
+
+* Java 21
+* OkHttp 2.7.5 - HTTP Client
+* Gson 2.12.1 - JSON Parsing
+* ThreeTenBP 1.7.1 - Date/Time Handling
+* JUnit 5.10.2 - Testing Framework
+* Javax Annotation API 1.3.2 - Annotations
+
 ## Known Issues
 
 - All test methods currently have the `@Disabled` annotation and contain TODO comments for validations.
 - API documentation may not perfectly match the implementation in some cases.
+- The client uses OkHttp 2.7.5, which is an older version, but is required for compatibility with the current codebase.
 
 ## Author
 
