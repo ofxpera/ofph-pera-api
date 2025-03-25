@@ -45,7 +45,7 @@ paths:
       operationId: peraArrangementRegistration
       tags:
         - PERA
-      summary: Registers the result of a PERA account opening
+      summary: "[PHASE 1] Registers the result of a PERA account opening"
       description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
       security:
         - SignedJWT: []
@@ -88,7 +88,7 @@ paths:
       operationId: getArrangementStatus
       tags:
         - PERA
-      summary: Get the status of a PERA arrangement
+      summary: "[PHASE 1] Get the status of a PERA arrangement"
       description: API that allows FIs to retrieve the status of one or more PERA Arrangements
       security:
         - SignedJWT: []
