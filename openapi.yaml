@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 0.0.7
+  version: 1.0.0
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -21,7 +21,7 @@ info:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/0.0.7-Draft
+    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/1.0.0
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 

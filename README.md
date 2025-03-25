@@ -12,7 +12,7 @@ This repository contains the OpenAPI 3.0 specification for the OFxPERA API, whic
 Production: `https://api.ofxpera.ph/v1`
 
 ### API Version
-Current Version: `0.0.7`
+Current Version: `1.0.0`
 
 ### Prerequisites
 - Valid participant registration with OFxPERA

@@ -1,7 +1,7 @@
 # swagger-java-client
 
 OFxPERA API
-- API version: 0.0.7
+- API version: 1.0.0
   - Build date: 2025-03-24T23:12:52.341191218Z[GMT]
 
 Philippines Open Finance API Implementation for PERA
@@ -139,7 +139,7 @@ public class OAuthApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/0.0.7*
+All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/1.0.0*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -208,5 +208,3 @@ Philippines Open Finance Team
 ## License
 
 Unlicense - https://www.apache.org/licenses/LICENSE-2.0.html
-
-

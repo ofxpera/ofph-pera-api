@@ -1,6 +1,6 @@
 # CommonApi
 
-All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/0.0.7*
+All URIs are relative to *https://virtserver.swaggerhub.com/voyager-innovation/OFxPERA/1.0.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

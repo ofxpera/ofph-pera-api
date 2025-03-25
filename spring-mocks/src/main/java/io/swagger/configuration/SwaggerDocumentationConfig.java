@@ -18,7 +18,7 @@ public class SwaggerDocumentationConfig {
                 .title("OFxPERA API")
                 .description("Philippines Open Finance API Implementation for PERA")
                 .termsOfService("")
-                .version("0.0.7")
+                .version("1.0.0")
                 .license(new License()
                     .name("Apache 2.0")
                     .url("https://www.apache.org/licenses/LICENSE-2.0.html"))

@@ -40,7 +40,7 @@ mvn clean package
 mvn spring-boot:run
 ```
 
-The server will start on port 8080 with the context path `/voyager-innovation/OFxPERA/0.0.7`.
+The server will start on port 8080 with the context path `/voyager-innovation/OFxPERA/1.0.0`.
 
 ## API Documentation
 

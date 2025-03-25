@@ -1,5 +1,32 @@
 # OFxPERA API Release Notes
 
+## Version 1.0.0
+
+*Release Date: March 25, 2025*
+
+This release marks the first stable version of the OFxPERA API, signifying production readiness and API stability.
+
+### Major Changes
+
+- **API Stability**: The API is now considered stable for production use
+- **Version Standardization**: Updated all version references from 0.0.7 to 1.0.0 across:
+  - Main README.md
+  - OpenAPI specification (openapi.yaml)
+  - Spring mocks context path and documentation
+  - SwaggerHub API Auto Mocking URL
+
+### Compatibility Notes
+
+- This version maintains full backward compatibility with version 0.0.7
+- No schema changes or endpoint modifications were made in this version
+- Client applications using version 0.0.7 should continue to function with 1.0.0
+
+---
+
+*These release notes document changes from version 0.0.7 to version 1.0.0 of the OFxPERA API.*
+
+Cascade [2025-03-25T10:14:22+08:00]
+
 ## Version 0.0.7
 
 *Release Date: March 25, 2025*
