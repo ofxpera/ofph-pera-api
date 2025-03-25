@@ -76,4 +76,6 @@ Please follow standard Git workflow for contributions:
 
 ## License
 
-This project is proprietary and confidential. Unauthorized copying, distribution, or use is strictly prohibited.
+Copyright 2024-2025 OFxPERA Contributors
+
+Licensed under the Apache License 2.0 - See LICENSE file for details
