@@ -50,7 +50,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -85,7 +84,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -120,7 +118,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -159,7 +156,6 @@ paths:
             type: string
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved participant information
@@ -190,7 +186,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Product successfully registered
@@ -227,7 +222,6 @@ paths:
             type: string
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Product successfully updated
@@ -264,7 +258,6 @@ paths:
             type: string
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully retrieved the list of registered products associated with the PERA Admin.
@@ -305,7 +298,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -455,7 +447,6 @@ paths:
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "302":
           description: Redirect to client with authorization code
@@ -504,7 +495,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -587,7 +577,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Token information retrieved
@@ -651,7 +640,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: User information retrieved
@@ -723,7 +711,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Successfully forwarded customer endorsement
@@ -770,7 +757,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         "200":
           description: Customer's Personal Information retrieved successfully
@@ -1043,7 +1029,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1107,7 +1092,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: List of consent arrangements
@@ -1156,7 +1140,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Consent arrangement details
@@ -1205,7 +1188,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '204':
           description: Consent arrangement successfully revoked
@@ -1249,7 +1231,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1304,7 +1285,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Consent arrangement history
@@ -1347,7 +1327,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1404,7 +1383,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: List of consent templates
@@ -1455,7 +1433,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1527,7 +1504,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Customer's consent arrangements
@@ -1590,7 +1566,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       requestBody:
         required: true
         content:
@@ -1694,7 +1669,6 @@ paths:
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-        - $ref: '#/components/parameters/FapiFinancialId'
       responses:
         '200':
           description: Customer's consent dashboard
@@ -1757,14 +1731,6 @@ components:
       schema:
         type: string
         format: ipv4
-    
-    FapiFinancialId:
-      name: x-fapi-financial-id
-      in: header
-      required: true
-      description: The unique identifier of the financial institution that the customer has a relationship with. Identifies a legal entity, which is a financial institution participating in an open banking ecosystem. This identifier is provisioned by an authority within a financial ecosystem.
-      schema:
-        type: string
     
     ClientHeaders:
       name: x-client-headers
