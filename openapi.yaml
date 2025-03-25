@@ -377,7 +377,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -573,7 +573,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -654,7 +654,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -716,7 +716,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -786,7 +786,7 @@ paths:
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -831,8 +831,7 @@ paths:
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/ClientHeaders'
-        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
@@ -1108,7 +1107,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1170,8 +1169,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
-        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
@@ -1217,8 +1215,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
-        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
@@ -1264,7 +1261,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1306,7 +1303,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1359,7 +1356,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1400,7 +1397,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1455,7 +1452,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1504,7 +1501,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1574,7 +1571,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1635,7 +1632,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1737,7 +1734,7 @@ paths:
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/ClientHeaders'
+        - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
         - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
@@ -1804,15 +1801,14 @@ components:
       schema:
         type: string
         format: ipv4
-    
-    ClientHeaders:
-      name: x-client-headers
+
+    CustomerUserAgent:
+      name: x-customer-user-agent
       in: header
-      required: true
-      description: The customer's original standard http headers Base64 encoded, including the original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+      required: false
+      description: The customer's original User-Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
       schema:
         type: string
-        format: base64
 
     Authorization:
       name: Authorization

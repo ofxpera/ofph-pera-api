@@ -10,7 +10,6 @@ This release marks the first stable version of the OFxPERA API, signifying produ
 
 - **API Stability**: The API is now considered stable for production use
 - **Version Standardization**: Updated all version references from 0.0.7 to 1.0.0 across:
-  - Main README.md
   - OpenAPI specification (openapi.yaml)
   - Spring mocks context path and documentation
   - SwaggerHub API Auto Mocking URL
@@ -25,6 +24,8 @@ This release marks the first stable version of the OFxPERA API, signifying produ
 - **Removed Redundant Parameters**:
   - Removed `ParticipantId` parameter from multiple endpoints to reduce duplication and avoid confusion
   - Streamlined header requirements across all endpoints
+- **Replaced Client Headers**:
+  - Replaced `ClientHeaders` header with `CustomerUserAgent` for brevity and clarity
 
 ### Compatibility Notes
 
