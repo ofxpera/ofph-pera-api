@@ -72,8 +72,12 @@ public interface OauthApi {
 , @Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
 , @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in FAPI Advanced. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
 , @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
+, @Parameter(in = ParameterIn.HEADER, description = "The customer's original User-Agent header Base64 encoded, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-client-user-agent", required=true) String xClientUserAgent
+, @Parameter(in = ParameterIn.HEADER, description = "Bearer token for authentication. Must be in the format 'Bearer <token>'" ,required=true,schema=@Schema()) @RequestHeader(value="Authorization", required=true) String authorization
 , @Parameter(in = ParameterIn.HEADER, description = "Detached JWS signature for request integrity verification. Required for high-risk operations that require non-repudiation." ,schema=@Schema()) @RequestHeader(value="x-jws-signature", required=false) String xJwsSignature
 , @Parameter(in = ParameterIn.HEADER, description = "HTTP Digest header as defined in RFC3230 and RFC5843. Contains a hash of the request body, used in conjunction with the x-jws-signature header for request integrity verification." ,schema=@Schema()) @RequestHeader(value="Digest", required=false) String digest
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 , @Parameter(in = ParameterIn.QUERY, description = "Code challenge for PKCE" ,schema=@Schema()) @Valid @RequestParam(value = "code_challenge", required = false) String codeChallenge
 , @Parameter(in = ParameterIn.QUERY, description = "Code challenge method for PKCE" ,schema=@Schema(allowableValues={ "S256" }
 )) @Valid @RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod
@@ -103,7 +107,7 @@ public interface OauthApi {
         consumes = { "application/x-www-form-urlencoded" }, 
         method = RequestMethod.POST)
     ResponseEntity<TokenResponse> getOAuthToken(@Parameter(in = ParameterIn.HEADER, description = "Field referencing the unique identifier of the requesting participant." ,required=true,schema=@Schema()) @RequestHeader(value="participant-id", required=true) String participantId
-, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
+, @Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
 )) @RequestHeader(value="x-v", required=true) Integer xV
 , @Parameter(in = ParameterIn.HEADER, description = "The time when the customer last logged in to the Data Recipient Software Product as described in FAPI Advanced. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-auth-date", required=true) OffsetDateTime xFapiAuthDate
 , @Parameter(in = ParameterIn.HEADER, description = "The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls." ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-ip-address", required=true) String xFapiCustomerIpAddress
@@ -113,6 +117,8 @@ public interface OauthApi {
 , @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
 , @Parameter(in = ParameterIn.HEADER, description = "Detached JWS signature for request integrity verification. Required for high-risk operations that require non-repudiation." ,schema=@Schema()) @RequestHeader(value="x-jws-signature", required=false) String xJwsSignature
 , @Parameter(in = ParameterIn.HEADER, description = "HTTP Digest header as defined in RFC3230 and RFC5843. Contains a hash of the request body, used in conjunction with the x-jws-signature header for request integrity verification." ,schema=@Schema()) @RequestHeader(value="Digest", required=false) String digest
+, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+, @Parameter(in = ParameterIn.HEADER, description = "Bearer token for authentication. Must be in the format 'Bearer <token>'" ,required=true,schema=@Schema()) @RequestHeader(value="Authorization", required=true) String authorization
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema(allowableValues={ "authorization_code", "refresh_token" }
 )) @RequestParam(value="grant_type", required=true)  String grantType
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema()) @RequestParam(value="code", required=true)  String code
@@ -122,9 +128,7 @@ public interface OauthApi {
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema(allowableValues={ "urn:ietf:params:oauth:assertion-type:jwt-bearer" }
 )) @RequestParam(value="client_assertion_type", required=true)  String clientAssertionType
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema()) @RequestParam(value="client_assertion", required=true)  String clientAssertion
-, @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
 );
-
 
     @Operation(summary = "Optional OpenID Connect UserInfo Endpoint", description = "OpenID Connect UserInfo Endpoint that returns information about the authenticated user. ", security = {
         @SecurityRequirement(name = "OAuth2", scopes = {
@@ -230,6 +234,7 @@ public interface OauthApi {
 , @Parameter(in = ParameterIn.HEADER, description = "The time when the PSU last logged in to the client software as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-fapi-customer-last-logged-time", required=true) OffsetDateTime xFapiCustomerLastLoggedTime
 , @Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody OauthAuthBody body
 , @Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+, @Parameter(in = ParameterIn.HEADER, description = "Bearer token for authentication. Must be in the format 'Bearer <token>'" ,required=true,schema=@Schema()) @RequestHeader(value="Authorization", required=true) String authorization
 );
 
 }

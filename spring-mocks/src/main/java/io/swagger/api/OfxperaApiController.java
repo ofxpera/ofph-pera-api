@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,15 +107,17 @@ public class OfxperaApiController implements OfxperaApi {
         return new ResponseEntity<List<PeraProduct>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @Override
     public ResponseEntity<ClientRegistrationResponse> registerParticipant(@Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "100", "1" }, minimum="1", maximum="100"
     )) @RequestHeader(value="x-v", required=true) Integer xV
     ,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
     ,@Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+    ,@Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
     ) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<ClientRegistrationResponse>(objectMapper.readValue("{\n  \"clientIdIssuedAt\" : 0,\n  \"clientId\" : \"clientId\",\n  \"registrationAccessToken\" : \"registrationAccessToken\",\n  \"registrationClientUri\" : \"http://example.com/aeiou\"\n}", ClientRegistrationResponse.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<ClientRegistrationResponse>(objectMapper.readValue("{\n  \"client_id\" : \"client_id\",\n  \"client_secret\" : \"client_secret\",\n  \"client_id_issued_at\" : 0,\n  \"client_secret_expires_at\" : 0,\n  \"redirect_uris\" : [ \"redirect_uris\", \"redirect_uris\" ],\n  \"token_endpoint_auth_method\" : \"token_endpoint_auth_method\",\n  \"grant_types\" : [ \"grant_types\", \"grant_types\" ],\n  \"response_types\" : [ \"response_types\", \"response_types\" ],\n  \"client_name\" : \"client_name\",\n  \"client_uri\" : \"client_uri\",\n  \"logo_uri\" : \"logo_uri\",\n  \"scope\" : \"scope\",\n  \"contacts\" : [ \"contacts\", \"contacts\" ],\n  \"tos_uri\" : \"tos_uri\",\n  \"policy_uri\" : \"policy_uri\",\n  \"jwks_uri\" : \"jwks_uri\",\n  \"jwks\" : { },\n  \"software_id\" : \"software_id\",\n  \"software_version\" : \"software_version\",\n  \"software_statement\" : \"software_statement\"\n}", ClientRegistrationResponse.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<ClientRegistrationResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,6 +131,7 @@ public class OfxperaApiController implements OfxperaApi {
     ,@Parameter(in = ParameterIn.HEADER, description = "Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable." ,required=true,schema=@Schema(allowableValues={ "1", "100" }, minimum="1", maximum="100"
     )) @RequestHeader(value="x-v", required=true) Integer xV
     ,@Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+    ,@Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
     ) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -149,11 +151,12 @@ public class OfxperaApiController implements OfxperaApi {
     )) @RequestHeader(value="x-v", required=true) Integer xV
     ,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true, schema=@Schema()) @Valid @RequestBody ParticipantConfig body
     ,@Parameter(in = ParameterIn.HEADER, description = "An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction." ,schema=@Schema()) @RequestHeader(value="x-fapi-interaction-id", required=false) UUID xFapiInteractionId
+    ,@Parameter(in = ParameterIn.HEADER, description = "Unique idempotency key for the request as per FAPI Advanced requirements" ,required=true,schema=@Schema()) @RequestHeader(value="x-idempotency-key", required=true) UUID xIdempotencyKey
     ) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<ClientRegistrationResponse>(objectMapper.readValue("{\n  \"clientIdIssuedAt\" : 0,\n  \"clientId\" : \"clientId\",\n  \"registrationAccessToken\" : \"registrationAccessToken\",\n  \"registrationClientUri\" : \"http://example.com/aeiou\"\n}", ClientRegistrationResponse.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<ClientRegistrationResponse>(objectMapper.readValue("{\n  \"client_id\" : \"client_id\",\n  \"client_secret\" : \"client_secret\",\n  \"client_id_issued_at\" : 0,\n  \"client_secret_expires_at\" : 0,\n  \"redirect_uris\" : [ \"redirect_uris\", \"redirect_uris\" ],\n  \"token_endpoint_auth_method\" : \"token_endpoint_auth_method\",\n  \"grant_types\" : [ \"grant_types\", \"grant_types\" ],\n  \"response_types\" : [ \"response_types\", \"response_types\" ],\n  \"client_name\" : \"client_name\",\n  \"client_uri\" : \"client_uri\",\n  \"logo_uri\" : \"logo_uri\",\n  \"scope\" : \"scope\",\n  \"contacts\" : [ \"contacts\", \"contacts\" ],\n  \"tos_uri\" : \"tos_uri\",\n  \"policy_uri\" : \"policy_uri\",\n  \"jwks_uri\" : \"jwks_uri\",\n  \"jwks\" : { },\n  \"software_id\" : \"software_id\",\n  \"software_version\" : \"software_version\",\n  \"software_statement\" : \"software_statement\"\n}", ClientRegistrationResponse.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<ClientRegistrationResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
