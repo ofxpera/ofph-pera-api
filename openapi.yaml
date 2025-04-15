@@ -201,9 +201,12 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
+      security:
+        - OAuth2: []
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -337,6 +340,8 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of PERA products associated with PERA Admin"
       description: API for retrieving all registered products associated with the PERA Admin. 
+      security:
+        - OAuth2: []
       parameters:
         - name: participant_id
           in: path
@@ -609,7 +614,6 @@ paths:
                   description: Refresh token used to obtain a new access token.
                 client_assertion_type:
                   type: string
-                  enum: [urn:ietf:params:oauth:assertion-type:jwt-bearer]
                   description: value must be "urn:ietf:params:oauth:assertion-type:jwt-bearer"
                 client_assertion:
                   type: string
@@ -1871,7 +1875,7 @@ components:
         - region
         - province
         - street_address
-        - city
+        - city_municipality
         - country
         - postal_code
       properties:
@@ -2023,8 +2027,8 @@ components:
         - sub
         - arrangementId
         - personalInformation
-        - cdd
         - presentedIds
+        - peraAdmin
       properties:
         sub:
           type: string
@@ -2049,15 +2053,12 @@ components:
 
     CustomerDueDiligence:
       type: object
-      required:
-        - employmentStatus
-        - pepIndicator
-        - fundSource
-        - cddIndicator
       properties:
-        employmentStatus:
+        contributorType:
           type: string
           maxLength: 50
+          enum: ["Employee", "Self-Employed", "Overseas Filipino"]
+          default: "string"
         occupation:
           type: string
           maxLength: 150
