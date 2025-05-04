@@ -21,6 +21,10 @@ GET /auth?response_type=code
     &nonce={nonce}
     &response_mode=jwt
     &request={request_object}
+
+Headers:
+  Accept: application/jwt
+  x-fapi-interaction-id: {uuid}                 # Recommended for correlation
 ```
 
 **Parameters:**
@@ -44,6 +48,11 @@ On success, the authorization server redirects to `redirect_uri` with a signed J
 
 ```
 GET {redirect_uri}?response={jwt}&state={state}
+
+Headers:
+  x-fapi-interaction-id: {uuid}                 # Echoed if provided in request
+  Cache-Control: no-store
+  Pragma: no-cache
 ```
 
 Where `response` is a JWT containing the authorization code and other parameters, signed (and optionally encrypted) by the authorization server.
@@ -89,7 +98,10 @@ Exchanges the authorization code for tokens.
 ```http
 POST /token
 Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-interaction-id: {uuid}
 
+Body:
 grant_type=authorization_code
 &code={code}
 &redirect_uri={redirect_uri}
@@ -109,7 +121,13 @@ grant_type=authorization_code
 
 **Response:**
 
-```json
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+x-fapi-interaction-id: {uuid}
+
 {
   "access_token": "eyJraWQiOiJ...",
   "token_type": "Bearer",
@@ -133,14 +151,21 @@ Checks the validity of an access token.
 ```http
 POST /introspect
 Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 Authorization: Basic {client_credentials}
+x-fapi-interaction-id: {uuid}
 
+Body:
 token={access_token}
 ```
 
 **Response:**
 
-```json
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+x-fapi-interaction-id: {uuid}
+
 {
   "active": true,
   "scope": "openid accounts",
@@ -163,15 +188,23 @@ Revokes an access or refresh token.
 ```http
 POST /revoke
 Content-Type: application/x-www-form-urlencoded
+Accept: application/json
 Authorization: Basic {client_credentials}
+x-fapi-interaction-id: {uuid}
 
+Body:
 token={token}
 &token_type_hint=access_token
 ```
 
 **Response:**
 
-- HTTP 200 with empty body on success.
+```http
+HTTP/1.1 200 OK
+x-fapi-interaction-id: {uuid}
+
+(empty body)
+```
 
 ---
 
@@ -179,16 +212,32 @@ token={token}
 
 ### GET `/customer/{customer_id}/detail`
 
-Retrieve customer details using a valid access token.
+Retrieve customer details using a valid access token. The response is a JWE (JSON Web Encryption) as per FAPI and Open Banking requirements.
 
 **Request:**
 
 ```http
 GET /customer/{customer_id}/detail
 Authorization: Bearer {access_token}
+Accept: application/jose
+x-fapi-interaction-id: {uuid}
 ```
 
 **Response:**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/jose
+x-fapi-interaction-id: {uuid}
+
+<encrypted JWE payload>
+
+// Example JWE Compact Serialization (truncated for clarity)
+eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ...
+```
+
+- The response body is a JWE, which must be decrypted by the client using its private key.
+- The decrypted payload will contain the customer details in JSON format, e.g.:
 
 ```json
 {
@@ -206,7 +255,6 @@ Authorization: Bearer {access_token}
 ```
 
 ---
-
 ## Notes
 
 - All endpoints require TLS (HTTPS) and must reject non-FAPI or non-JARM compliant requests.
@@ -214,3 +262,4 @@ Authorization: Bearer {access_token}
 - Clients must validate JWT signatures, claims, and audience as per JARM and FAPI.
 - JWTs (id_token, request object, JARM response) must be signed and validated per FAPI, JARM, and local regulations.
 - Error responses follow [RFC 6749](https://tools.ietf.org/html/rfc6749), [OIDC](https://openid.net/specs/openid-connect-core-1_0.html), and JARM specifications.
+- Only headers required or recommended by the latest FAPI and Open Banking standards are included above (as of 2025): `x-fapi-interaction-id`, `Accept`, `Content-Type`, and `Authorization` (where applicable).
