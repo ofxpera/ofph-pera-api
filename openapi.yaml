@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 1.0.0
+  version: 1.0.1
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -56,7 +56,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          application/jwt:
             schema:
               $ref: "#/components/schemas/PeraArrangement"
       responses:
@@ -533,18 +533,19 @@ paths:
           description: Random value used to prevent replay attacks
           schema:
             type: string
-        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "302":
           description: Redirect to client with authorization code
-          headers:
+          content:
             Location:
               schema:
                 type: string
                 format: uri
-                description: Redirect URI with authorization code
+                description: URI to redirect the user to, including the authorization code as a query parameter and JARM response
+              example: "https://client.example.org/cb?response=SplxlOBeZQQYbYS6WxSbIA&response=eyJhbGciOiJSUzI1NiIsImtpZCI6ImsyYmRjIn0.ew0KICJpc3MiOiAiczZCaGRSa3F0MyIsDQogImF1ZCI6ICJodHRwczovL2NsaWVudC5leGFtcGxlLm9yZyIsDQogImV4cCI6IDE1OTExMDUxODAsDQogIm5iZiI6IDE1OTExMDQ4ODAsDQogImlhdCI6IDE1OTExMDQ4ODAsDQogImp0aSI6ICJuLWp3dF9odE1qMm5vU3NnayIsDQogInJlc3BvbnNlX3R5cGUiOiAiY29kZSIsDQogImNvZGUiOiAiU3BseGxPQmVaUVFZYllTNld4U2JJQSIsDQogInN0YXRlIjogImVjb3VjaFpSZlRLUEY0NnYzakRMaTlsb3cySE03NlN1ejJZaTNwS1VudzQiDQp9.ER9HDBVZbR1Jtpoe_ow75mQhR6KkKhPz_0jE9ECY8nM4wCjbouMCOGnMkPHIZSWPu2zHja_WMpH30ILRxtJ8Ll8G_ocYYJzJYoAR-sEVmPfyR-NZLiWTDkgYoS7M3EvYMqmLIXlnXbHf-xNsGU_IG-r-1S51_9RDTjh8Y3JUvDQ"
+          
         "400":
           description: OAuth error response
           content:
@@ -576,12 +577,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
         required: true
         content:
@@ -655,12 +650,6 @@ paths:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: Token information retrieved
@@ -713,15 +702,8 @@ paths:
       security:
         - OAuth2: []
       parameters:
-        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: User information retrieved

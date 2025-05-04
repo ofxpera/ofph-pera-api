@@ -1,7 +1,7 @@
 # OFxPERA API Documentation
 
 This API implements the OAuth 2.0 Authorization Code Flow as defined in OFxPERA speficiations.
-The OFxPERA specifications is based on FAPI (Financial-grade API) standards and the regulatory requirements of the UK, Australia, and South Korea. It makes use of JARM (JWT Secured Authorization Response Mode) and JWE (JSON Web Encryption) standards.
+The OFxPERA specifications is based on FAPI (Financial-grade API) standards and the Open Finance requirements of the UK, Australia, and South Korea. It makes use of JARM (JWT Secured Authorization Response Mode) and JWE (JSON Web Encryption) standards.
 
 ## 1. OAuth 2.0 Authorization Endpoint
 
@@ -25,7 +25,8 @@ GET /auth?response_type=code
 
 Headers:
   Accept: application/jwt
-  x-fapi-interaction-id: {uuid}                 # Recommended for correlation
+  x-fapi-interaction-id: {uuid}
+  x-fapi-auth-date: {rfc7231-date}
 ```
 
 **Parameters:**
@@ -36,7 +37,7 @@ Headers:
 | client_id         | Yes      | OAuth client identifier                                           |
 | redirect_uri      | Yes      | Client redirect URI                                               |
 | scope             | Yes      | Space-delimited scopes (e.g., `openid accounts`)                  |
-| state             | No       | Opaque value to maintain state                                    |
+| state             | Yes      | Opaque value to maintain state                                    |
 | code_challenge    | No       | PKCE code challenge (SHA-256 of code_verifier, base64url-encoded) |
 | code_challenge_method | No   | Must be `S256` (required for public clients)                      |
 | nonce             | No       | Unique value for replay protection (required for OpenID Connect)  |
