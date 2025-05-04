@@ -34,8 +34,8 @@ tags:
     description: Common APIs used across different use cases
   - name: PERA
     description: APIs specific to PERA operations (Philippine Equity and Retirement Account)
-  - name: Consent
-    description: Consent management endpoints
+  #- name: Consent
+  #  description: Consent management endpoints
   - name: Discovery
     description: Optional discovery endpoints for OpenID/OAuth configuration and key management
 
@@ -83,124 +83,130 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /ofxpera/arrangements/{arrangement_id}:
-    get:
-      operationId: getArrangementStatus
-      tags:
-        - PERA
-      summary: "[PHASE 1] Get the status of a PERA arrangement"
-      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
-      security:
-        - SignedJWT: []
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the PERA Arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-      responses:
-        "200":
-          description: Successfully retrieved the status of the PERA Arrangement
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PeraArrangement"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/ofxpera/arrangements/{arrangement_id}:
+  #  get:
+  #    operationId: getArrangementStatus
+  #    tags:
+  #      - PERA
+  #    summary: "[PHASE 2] Get the status of a PERA arrangement"
+  #    description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+  #    security:
+  #      - SignedJWT: []
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the PERA Arrangement
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #    responses:
+  #      "200":
+  #        description: Successfully retrieved the status of the PERA Arrangement
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/PeraArrangement"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
+  
      
   /ofxpera/participants:
-    post:
-      operationId: registerParticipant
-      tags:
-        - Bootstrap
-      summary: "[PHASE 2] Register an OFxPERA Participant"
-      description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ParticipantConfig"
-      responses:
-        "201":
-          description: Participant successfully registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientRegistrationResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    put:
-      operationId: updateParticipant
-      tags:
-        - Bootstrap
-      summary: "[PHASE 2] Update an OFxPERA Participant"
-      description: API for updating the URIs and status of an OFxPERA Participant
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ParticipantConfig"
-      responses:
-        "201":
-          description: Participant successfully updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientRegistrationResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+    #post:
+    #  operationId: registerParticipant
+    #  tags:
+    #    - Bootstrap
+    #  summary: "[PHASE 2] Register an OFxPERA Participant"
+    #  description: API for registering an OFxPERA Participant following FAPI Dynamic Client Registration requirements
+    #  parameters:
+    #    - $ref: '#/components/parameters/ApiVersion'
+    #    - $ref: '#/components/parameters/FapiInteractionId'
+    #    - $ref: '#/components/parameters/IdempotencyKey'
+    #  requestBody:
+    #    required: true
+    #    content:
+    #      application/json:
+    #        schema:
+    #          $ref: "#/components/schemas/ParticipantConfig"
+    #  responses:
+    #    "201":
+    #      description: Participant successfully registered
+    #      content:
+    #        application/json:
+    #          schema:
+    #            $ref: "#/components/schemas/ClientRegistrationResponse"
+    #    "400":
+    #      $ref: "#/components/responses/BadRequest"
+    #    "401":
+    #      $ref: "#/components/responses/Unauthorized"
+    #    "403":
+    #      $ref: "#/components/responses/Forbidden"
+    #    "404":
+    #      $ref: "#/components/responses/NotFound"
+    #    "429":
+    #      $ref: "#/components/responses/TooManyRequests"
+    #    "500":
+    #      $ref: "#/components/responses/InternalServerError"
+
+    #put:
+    #  operationId: updateParticipant
+    #  tags:
+    #    - Bootstrap
+    #  summary: "[PHASE 2] Update an OFxPERA Participant"
+    #  description: API for updating the URIs and status of an OFxPERA Participant
+    #  parameters:
+    #    - $ref: '#/components/parameters/ApiVersion'
+    #    - $ref: '#/components/parameters/FapiInteractionId'
+    #    - $ref: '#/components/parameters/IdempotencyKey'
+    #  requestBody:
+    #    required: true
+    #    content:
+    #      application/json:
+    #        schema:
+    #          $ref: "#/components/schemas/ParticipantConfig"
+    #  responses:
+    #    "201":
+    #      description: Participant successfully updated
+    #      content:
+    #        application/json:
+    #          schema:
+    #            $ref: "#/components/schemas/ClientRegistrationResponse"
+    #    "400":
+    #      $ref: "#/components/responses/BadRequest"
+    #    "401":
+    #      $ref: "#/components/responses/Unauthorized"
+    #    "403":
+    #      $ref: "#/components/responses/Forbidden"
+    #    "404":
+    #      $ref: "#/components/responses/NotFound"
+    #    "429":
+    #      $ref: "#/components/responses/TooManyRequests"
+    #    "500":
+    #      $ref: "#/components/responses/InternalServerError"
+    
     get:
       operationId: listParticipants
       tags:
         - Bootstrap
       summary: "[PHASE 1] Get a list of registered OFxPERA Participants"
       description: API for retrieving all registered OFxPERA Participants
+      security:
+        - OAuth2: []
       parameters:
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
+        
       responses:
         "200":
           description: Successfully retrieved OFxPERA Participants
@@ -223,109 +229,109 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /ofxpera/participants/{participant_id}:
-    get:
-      operationId: getParticipant
-      tags:
-        - Bootstrap
-      summary: "[PHASE 2] Get an OFxPERA Participant's registration information"
-      description: API for retrieving registration information for a specific OFxPERA Participant
-      parameters:
-        - name: participant_id
-          in: path
-          required: true
-          description: Participant identifier issued during participant registration
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-      responses:
-        "200":
-          description: Successfully retrieved participant information
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ParticipantConfig"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/ofxpera/participants/{participant_id}:
+  #  get:
+  #    operationId: getParticipant
+  #    tags:
+  #      - Bootstrap
+  #    summary: "[PHASE 2] Get an OFxPERA Participant's registration information"
+  #    description: API for retrieving registration information for a specific OFxPERA Participant
+  #    parameters:
+  #      - name: participant_id
+  #        in: path
+  #        required: true
+  #        description: Participant identifier issued during participant registration
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #    responses:
+  #      "200":
+  #        description: Successfully retrieved participant information
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/ParticipantConfig"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
  
-  /ofxpera/products:
-   post:
-      operationId: registerProduct
-      tags:
-        - Bootstrap
-      summary: "[PHASE 2] Register a PERA Admin Product"
-      description: API that allows PERA Admin to register a PERA product. 
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/IdempotencyKey'
-      responses:
-        "200":
-          description: Product successfully registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PeraProduct"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/ofxpera/products:
+  # post:
+  #    operationId: registerProduct
+  #    tags:
+  #      - Bootstrap
+  #    summary: "[PHASE 2] Register a PERA Admin Product"
+  #    description: API that allows PERA Admin to register a PERA product. 
+  #    parameters:
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #    responses:
+  #      "200":
+  #        description: Product successfully registered
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/PeraProduct"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
   
-  /ofxpera/products/{product_id}:
-   put:
-      operationId: updateProduct
-      tags:
-        - Bootstrap
-      summary: "[PHASE 2] Update a PERA Admin Product"
-      description: API that allows PERA Admin to update their product. 
-      parameters:
-        - name: product_id
-          in: path
-          required: true
-          description: Product identifier issued during product registration
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/IdempotencyKey'
-      responses:
-        "200":
-          description: Product successfully updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PeraProduct"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/ofxpera/products/{product_id}:
+  # put:
+  #    operationId: updateProduct
+  #    tags:
+  #      - Bootstrap
+  #    summary: "[PHASE 2] Update a PERA Admin Product"
+  #    description: API that allows PERA Admin to update their product. 
+  #    parameters:
+  #      - name: product_id
+  #        in: path
+  #        required: true
+  #        description: Product identifier issued during product registration
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #    responses:
+  #      "200":
+  #        description: Product successfully updated
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/PeraProduct"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
 
   /ofxpera/products/{participant_id}:
    get:
@@ -334,6 +340,8 @@ paths:
         - Bootstrap
       summary: "[PHASE 1] Get a list of PERA products associated with PERA Admin"
       description: API for retrieving all registered products associated with the PERA Admin. 
+      security:
+        - OAuth2: []
       parameters:
         - name: participant_id
           in: path
@@ -379,7 +387,6 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
@@ -397,8 +404,6 @@ paths:
                 participant_id:
                   type: string
                   description: Participant identifier of the FI issued during registration
-                endorsement_details:
-                  $ref: "#/components/schemas/EndorsementDetails"
                 authorization_code:
                   type: string
                   description: Authorization code
@@ -575,7 +580,6 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       requestBody:
@@ -610,7 +614,6 @@ paths:
                   description: Refresh token used to obtain a new access token.
                 client_assertion_type:
                   type: string
-                  enum: [urn:ietf:params:oauth:assertion-type:jwt-bearer] 
                   description: value must be "urn:ietf:params:oauth:assertion-type:jwt-bearer"
                 client_assertion:
                   type: string
@@ -640,7 +643,7 @@ paths:
       operationId: introspectToken
       tags:
         - OAuth
-      summary: Optional token introspection
+      summary: '[OPTIONAL] token introspection'
       description: |
         Endpoint for validating and retrieving metadata about an access token. Returns information about whether the token is active, its associated client, user, scopes, and expiration details. This endpoint allows resource servers to verify tokens before granting access to protected resources.
       parameters:
@@ -656,7 +659,6 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
@@ -705,7 +707,7 @@ paths:
       operationId: getUserInfo
       tags:
         - OAuth
-      summary: Optional OpenID Connect UserInfo Endpoint
+      summary: '[OPTIONAL] OpenID Connect UserInfo Endpoint'
       description: |
         OpenID Connect UserInfo Endpoint that returns information about the authenticated user.
       security:
@@ -718,7 +720,6 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/CustomerUserAgent'
         - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
         - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
@@ -767,49 +768,48 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /common/customers/endorse:
-    get:
-      operationId: forwardCustomerEndorsement
-      tags:
-        - Common
-      summary: "[DEPRECATED] Forward customer endorsement"
-      security:
-        - OAuth2: []
-      parameters:
-        - name: endorsement
-          in: query
-          description: Encrypted endorsement payload in JWS/JWE format
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        "200":
-          description: Successfully forwarded customer endorsement
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EndorsementResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/common/customers/endorse:
+  #  get:
+  #    operationId: forwardCustomerEndorsement
+  #    tags:
+  #      - Common
+  #    summary: "[DEPRECATED] Forward customer endorsement"
+  #    security:
+  #      - OAuth2: []
+  #    parameters:
+  #      - name: endorsement
+  #        in: query
+  #        description: Encrypted endorsement payload in JWS/JWE format
+  #        required: true
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      "200":
+  #        description: Successfully forwarded customer endorsement
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/EndorsementResponse"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
 
   /common/customers/{customer_id}/detail:
     get:
@@ -832,9 +832,7 @@ paths:
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/JwsSignature'
         - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
       responses:
         "200":
           description: Customer's Personal Information retrieved successfully
@@ -855,213 +853,213 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /.well-known/openid-configuration:
-    get:
-      operationId: getOpenIdConfiguration
-      tags:
-        - Discovery
-      summary: Optional - OpenID Connect Discovery
-      description: Retrieve OpenID Connect configuration information
-      responses:
-        "200":
-          description: OpenID Connect configuration retrieved
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - issuer
-                  - authorization_endpoint
-                  - token_endpoint
-                  - jwks_uri
-                  - registration_endpoint
-                properties:
-                  issuer:
-                    type: string
-                    format: uri
-                    description: Base URL that uniquely identifies the authorization server
-                  authorization_endpoint:
-                    type: string
-                    format: uri
-                    description: Authorization endpoint URL for initiating the OAuth 2.0 flow
-                  token_endpoint:
-                    type: string
-                    format: uri
-                    description: Token endpoint URL for obtaining access tokens
-                  userinfo_endpoint:
-                    type: string
-                    format: uri
-                    description: UserInfo endpoint URL for retrieving authenticated user information
-                  jwks_uri:
-                    type: string
-                    format: uri
-                    description: URL for retrieving the JSON Web Key Set used to validate JWTs
-                  registration_endpoint:
-                    type: string
-                    format: uri
-                    description: Dynamic Client Registration endpoint URL
-                  scopes_supported:
-                    type: array
-                    items:
-                      type: string
-                  response_types_supported:
-                    type: array
-                    items:
-                      type: string
-                  grant_types_supported:
-                    type: array
-                    items:
-                      type: string
-                  subject_types_supported:
-                    type: array
-                    items:
-                      type: string
-                  id_token_signing_alg_values_supported:
-                    type: array
-                    items:
-                      type: string
-                  token_endpoint_auth_methods_supported:
-                    type: array
-                    items:
-                      type: string
-                  claims_supported:
-                    type: array
-                    items:
-                      type: string
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/.well-known/openid-configuration:
+  #  get:
+  #    operationId: getOpenIdConfiguration
+  #    tags:
+  #      - Discovery
+  #    summary: Optional - OpenID Connect Discovery
+  #    description: Retrieve OpenID Connect configuration information
+  #    responses:
+  #      "200":
+  #        description: OpenID Connect configuration retrieved
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #              required:
+  #                - issuer
+  #                - authorization_endpoint
+  #                - token_endpoint
+  #                - jwks_uri
+  #                - registration_endpoint
+  #              properties:
+  #                issuer:
+  #                  type: string
+  #                  format: uri
+  #                  description: Base URL that uniquely identifies the authorization server
+  #                authorization_endpoint:
+  #                  type: string
+  #                  format: uri
+  #                  description: Authorization endpoint URL for initiating the OAuth 2.0 flow
+  #                token_endpoint:
+  #                  type: string
+  #                  format: uri
+  #                  description: Token endpoint URL for obtaining access tokens
+  #                userinfo_endpoint:
+  #                  type: string
+  #                  format: uri
+  #                  description: UserInfo endpoint URL for retrieving authenticated user information
+  #                jwks_uri:
+  #                  type: string
+  #                  format: uri
+  #                  description: URL for retrieving the JSON Web Key Set used to validate JWTs
+  #                registration_endpoint:
+  #                  type: string
+  #                  format: uri
+  #                  description: Dynamic Client Registration endpoint URL
+  #                scopes_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                response_types_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                grant_types_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                subject_types_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                id_token_signing_alg_values_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                token_endpoint_auth_methods_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #                claims_supported:
+  #                  type: array
+  #                  items:
+  #                    type: string
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
 
-  /.well-known/openid-registration:
-    post:
-      operationId: registerClient
-      tags:
-        - Discovery
-      summary: "[PHASE 2] Dynamic Client Registration (configurable endpoint)"
-      description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
-      parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ClientRegistration"
-      responses:
-        "201":
-          description: Client registration successful
-          headers:
-            Registration-Access-Token:
-              schema:
-                type: string
-              description: Token for managing the registration
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientRegistrationResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    get:
-      operationId: getClientRegistration
-      tags:
-        - Discovery
-      summary: Get Client Registration (configurable endpoint)
-      security:
-        - RegistrationAccessToken: []
-      responses:
-        "200":
-          description: Current client configuration
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientRegistration"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    put:
-      operationId: updateClientRegistration
-      tags:
-        - Discovery
-      summary: "[PHASE 2] Update Client Registration (configurable endpoint)"
-      security:
-        - RegistrationAccessToken: []
-      parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ClientRegistration"
-      responses:
-        "200":
-          description: Client configuration updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ClientRegistration"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-    delete:
-      operationId: deleteClientRegistration
-      tags:
-        - Discovery
-      summary: Delete Client Registration (configurable endpoint)
-      parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
-      responses:
-        "204":
-          description: Client registration deleted
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #/.well-known/openid-registration:
+  #  post:
+  #    operationId: registerClient
+  #    tags:
+  #      - Discovery
+  #    summary: "[PHASE 2] Dynamic Client Registration (configurable endpoint)"
+  #    description: Register a new OFxPERA Participant as an OAuth client following FAPI Dynamic Client Registration requirements.
+  #    parameters:
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: "#/components/schemas/ClientRegistration"
+  #    responses:
+  #      "201":
+  #        description: Client registration successful
+  #        headers:
+  #          Registration-Access-Token:
+  #            schema:
+  #              type: string
+  #            description: Token for managing the registration
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/ClientRegistrationResponse"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
+  #  get:
+  #    operationId: getClientRegistration
+  #    tags:
+  #      - Discovery
+  #    summary: Get Client Registration (configurable endpoint)
+  #    security:
+  #      - RegistrationAccessToken: []
+  #    responses:
+  #      "200":
+  #        description: Current client configuration
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/ClientRegistration"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
+  #  put:
+  #    operationId: updateClientRegistration
+  #    tags:
+  #      - Discovery
+  #    summary: "[PHASE 2] Update Client Registration (configurable endpoint)"
+  #    security:
+  #      - RegistrationAccessToken: []
+  #    parameters:
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: "#/components/schemas/ClientRegistration"
+  #    responses:
+  #      "200":
+  #        description: Client configuration updated
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/ClientRegistration"
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
+  #  delete:
+  #    operationId: deleteClientRegistration
+  #    tags:
+  #      - Discovery
+  #    summary: Delete Client Registration (configurable endpoint)
+  #    parameters:
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #    responses:
+  #      "204":
+  #        description: Client registration deleted
+  #      "400":
+  #        $ref: "#/components/responses/BadRequest"
+  #      "401":
+  #        $ref: "#/components/responses/Unauthorized"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
 
   /.well-known/jwks.json:
     get:
@@ -1090,674 +1088,662 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /consent/arrangements:
-    post:
-      operationId: createConsentArrangement
-      tags:
-        - Consent
-      summary: Create a consent arrangement
-      description: |
-        Create a new consent arrangement between a data holder and data recipient.
-        Based on:
-        - UK Open Banking Consent API v3.1.10
-        - Australia CDR Consent Management Standards v1.14.0
-        - Singapore SGFinDex Consent Framework
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentArrangementRequest'
-      responses:
-        '201':
-          description: Consent arrangement created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/arrangements:
+  #  post:
+  #    operationId: createConsentArrangement
+  #    tags:
+  #      - Consent
+  #    summary: Create a consent arrangement
+  #    description: |
+  #      Create a new consent arrangement between a data holder and data recipient.
+  #      Based on:
+  #      - UK Open Banking Consent API v3.1.10
+  #      - Australia CDR Consent Management Standards v1.14.0
+  #      - Singapore SGFinDex Consent Framework
+  #    parameters:
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: '#/components/schemas/ConsentArrangementRequest'
+  #    responses:
+  #      '201':
+  #        description: Consent arrangement created successfully
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/ConsentArrangementResponse'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-    get:
-      operationId: listConsentArrangements
-      tags:
-        - Consent
-      summary: List consent arrangements
-      description: |
-        Retrieve a list of active consent arrangements for the authenticated user.
-        Based on:
-        - UK Open Banking Account Access Consents API
-        - Australia CDR Get Consent API
-      parameters:
-        - name: status
-          in: query
-          description: Filter consents by status
-          schema:
-            type: string
-            enum: [active, expired, revoked, suspended]
-        - name: from_date
-          in: query
-          description: Filter consents created after this date
-          schema:
-            type: string
-            format: date-time
-        - name: to_date
-          in: query
-          description: Filter consents created before this date
-          schema:
-            type: string
-            format: date-time
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: List of consent arrangements
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #  get:
+  #    operationId: listConsentArrangements
+  #    tags:
+  #      - Consent
+  #    summary: List consent arrangements
+  #    description: |
+  #      Retrieve a list of active consent arrangements for the authenticated user.
+  #      Based on:
+  #      - UK Open Banking Account Access Consents API
+  #      - Australia CDR Get Consent API
+  #    parameters:
+  #      - name: status
+  #        in: query
+  #        description: Filter consents by status
+  #        schema:
+  #          type: string
+  #          enum: [active, expired, revoked, suspended]
+  #      - name: from_date
+  #        in: query
+  #        description: Filter consents created after this date
+  #        schema:
+  #          type: string
+  #          format: date-time
+  #      - name: to_date
+  #        in: query
+  #        description: Filter consents created before this date
+  #        schema:
+  #          type: string
+  #          format: date-time
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: List of consent arrangements
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: array
+  #              items:
+  #                $ref: '#/components/schemas/ConsentArrangementResponse'
+  #     '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/arrangements/{arrangement_id}:
-    get:
-      operationId: getConsentArrangement
-      tags:
-        - Consent
-      summary: Get consent arrangement details
-      description: |
-        Retrieve details of a specific consent arrangement.
-        Based on:
-        - UK Open Banking Account Access Consents API
-        - Australia CDR Get Consent API
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the consent arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: Consent arrangement details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/arrangements/{arrangement_id}:
+  #  get:
+  #    operationId: getConsentArrangement
+  #    tags:
+  #      - Consent
+  #    summary: Get consent arrangement details
+  #    description: |
+  #      Retrieve details of a specific consent arrangement.
+  #      Based on:
+  #      - UK Open Banking Account Access Consents API
+  #      - Australia CDR Get Consent API
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the consent arrangement
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: Consent arrangement details
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/ConsentArrangementResponse'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-    delete:
-      operationId: revokeConsentArrangement
-      tags:
-        - Consent
-      summary: Revoke consent arrangement
-      description: |
-        Revoke an existing consent arrangement.
-        Based on:
-        - UK Open Banking Account Access Consents API
-        - Australia CDR Revoke Consent API
-        - Korea MyData Consent Revocation API
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the consent arrangement to revoke
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '204':
-          description: Consent arrangement successfully revoked
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #  delete:
+  #    operationId: revokeConsentArrangement
+  #    tags:
+  #      - Consent
+  #    summary: Revoke consent arrangement
+  #    description: |
+  #      Revoke an existing consent arrangement.
+  #      Based on:
+  #      - UK Open Banking Account Access Consents API
+  #      - Australia CDR Revoke Consent API
+  #      - Korea MyData Consent Revocation API
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the consent arrangement to revoke
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '204':
+  #        description: Consent arrangement successfully revoked
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-    put:
-      operationId: updateConsentStatus
-      tags:
-        - Consent
-      summary: Update consent arrangement status
-      description: |
-        Update the status of a consent arrangement (e.g., suspend, resume).
-        Based on:
-        - UK Open Banking Account Access Consents API
-        - Australia CDR Update Consent API
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the consent arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentStatusUpdate'
-      responses:
-        '200':
-          description: Consent status updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #  put:
+  #    operationId: updateConsentStatus
+  #    tags:
+  #      - Consent
+  #    summary: Update consent arrangement status
+  #    description: |
+  #      Update the status of a consent arrangement (e.g., suspend, resume).
+  #      Based on:
+  #      - UK Open Banking Account Access Consents API
+  #      - Australia CDR Update Consent API
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the consent arrangement
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: '#/components/schemas/ConsentStatusUpdate'
+  #    responses:
+  #      '200':
+  #        description: Consent status updated successfully
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/ConsentArrangementResponse'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/arrangements/{arrangement_id}/history:
-    get:
-      operationId: getConsentHistory
-      tags:
-        - Consent
-      summary: Get consent arrangement history
-      description: |
-        Retrieve the full history of changes to a consent arrangement.
-        Based on:
-        - Australia CDR Consent History API
-        - UK Open Banking Consent Audit Requirements
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the consent arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: Consent arrangement history
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentHistory'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/arrangements/{arrangement_id}/history:
+  #  get:
+  #    operationId: getConsentHistory
+  #    tags:
+  #      - Consent
+  #    summary: Get consent arrangement history
+  #    description: |
+  #      Retrieve the full history of changes to a consent arrangement.
+  #      Based on:
+  #      - Australia CDR Consent History API
+  #      - UK Open Banking Consent Audit Requirements
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the consent arrangement
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: Consent arrangement history
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/ConsentHistory'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/bulk:
-    post:
-      operationId: createBulkConsent
-      tags:
-        - Consent
-      summary: Create bulk consent arrangements
-      description: |
-        Create multiple consent arrangements in a single request.
-        Based on:
-        - Korea MyData Bulk Consent API
-        - Singapore SGFinDex Multi-Institution Consent
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BulkConsentRequest'
-      responses:
-        '201':
-          description: Bulk consent arrangements created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BulkConsentResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/bulk:
+  #  post:
+  #    operationId: createBulkConsent
+  #    tags:
+  #      - Consent
+  #    summary: Create bulk consent arrangements
+  #    description: |
+  #      Create multiple consent arrangements in a single request.
+  #      Based on:
+  #      - Korea MyData Bulk Consent API
+  #      - Singapore SGFinDex Multi-Institution Consent
+  #    parameters:
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            $ref: '#/components/schemas/BulkConsentRequest'
+  #    responses:
+  #      '201':
+  #        description: Bulk consent arrangements created successfully
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/BulkConsentResponse'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/templates:
-    get:
-      operationId: listConsentTemplates
-      tags:
-        - Consent
-      summary: List available consent templates
-      description: |
-        Retrieve available consent templates that can be used to create new arrangements.
-        Based on:
-        - Australia CDR Consent Taxonomy
-        - UK Open Banking Standard Permissions
-      parameters:
-        - name: category
-          in: query
-          description: Filter templates by category
-          schema:
-            type: string
-        - name: purpose
-          in: query
-          description: Filter templates by purpose
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: List of consent templates
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ConsentTemplate'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/templates:
+  #  get:
+  #    operationId: listConsentTemplates
+  #    tags:
+  #      - Consent
+  #    summary: List available consent templates
+  #    description: |
+  #      Retrieve available consent templates that can be used to create new arrangements.
+  #      Based on:
+  #      - Australia CDR Consent Taxonomy
+  #      - UK Open Banking Standard Permissions
+  #    parameters:
+  #      - name: category
+  #        in: query
+  #        description: Filter templates by category
+  #        schema:
+  #          type: string
+  #      - name: purpose
+  #        in: query
+  #        description: Filter templates by purpose
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: List of consent templates
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: array
+  #              items:
+  #                $ref: '#/components/schemas/ConsentTemplate'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/arrangements/{arrangement_id}/extend:
-    post:
-      operationId: extendConsentDuration
-      tags:
-        - Consent
-      summary: Extend consent arrangement duration
-      description: |
-        Extend the duration of an existing consent arrangement.
-        Based on:
-        - Australia CDR Consent Amendment
-        - UK Open Banking Re-authentication
-      security:
-        - OAuth2: []
-      parameters:
-        - name: arrangement_id
-          in: path
-          required: true
-          description: The ID of the consent arrangement
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ConsentExtensionRequest'
-      responses:
-        '200':
-          description: Consent duration extended successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/arrangements/{arrangement_id}/extend:
+  #  post:
+  #    operationId: extendConsentDuration
+  #    tags:
+  #      - Consent
+  #    summary: Extend consent arrangement duration
+  #    description: |
+  #      Extend the duration of an existing consent arrangement.
+  #      Based on:
+  #      - Australia CDR Consent Amendment
+  #      - UK Open Banking Re-authentication
+  #    security:
+  #      - OAuth2: []
+  #    parameters:
+  #      - name: arrangement_id
+  #        in: path
+  #        required: true
+  #        description: The ID of the consent arrangement
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #     - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #   requestBody:
+  #     required: true
+  #     content:
+  #       application/json:
+  #         schema:
+  #           $ref: '#/components/schemas/ConsentExtensionRequest'
+  #   responses:
+  #    '200':
+  #       description: Consent duration extended successfully
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/ConsentArrangementResponse'
+  #     '400':
+  #       $ref: '#/components/responses/BadRequest'
+  #     '401':
+  #       $ref: '#/components/responses/Unauthorized'
+  #     '403':
+  #       $ref: '#/components/responses/Forbidden'
+  #     '404':
+  #       $ref: '#/components/responses/NotFound'
+  #     '429':
+  #       $ref: '#/components/responses/TooManyRequests'
+  #     '500':
+  #       $ref: '#/components/responses/InternalServerError'
 
-  /consent/customers/{customer_id}/arrangements:
-    get:
-      operationId: getCustomerConsents
-      tags:
-        - Consent
-      summary: Get customer's consent arrangements
-      description: |
-        Retrieve all consent arrangements for a specific customer.
-        Based on:
-        - UK Open Banking Customer Consent Management
-        - Australia CDR Consumer Dashboard APIs
-        - Singapore SGFinDex Customer Consent View
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          description: The customer's unique identifier
-          schema:
-            type: string
-        - name: status
-          in: query
-          description: Filter consents by status
-          schema:
-            type: string
-            enum: [active, expired, revoked, suspended]
-        - name: data_holder_id
-          in: query
-          description: Filter by specific data holder/institution
-          schema:
-            type: string
-        - name: purpose
-          in: query
-          description: Filter by consent purpose
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: Customer's consent arrangements
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - customer_id
-                  - arrangements
-                properties:
-                  customer_id:
-                    type: string
-                  total_arrangements:
-                    type: integer
-                  active_arrangements:
-                    type: integer
-                  arrangements:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ConsentArrangementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #consent/customers/{customer_id}/arrangements:
+  # get:
+  #   operationId: getCustomerConsents
+  #   tags:
+  #     - Consent
+  #   summary: Get customer's consent arrangements
+  #   description: |
+  #     Retrieve all consent arrangements for a specific customer.
+  #     Based on:
+  #     - UK Open Banking Customer Consent Management
+  #     - Australia CDR Consumer Dashboard APIs
+  #     - Singapore SGFinDex Customer Consent View
+  #   parameters:
+  #     - name: customer_id
+  #       in: path
+  #       required: true
+  #       description: The customer's unique identifier
+  #       schema:
+  #         type: string
+  #     - name: status
+  #       in: query
+  #       description: Filter consents by status
+  #      schema:
+  #         type: string
+  #         enum: [active, expired, revoked, suspended]
+  #     - name: data_holder_id
+  #       in: query
+  #       description: Filter by specific data holder/institution
+  #       schema:
+  #         type: string
+  #     - name: purpose
+  #       in: query
+  #       description: Filter by consent purpose
+  #       schema:
+  #         type: string
+  #     - $ref: '#/components/parameters/ApiVersion'
+  #     - $ref: '#/components/parameters/FapiInteractionId'
+  #     - $ref: '#/components/parameters/FapiAuthDate'
+  #     - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #     - $ref: '#/components/parameters/CustomerUserAgent'
+  #     - $ref: '#/components/parameters/IdempotencyKey'
+  #     - $ref: '#/components/parameters/Digest'
+  #     - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: Customer's consent arrangements
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #              required:
+  #                - customer_id
+  #                - arrangements
+  #              properties:
+  #                customer_id:
+  #                  type: string
+  #                total_arrangements:
+  #                  type: integer
+  #                active_arrangements:
+  #                  type: integer
+  #                arrangements:
+  #                  type: array
+  #                 items:
+  #                   $ref: '#/components/schemas/ConsentArrangementResponse'
+  #      '400':
+  #       $ref: '#/components/responses/BadRequest'
+  #     '401':
+  #       $ref: '#/components/responses/Unauthorized'
+  #     '403':
+  #       $ref: '#/components/responses/Forbidden'
+  #     '404':
+  #      $ref: '#/components/responses/NotFound'
+  #     '429':
+  #       $ref: '#/components/responses/TooManyRequests'
+  #     '500':
+  #       $ref: '#/components/responses/InternalServerError'
 
-  /consent/customers/{customer_id}/arrangements/bulk-update:
-    post:
-      operationId: bulkUpdateCustomerConsents
-      tags:
-        - Consent
-      summary: Bulk update customer's consent arrangements
-      description: |
-        Update multiple consent arrangements for a specific customer in a single request.
-        Based on:
-        - Australia CDR Bulk Consumer Update
-        - Korea MyData Consent Management
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          description: The customer's unique identifier
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - updates
-              properties:
-                updates:
-                  type: array
-                  items:
-                    type: object
-                    required:
-                      - id
-                      - action
-                    properties:
-                      id:
-                        type: string
-                      action:
-                        type: string
-                        enum: [revoke, suspend, resume, extend]
-                      reason:
-                        type: string
-                      extension_details:
-                        $ref: '#/components/schemas/ConsentExtensionRequest'
-                  minItems: 1
-                  maxItems: 50
-      responses:
-        '200':
-          description: Bulk update results
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - customer_id
-                  - results
-                properties:
-                  customer_id:
-                    type: string
-                  results:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - id
-                        - status
-                      properties:
-                        id:
-                          type: string
-                        status:
-                          type: string
-                          enum: [success, failed]
-                        error:
-                          type: object
-                          properties:
-                            code:
-                              type: string
-                            message:
-                              type: string
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+ #/consent/customers/{customer_id}/arrangements/bulk-update:
+  #  post:
+  #    operationId: bulkUpdateCustomerConsents
+  #    tags:
+  #      - Consent
+  #    summary: Bulk update customer's consent arrangements
+  #    description: |
+  #      Update multiple consent arrangements for a specific customer in a single request.
+  #      Based on:
+  #      - Australia CDR Bulk Consumer Update
+  #      - Korea MyData Consent Management
+  #    parameters:
+  #      - name: customer_id
+  #        in: path
+  #        required: true
+  #        description: The customer's unique identifier
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            type: object
+  #            required:
+  #              - updates
+  #            properties:
+  #              updates:
+  #                type: array
+  #                items:
+  #                  type: object
+  #                  required:
+  #                    - id
+  #                    - action
+  #                  properties:
+  #                    id:
+  #                     type: string
+  #                    action:
+  #                      type: string
+  #                      enum: [revoke, suspend, resume, extend]
+  #                    reason:
+  #                      type: string
+  #                    extension_details:
+  #                      $ref: '#/components/schemas/ConsentExtensionRequest'
+  #                minItems: 1
+  #                maxItems: 50
+  #    responses:
+  #      '200':
+  #        description: Bulk update results
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #              required:
+  #                - customer_id
+  #                - results
+  #              properties:
+  #                customer_id:
+  #                  type: string
+  #                results:
+  #                  type: array
+  #                  items:
+  #                    type: object
+  #                    required:
+  #                      - id
+  #                      - status
+  #                    properties:
+  #                      id:
+  #                        type: string
+  #                      status:
+  #                        type: string
+  #                        enum: [success, failed]
+  #                      error:
+  #                        type: object
+  #                        properties:
+  #                          code:
+  #                            type: string
+  #                          message:
+  #                            type: string
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
-  /consent/customers/{customer_id}/dashboard:
-    get:
-      operationId: getCustomerConsentDashboard
-      tags:
-        - Consent
-      summary: Get customer's consent dashboard
-      description: |
-        Retrieve a comprehensive view of customer's consent arrangements and data sharing.
-        Based on:
-        - Australia CDR Consumer Dashboard
-        - UK Open Banking Consent Dashboard
-        - Singapore SGFinDex Customer Portal
-      parameters:
-        - name: customer_id
-          in: path
-          required: true
-          description: The customer's unique identifier
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/JwsSignature'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      responses:
-        '200':
-          description: Customer's consent dashboard
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConsentDashboard'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+  #/consent/customers/{customer_id}/dashboard:
+  #  get:
+  #    operationId: getCustomerConsentDashboard
+  #    tags:
+  #      - Consent
+  #    summary: Get customer's consent dashboard
+  #    description: |
+  #      Retrieve a comprehensive view of customer's consent arrangements and data sharing.
+  #      Based on:
+  #      - Australia CDR Consumer Dashboard
+  #      - UK Open Banking Consent Dashboard
+  #      - Singapore SGFinDex Customer Portal
+  #    parameters:
+  #      - name: customer_id
+  #        in: path
+  #        required: true
+  #        description: The customer's unique identifier
+  #        schema:
+  #          type: string
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    responses:
+  #      '200':
+  #        description: Customer's consent dashboard
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: '#/components/schemas/ConsentDashboard'
+  #      '400':
+  #        $ref: '#/components/responses/BadRequest'
+  #      '401':
+  #        $ref: '#/components/responses/Unauthorized'
+  #      '403':
+  #        $ref: '#/components/responses/Forbidden'
+  #      '404':
+  #        $ref: '#/components/responses/NotFound'
+  #      '429':
+  #        $ref: '#/components/responses/TooManyRequests'
+  #      '500':
+  #        $ref: '#/components/responses/InternalServerError'
 
 security:
   - SignedJWT: []
@@ -1828,15 +1814,7 @@ components:
       schema:
         type: string
         format: uuid
-
-    JwsSignature:
-      name: x-jws-signature
-      in: header
-      required: false
-      description: Detached JWS signature for request integrity verification. Required for high-risk operations that require non-repudiation.
-      schema:
-        type: string
-
+        
     Digest:
       name: Digest
       in: header
@@ -1897,7 +1875,7 @@ components:
         - region
         - province
         - street_address
-        - city
+        - city_municipality
         - country
         - postal_code
       properties:
@@ -2049,8 +2027,8 @@ components:
         - sub
         - arrangementId
         - personalInformation
-        - cdd
         - presentedIds
+        - peraAdmin
       properties:
         sub:
           type: string
@@ -2075,15 +2053,12 @@ components:
 
     CustomerDueDiligence:
       type: object
-      required:
-        - employmentStatus
-        - pepIndicator
-        - fundSource
-        - cddIndicator
       properties:
-        employmentStatus:
+        contributorType:
           type: string
           maxLength: 50
+          enum: ["Employee", "Self-Employed", "Overseas Filipino"]
+          default: "string"
         occupation:
           type: string
           maxLength: 150
@@ -2865,10 +2840,10 @@ components:
           enum: [invalid_tin,existing_account,incomplete_info,failed_dd,failed_cc, others]
           default: null
           description: Reason for the resulting status of the arrangement, mostly used for DECLINED status.
-        creationDate:
+        LastUpdateDate:
           type: string
           format: date-time
-          description: Date and time when the PERA arrangement was created
+          description: Date and time when the PERA arrangement was updated
           
     PeraProduct:
         type: object
