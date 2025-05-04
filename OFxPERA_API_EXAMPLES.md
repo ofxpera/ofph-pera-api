@@ -1,8 +1,9 @@
-# OAuth 2.0 API Documentation
+# OFxPERA API Documentation
 
-This API implements the OAuth 2.0 Authorization Code Flow with PKCE, fully compliant with FAPI (Financial-grade API) standards, JARM (JWT Secured Authorization Response Mode), and the regulatory requirements of the UK, Australia, and South Korea.
+This API implements the OAuth 2.0 Authorization Code Flow as defined in OFxPERA speficiations.
+The OFxPERA specifications is based on FAPI (Financial-grade API) standards and the regulatory requirements of the UK, Australia, and South Korea. It makes use of JARM (JWT Secured Authorization Response Mode) and JWE (JSON Web Encryption) standards.
 
-## 1. Authorization Endpoint
+## 1. OAuth 2.0 Authorization Endpoint
 
 ### GET `/auth`
 
@@ -29,18 +30,18 @@ Headers:
 
 **Parameters:**
 
-| Name                | Required | Description                                                               |
-|---------------------|----------|---------------------------------------------------------------------------|
-| response_type       | Yes      | Must be `code`                                                            |
-| client_id           | Yes      | OAuth client identifier                                                   |
-| redirect_uri        | Yes      | Client redirect URI                                                       |
-| scope               | Yes      | Space-delimited scopes (e.g., `openid accounts`)                          |
-| state               | Yes      | Opaque value to maintain state                                            |
-| code_challenge      | Yes      | PKCE code challenge (SHA-256 of code_verifier, base64url-encoded)         |
-| code_challenge_method | Yes    | Must be `S256`                                                            |
-| nonce               | Yes      | Unique value for replay protection (required for OpenID Connect)          |
-| response_mode       | Yes      | Must be `jwt` (enables JARM)                                              |
-| request             | Optional | Signed request object (JWT) for FAPI compliance                           |
+| Name              | Required | Description                                                       |
+|-------------------|----------|-------------------------------------------------------------------|
+| response_type     | Yes      | Must be `code`                                                    |
+| client_id         | Yes      | OAuth client identifier                                           |
+| redirect_uri      | Yes      | Client redirect URI                                               |
+| scope             | Yes      | Space-delimited scopes (e.g., `openid accounts`)                  |
+| state             | No       | Opaque value to maintain state                                    |
+| code_challenge    | No       | PKCE code challenge (SHA-256 of code_verifier, base64url-encoded) |
+| code_challenge_method | No   | Must be `S256` (required for public clients)                      |
+| nonce             | No       | Unique value for replay protection (required for OpenID Connect)  |
+| response_mode     | Yes      | Must be `jwt` (enables JARM)                                      |
+| request           | Optional | Signed request object (JWT) for FAPI compliance                   |
 
 **Response (JARM):**
 
@@ -87,7 +88,7 @@ Where `response` is a JWT containing the authorization code and other parameters
 
 ---
 
-## 2. Token Endpoint
+## 2. OAuth 2.0 Token Endpoint
 
 ### POST `/token`
 
@@ -140,7 +141,7 @@ x-fapi-interaction-id: {uuid}
 
 ---
 
-## 3. Token Introspection Endpoint
+## 3. Optional Token Introspection Endpoint
 
 ### POST `/introspect`
 
@@ -177,7 +178,7 @@ x-fapi-interaction-id: {uuid}
 
 ---
 
-## 4. Token Revocation Endpoint
+## 4. Optional Token Revocation Endpoint
 
 ### POST `/revoke`
 
@@ -208,9 +209,9 @@ x-fapi-interaction-id: {uuid}
 
 ---
 
-## 5. Example: Accessing a Protected Resource
+## 5. Example: Retrieving Customer Information
 
-### GET `/customer/{customer_id}/detail`
+### GET `/customers/{customer_id}/detail`
 
 Retrieve customer details using a valid access token. The response is a JWE (JSON Web Encryption) as per FAPI and Open Banking requirements.
 
