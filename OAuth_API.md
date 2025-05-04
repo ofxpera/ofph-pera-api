@@ -217,7 +217,7 @@ Retrieve customer details using a valid access token. The response is a JWE (JSO
 **Request:**
 
 ```http
-GET /customer/{customer_id}/detail
+GET /customers/{customer_id}/detail
 Authorization: Bearer {access_token}
 Accept: application/jose
 x-fapi-interaction-id: {uuid}
@@ -232,27 +232,104 @@ x-fapi-interaction-id: {uuid}
 
 <encrypted JWE payload>
 
-// Example JWE Compact Serialization (truncated for clarity)
-eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ...
+// Example JWE Compact Serialization (truncated)
+eyJhbGciOiJSU0EtT0FFUCIsImVuYyI6IkExMjhHQ00ifQ...<encrypted_content>
 ```
 
 - The response body is a JWE, which must be decrypted by the client using its private key.
-- The decrypted payload will contain the customer details in JSON format, e.g.:
+- The decrypted payload will contain the following structure (based on the OpenAPI specification):
 
 ```json
 {
-  "customer_id": "123456789",
-  "name": "Jane Doe",
-  "email": "jane.doe@example.com",
-  "accounts": [
+  "sub": "user-123",
+  "arrangementId": "arr-456",
+  "personalInformation": {
+    "sub": "user-123",
+    "title": "Ms",
+    "givenName": "Jane",
+    "middleName": "A.",
+    "lastName": "Doe",
+    "suffix": "Jr.",
+    "phoneNumber": "63287654321",
+    "mobileNumber": "639171234567",
+    "email": "jane.doe@example.com",
+    "birthdate": "1990-01-01",
+    "nationality": "PHL",
+    "residentialAddress": {
+      "line1": "#357 Barbie's Townhouse",
+      "line2": "Yakal Street cor Lawaan Street",
+      "barangay": "Santo Niño",
+      "city": "Tanay",
+      "province": "Rizal",
+      "region": "Region IV-A (CALABARZON)",
+      "postalCode": "1635",
+      "country": "PHL"
+    },
+    "tin": "123-456-789-000"
+  },
+  "presentedIds": [
     {
-      "account_id": "987654321",
-      "type": "checking",
-      "balance": 1000.50
+      "idType": "PASSPORT",
+      "idNumber": "A1234567"
     }
-  ]
+  ],
+  "cdd": {
+    "status": "PASSED",
+    "lastChecked": "2024-12-31"
+  },
+  "peraAdmin": "admin-789"
 }
 ```
+
+---
+
+## 6. Example: Registering a PERA Arrangement
+
+### POST `/ofxpera/arrangements`
+
+Registers the result of a PERA account opening. The request and response use JWE (JSON Web Encryption).
+
+**Request:**
+
+```http
+POST /ofxpera/arrangements
+Authorization: Bearer {access_token}
+Content-Type: application/jose
+Accept: application/jose
+x-fapi-interaction-id: {uuid}
+x-idempotency-key: {idempotency-uuid}
+
+<encrypted JWE payload>
+
+// Example decrypted payload
+{
+  "id": "arr-001",
+  "adminId": "admin-123",
+  "customerId": "cust-456",
+  "sub": "user-789",
+  "consentId": "consent-abc",
+  "status": "active",
+  "creationDate": "2025-05-01T10:00:00Z"
+}
+```
+
+**Response:**
+
+```http
+HTTP/1.1 201 Created
+Content-Type: application/jose
+x-fapi-interaction-id: {uuid}
+
+<encrypted JWE payload>
+
+// Example decrypted payload
+{
+  "id": "arr-001"
+}
+```
+
+- Both request and response bodies are JWE payloads, which must be encrypted/decrypted by the client and server accordingly.
+- The response contains the unique identifier of the registered PERA arrangement.
 
 ---
 ## Notes
