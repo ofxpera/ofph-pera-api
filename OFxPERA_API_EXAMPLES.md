@@ -26,7 +26,6 @@ GET /auth?response_type=code
 Headers:
   Accept: application/jwt
   x-fapi-interaction-id: {uuid}
-  x-fapi-auth-date: {rfc7231-date}
 ```
 
 **Parameters:**
