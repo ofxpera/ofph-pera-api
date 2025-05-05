@@ -1735,7 +1735,7 @@ components:
     ApiVersion:
       name: x-v
       in: header
-      required: true
+      required: false
       description: Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
       schema:
         type: integer
@@ -1755,7 +1755,7 @@ components:
     FapiAuthDate:
       name: x-fapi-auth-date
       in: header
-      required: true
+      required: false
       description: The time when the customer last logged in to the Data Recipient Software Product as described in FAPI Advanced. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
       schema:
         type: string
@@ -1810,7 +1810,7 @@ components:
     FapiCustomerLastLoggedTime:
       name: x-fapi-customer-last-logged-time
       in: header
-      required: true
+      required: false
       description: The time when the PSU last logged in to the client software as per FAPI Advanced requirements
       schema:
         type: string
