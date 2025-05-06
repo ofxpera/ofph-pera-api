@@ -108,17 +108,36 @@ grant_type=authorization_code
 &redirect_uri={redirect_uri}
 &client_id={client_id}
 &code_verifier={code_verifier}
+&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+&client_assertion={signed_jwt}
 ```
 
 **Parameters:**
 
-| Name          | Required | Description                          |
-|---------------|----------|--------------------------------------|
-| grant_type    | Yes      | Must be `authorization_code`         |
-| code          | Yes      | Authorization code from `/auth`      |
-| redirect_uri  | Yes      | Must match the original request      |
-| client_id     | Yes      | OAuth client ID                      |
-| code_verifier | Yes      | Original PKCE code verifier          |
+| Name                  | Required | Description                                                    |
+|-----------------------|----------|----------------------------------------------------------------|
+| grant_type            | Yes      | Must be `authorization_code`                                   |
+| code                  | Yes      | Authorization code from `/auth`                                |
+| redirect_uri          | Yes      | Must match the original request                                |
+| client_id             | Yes      | OAuth client ID                                                |
+| code_verifier         | Yes      | Original PKCE code verifier                                    |
+| client_assertion_type | Yes      | Must be `urn:ietf:params:oauth:client-assertion-type:jwt-bearer` |
+| client_assertion      | Yes      | A signed JWT for client authentication                         |
+
+**Client Assertion JWT Format:**
+
+The client_assertion is a JWT signed by the client's private key with the following claims:
+
+```json
+{
+  "iss": "{client_id}",                     // Client ID as issuer
+  "sub": "{client_id}",                     // Client ID as subject
+  "aud": "https://auth.ofxpera.ph/token",   // Token endpoint URL as audience
+  "jti": "{unique_identifier}",             // Unique ID for this JWT
+  "exp": 1680000000,                        // Expiration time (max 5 minutes from issuance)
+  "iat": 1679999700                         // Issued at time
+}
+```
 
 **Response:**
 
@@ -153,11 +172,13 @@ Checks the validity of an access token.
 POST /introspect
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-Authorization: Basic {client_credentials}
 x-fapi-interaction-id: {uuid}
 
 Body:
 token={access_token}
+&client_id={client_id}
+&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+&client_assertion={signed_jwt}
 ```
 
 **Response:**
@@ -182,7 +203,7 @@ x-fapi-interaction-id: {uuid}
 
 ### POST `/revoke`
 
-Revokes an access or refresh token.
+Revokes an access or refresh token using client assertion JWT authentication.
 
 **Request:**
 
@@ -190,12 +211,14 @@ Revokes an access or refresh token.
 POST /revoke
 Content-Type: application/x-www-form-urlencoded
 Accept: application/json
-Authorization: Basic {client_credentials}
 x-fapi-interaction-id: {uuid}
 
 Body:
 token={token}
 &token_type_hint=access_token
+&client_id={client_id}
+&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+&client_assertion={signed_jwt}
 ```
 
 **Response:**
@@ -333,6 +356,49 @@ x-fapi-interaction-id: {uuid}
 - The response contains the unique identifier of the registered PERA arrangement.
 
 ---
+
+## 7. Refresh Token Flow with Client Assertion
+
+### POST `/token` (Refresh Flow)
+
+Obtains a new access token using a refresh token, with client authentication via JWT assertion.
+
+**Request:**
+
+```http
+POST /token
+Content-Type: application/x-www-form-urlencoded
+Accept: application/json
+x-fapi-interaction-id: {uuid}
+
+Body:
+grant_type=refresh_token
+&refresh_token={refresh_token}
+&client_id={client_id}
+&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+&client_assertion={signed_jwt}
+```
+
+**Response:**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
+Pragma: no-cache
+x-fapi-interaction-id: {uuid}
+
+{
+  "access_token": "eyJraWQiOiJ...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "newdef50200...",
+  "scope": "openid accounts"
+}
+```
+
+---
+
 ## Notes
 
 - All endpoints require TLS (HTTPS) and must reject non-FAPI or non-JARM compliant requests.
@@ -341,3 +407,13 @@ x-fapi-interaction-id: {uuid}
 - JWTs (id_token, request object, JARM response) must be signed and validated per FAPI, JARM, and local regulations.
 - Error responses follow [RFC 6749](https://tools.ietf.org/html/rfc6749), [OIDC](https://openid.net/specs/openid-connect-core-1_0.html), and JARM specifications.
 - Only headers required or recommended by the latest FAPI and Open Banking standards are included above (as of 2025): `x-fapi-interaction-id`, `Accept`, `Content-Type`, and `Authorization` (where applicable).
+
+### Client Assertion JWT Requirements:
+
+1. **Signing Algorithm**: Must use asymmetric algorithms (RS256, PS256, ES256, or ES384).
+2. **Audience (aud)**: Must match the token endpoint URL.
+3. **Issuer (iss) and Subject (sub)**: Must match the client_id.
+4. **JWT ID (jti)**: Must be unique for each request to prevent replay attacks.
+5. **Expiration (exp)**: Short-lived (max 5 minutes from issuance).
+6. **Signing Key**: Must be the private key associated with the public key registered for the client.
+7. **Required Claims**: `iss`, `sub`, `aud`, `exp`, `iat`, `jti`.
