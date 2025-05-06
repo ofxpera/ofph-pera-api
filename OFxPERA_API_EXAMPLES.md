@@ -1,54 +1,57 @@
 # OFxPERA API Documentation
 
 This API implements the OAuth 2.0 Authorization Code Flow as defined in OFxPERA speficiations.
-The OFxPERA specifications is based on FAPI (Financial-grade API) standards and the Open Finance requirements of the UK, Australia, and South Korea. It makes use of JARM (JWT Secured Authorization Response Mode) and JWE (JSON Web Encryption) standards.
+The OFxPERA specifications is based on FAPI (Financial-grade API) standards and the Open Finance requirements of the UK, Australia, and South Korea. It makes use of JAR (JWT Secured Authorization Request), JARM (JWT Secured Authorization Response Mode), and JWE (JSON Web Encryption) standards.
 
 ## 1. OAuth 2.0 Authorization Endpoint
 
 ### GET `/auth`
 
-Initiates the OAuth 2.0 Authorization Code Flow using JARM (JWT Secured Authorization Response Mode).
+Initiates the OAuth 2.0 Authorization Code Flow using JAR (JWT Secured Authorization Request) with JARM (JWT Secured Authorization Response Mode).
 
 **Request:**
 
 ```http
-GET /auth?response_type=code
-    &client_id={client_id}
-    &redirect_uri={redirect_uri}
-    &scope={scopes}
-    &state={state}
-    &code_challenge={code_challenge}
-    &code_challenge_method=S256
-    &nonce={nonce}
-    &response_mode=jwt
-    &request={request_object}
+GET /auth?request={request_object}
 
 Headers:
-  Accept: application/jwt
+  Accept: application/json
   x-fapi-interaction-id: {uuid}
 ```
 
 **Parameters:**
 
-| Name              | Required | Description                                                       |
-|-------------------|----------|-------------------------------------------------------------------|
-| response_type     | Yes      | Must be `code`                                                    |
-| client_id         | Yes      | OAuth client identifier                                           |
-| redirect_uri      | Yes      | Client redirect URI                                               |
-| scope             | Yes      | Space-delimited scopes (e.g., `openid accounts`)                  |
-| state             | Yes      | Opaque value to maintain state                                    |
-| code_challenge    | No       | PKCE code challenge (SHA-256 of code_verifier, base64url-encoded) |
-| code_challenge_method | No   | Must be `S256` (required for public clients)                      |
-| nonce             | No       | Unique value for replay protection (required for OpenID Connect)  |
-| response_mode     | Yes      | Must be `jwt` (enables JARM)                                      |
-| request           | Optional | Signed request object (JWT) for FAPI compliance                   |
+| Name     | Required | Description                                           |
+|----------|----------|-------------------------------------------------------|
+| request  | Yes      | Signed request object (JWT) for FAPI compliance       |
 
-**Response (JARM):**
+**JAR Request Object:**
 
-On success, the authorization server redirects to `redirect_uri` with a signed JWT (JARM response) as a query parameter:
+The `request` parameter contains a signed JWT with the following claims:
+
+```json
+{
+  "iss": "client123",
+  "aud": "https://as.example.com",
+  "response_type": "code",
+  "client_id": "client123",
+  "redirect_uri": "https://client.example.com/callback",
+  "scope": "openid accounts",
+  "state": "af0ifjsldkj",
+  "nonce": "n-0S6_WzA2Mj",
+  "response_mode": "jwt",
+  "exp": 1680000000,
+  "iat": 1679999400,
+  "jti": "abcdef-123456"
+}
+```
+
+**Response:**
+
+Using JARM, the authorization server redirects to the specified `redirect_uri` with a JWT response parameter:
 
 ```
-GET {redirect_uri}?response={jwt}&state={state}
+GET {redirect_uri}?response={jwt}
 
 Headers:
   x-fapi-interaction-id: {uuid}                 # Echoed if provided in request
@@ -56,35 +59,24 @@ Headers:
   Pragma: no-cache
 ```
 
-Where `response` is a JWT containing the authorization code and other parameters, signed (and optionally encrypted) by the authorization server.
+**JARM Response:**
 
-**Example JARM Success JWT Payload:**
+The `response` parameter is a signed and encrypted JWT (Nested JWT) containing:
 
 ```json
 {
   "iss": "https://as.example.com",
   "aud": "client123",
-  "exp": 1680000000,
-  "iat": 1679999400,
-  "code": "SplxlOBeZQQYbYS6WxSbIA",
+  "exp": 1680000600,
+  "iat": 1679999800,
+  "jti": "xyz-789012",
   "state": "af0ifjsldkj",
-  "scope": "openid accounts"
+  "code": "SplxlOBeZQQYbYS6WxSbIA",
+  "s_hash": "77QmUPtjPfzWtF2AnpK9RQ"
 }
 ```
 
-**Example JARM Error JWT Payload:**
-
-```json
-{
-  "iss": "https://as.example.com",
-  "aud": "client123",
-  "exp": 1680000000,
-  "iat": 1679999400,
-  "error": "access_denied",
-  "error_description": "The resource owner denied the request.",
-  "state": "af0ifjsldkj"
-}
-```
+The returned authorization code (`code`) is then exchanged for tokens using the token endpoint.
 
 ---
 
@@ -107,7 +99,6 @@ grant_type=authorization_code
 &code={code}
 &redirect_uri={redirect_uri}
 &client_id={client_id}
-&code_verifier={code_verifier}
 &client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
 &client_assertion={signed_jwt}
 ```
@@ -120,7 +111,6 @@ grant_type=authorization_code
 | code                  | Yes      | Authorization code from `/auth`                                |
 | redirect_uri          | Yes      | Must match the original request                                |
 | client_id             | Yes      | OAuth client ID                                                |
-| code_verifier         | Yes      | Original PKCE code verifier                                    |
 | client_assertion_type | Yes      | Must be `urn:ietf:params:oauth:client-assertion-type:jwt-bearer` |
 | client_assertion      | Yes      | A signed JWT for client authentication                         |
 
@@ -401,11 +391,12 @@ x-fapi-interaction-id: {uuid}
 
 ## Notes
 
-- All endpoints require TLS (HTTPS) and must reject non-FAPI or non-JARM compliant requests.
-- Authorization responses from `/auth` are returned as signed (and optionally encrypted) JWTs per [JARM](https://openid.net/specs/oauth-v2-jarm.html).
-- Clients must validate JWT signatures, claims, and audience as per JARM and FAPI.
-- JWTs (id_token, request object, JARM response) must be signed and validated per FAPI, JARM, and local regulations.
-- Error responses follow [RFC 6749](https://tools.ietf.org/html/rfc6749), [OIDC](https://openid.net/specs/openid-connect-core-1_0.html), and JARM specifications.
+- All endpoints require TLS (HTTPS) and must reject non-FAPI, non-JAR, or non-JARM compliant requests.
+- Authorization requests to `/auth` can use JAR (JWT Secured Authorization Request) per [JAR](https://datatracker.ietf.org/doc/html/rfc9101).
+- Authorization responses from `/auth` must be returned as signed and encrypted JWTs (Nested JWT) per [JARM](https://openid.net/specs/oauth-v2-jarm.html).
+- Clients must validate JWT signatures, decryption, claims, and audience as per JAR, JARM, and FAPI.
+- JWTs (id_token, request object, JARM response) must be properly secured per FAPI, JAR, JARM, and local regulations.
+- Error responses follow [RFC 6749](https://tools.ietf.org/html/rfc6749), [OIDC](https://openid.net/specs/openid-connect-core-1_0.html), JAR, and JARM specifications.
 - Only headers required or recommended by the latest FAPI and Open Banking standards are included above (as of 2025): `x-fapi-interaction-id`, `Accept`, `Content-Type`, and `Authorization` (where applicable).
 
 ### Client Assertion JWT Requirements:
