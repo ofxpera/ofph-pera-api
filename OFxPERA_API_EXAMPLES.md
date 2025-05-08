@@ -9,6 +9,22 @@ The OFxPERA specifications is based on FAPI (Financial-grade API) standards and 
 
 Initiates the OAuth 2.0 Authorization Code Flow using JAR (JWT Secured Authorization Request) with JARM (JWT Secured Authorization Response Mode).
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser as User Agent (Browser)
+    participant Client as Client App Backend
+    participant API as FI Auth Server
+
+    User->>Browser: Initiate authorization
+    Browser->>Client: Request JWT for authorization
+    Note over Client: Generate signed JWT (request object)
+    Client->>Browser: Return signed JWT
+    Browser->>API: GET /auth?request={request_object}
+    Note over API: Validate JWT and process authorization
+    API-->>Browser: Redirect with response={jwt} (JARM)
+```
+
 **Request:**
 
 ```http
