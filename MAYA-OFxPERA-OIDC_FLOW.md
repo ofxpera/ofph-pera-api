@@ -213,21 +213,19 @@ Once the PERA account onboarding has concluded, the results can be registered us
      Host: dev-ofph-api.mayabank.xyz
      Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
      Content-Type: application/json
+     x-v: 1.0.0
      x-fapi-interaction-id: 5b9c196b-f279-...
      x-idempotency-key: 082f2439-55b6-...
      
      {
-       "adminId": "PERA_ADMIN_001",
-       "arrangementId": "ARR12345",
-       "customerId": "123456",
-       "productId": "PERA_PRODUCT_001",
-       "status": "ACTIVE",
-       "createdAt": "2025-05-18T12:00:00Z",
-       "updatedAt": "2025-05-18T12:00:00Z",
-       "metadata": {
-         "contributionFrequency": "MONTHLY",
-         "initialContribution": 5000
-       }
+         "id": "97d9d019-74b7-4fce-ad34-04c5341554db",
+         "adminId": "one-admin-23",
+         "customerId": "978b-af96bea91c3b",
+         "sub": "001",
+         "consentId": "13505161-5053-409e-aad0-7cb4e0bb8bda",
+         "status": "active",
+         "reason": null,
+         "LastUpdateDate": "2025-05-18T00:13:04.514Z"
      }
      ```
 
@@ -249,18 +247,17 @@ Once the PERA account onboarding has concluded, the results can be registered us
    - Lambda returns a success response with the created arrangement details:
      ```json
      {
-       "adminId": "PERA_ADMIN_001",
-       "arrangementId": "ARR12345",
-       "customerId": "123456",
-       "productId": "PERA_PRODUCT_001",
-       "status": "ACTIVE",
-       "createdAt": "2025-05-18T12:00:00Z",
-       "updatedAt": "2025-05-18T12:00:00Z",
-       "metadata": {
-         "contributionFrequency": "MONTHLY",
-         "initialContribution": 5000
-       }
-     }
+         "statusCode": 201,
+         "headers": {
+            "x-v": "1.0.0",
+            "x-fapi-interaction-id": "30faef77-8c84-4e23-96f8-edac98e07939",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-v,x-fapi-interaction-id,x-idempotency-key",
+            "Content-Type": "application/json"
+         },
+         "body": "{\"id\":\"b851b3d4-003f-498e-8abd-dc709504de67\"}"
+      }
      ```
    - If encryption is enabled, the response is encrypted using JWE with the client's public key
    - The response is sent back to the client through the API Gateway
