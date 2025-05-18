@@ -165,7 +165,9 @@ Once the client has obtained an access token, it can access the protected resour
 4. **Lambda Function Processing**:
    - The request is forwarded to the GetCustomerDetailHandler Lambda function
    - Lambda extracts the customer_id from the path parameters
-   - Lambda validates the access token with Keycloak (if TOKEN_VALIDATION_ENABLED is true)
+   - Lambda validates the presence of the Access Token
+   - Lambda validates the expiration and subject of the token (if TOKEN_VALIDATION_ENABLED is true)
+   - Lambda validates the access token with Keycloak's introspection endpoint (if TOKEN_INTROSPECTION_ENABLED is true)
    - Lambda retrieves the customer information from DynamoDB
 
 5. **Response Encryption (Optional)**:
