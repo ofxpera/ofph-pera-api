@@ -120,6 +120,7 @@ When a user needs to authorize the third-party application to access their data:
       grant_type=authorization_code
       &code=authorization-code
       &client_id=client123
+      &site=ofxpera
       &client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
       &client_assertion=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImNsaWVudDEyMy1rZXkifQ.eyJpc3MiOiJjbGllbnQxMjMiLCJzdWIiOiJjbGllbnQxMjMiLCJhdWQiOiJodHRwczovL2Rldi1hZG1pbi1zZXJ2ZXIubWF5YWJhbmsueHl6L3JlYWxtcy9tYXlhYmFuay9wcm90b2NvbC9vcGVuaWQtY29ubmVjdC90b2tlbiIsImp0aSI6ImEtMTIzLXJhbmRvbS1qdGktdmFsdWUiLCJleHAiOjE3MDAwMDAwMDAsImlhdCI6MTYwMDAwMDAwMH0.signature
       &redirect_uri=https://client-app.com/callback
@@ -133,7 +134,10 @@ When a user needs to authorize the third-party application to access their data:
        "id_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
        "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
        "token_type": "Bearer",
-       "expires_in": 3600
+       "expires_in": 7243,
+       "refresh_expires_in": 7243,
+       "session_state": "8e570afb-3ba3-4411-8f98-f5bf716658ab",
+       "scope": "bank_account profile openid email address"
      }
      ```
 
