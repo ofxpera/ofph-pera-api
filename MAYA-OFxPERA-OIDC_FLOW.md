@@ -1,17 +1,17 @@
-# OAuth 2.0 and OpenID Connect Authorization Flow for Protected API Access
+# Admin-initiated Onboarding Authorization Flow
 
-This document describes the end-to-end authorization flow using OAuth 2.0 and OpenID Connect (OIDC) to access protected resources in the OFxPERA system, specifically focusing on the `GET /common/customers/{customer_id}/detail` endpoint.
+This document describes the end-to-end authorization flow using OAuth 2.0 and OpenID Connect (OIDC) to access protected resources in Maya's OFxPERA dev/test implementation, specifically focusing on the `GET /common/customers/{customer_id}/detail` and `POST /ofxpera/arrangements` endpoints.
 
 ## Overview
 
 The flow involves two main components:
 
-1. **Keycloak Identity Server** (ofph-auth-keycloak): Handles authentication and authorization
+1. **Keycloak Identity Server**: Handles authentication and authorization
    - Public Endpoint: `dev-admin-server.mayabank.xyz`
    - Private Endpoint: `dev-auth-server.mayabank.xyz` (mTLS-enabled)
 
-2. **Protected API** (ofph-protected-api): Provides secure access to customer data
-   - API Endpoint: `api.mayabank.xyz`
+2. **Resource Server API**: Provides secure access to customer data
+   - API Endpoint: `dev-ofph-api.mayabank.xyz`
 
 ## Architecture Diagram
 
@@ -54,11 +54,11 @@ sequenceDiagram
 
 ### 1. Client Registration (One-time Setup)
 
-Before a third-party client can access protected resources, it must be registered with the Keycloak server:
+Before a third-party client application can access protected resources, it must be registered with the Keycloak server:
 
 1. **Client Registration**:
-   - The client registers with Keycloak through the admin console or registration API at `https://dev-admin-server.mayabank.xyz/admin/mayabank/console/`
-   - Client provides redirect URIs, grant types, and other OAuth configuration
+   - The client system is registered with Keycloak through the admin console or registration API at `https://dev-admin-server.mayabank.xyz/admin/mayabank/console/`
+   - Client system is registered with its redirect URIs, JWKS URI, grant types, and other OAuth configuration
    - Client is configured to use the auth code flow, implicit flow and direct access grants are disabled.
 
 2. **Client Configuration**:
@@ -70,7 +70,7 @@ Before a third-party client can access protected resources, it must be registere
 
 3. **Certificate Setup for mTLS**:
    - Client obtains a client certificate from a trusted Certificate Authority (CA)
-   - The client certificate is added to the API Gateway's truststore
+   - The client's CA certificate must be added to the API Gateway's truststore
    - Client configures its TLS client to use this certificate for API calls to `https://dev-ofph-api.mayabank.xyz`
 
 ### 2. User Authorization Flow (OAuth 2.0 Authorization Code Flow)
@@ -272,7 +272,7 @@ Once the PERA account onboarding has concluded, the results can be registered us
 2. **Token Validation**:
    - Tokens are validated at multiple levels:
      - API Gateway JWT Authorizer validates token signature and claims
-     - Lambda function can perform additional validation with Keycloak
+     - Lambda function performs additional validation with Keycloak
 
 3. **Dynamic JWKS URL**:
    - The system supports dynamic JWKS URL retrieval from client definitions
@@ -303,18 +303,19 @@ The API Gateway is configured with:
 
 The GetCustomerDetailHandler Lambda function:
 - Validates the access token with Keycloak
-- Retrieves customer data from DynamoDB
+- Retrieves customer data from DynamoDB as a proxy to Maya's CIF system
 - Dynamically determines the JWKS URL from the client definition
 - Encrypts the response using JWE if enabled
 
 ## Summary
 
-This authorization flow provides a secure and standards-compliant method for third-party applications to access protected resources. By combining OAuth 2.0, OpenID Connect, mTLS, and JWE encryption, the system ensures that:
+This authorization flow provides a secure and standards-compliant method for third-party applications to access protected resources. By combining OAuth 2.0, OpenID Connect, mTLS, JAR, JARM and JWE encryption, the system ensures that:
 
-1. Only authenticated users can authorize access to their data
-2. Only authorized and authenticated clients can access the API
-3. Sensitive data is protected both in transit and through encryption
-4. Each client can have its own encryption keys for maximum security
+1. Only authenticated customers/account holders can authorize access to their data
+2. Only authorized and authenticated clients can initiate requests on behalf of customers
+3. Proof of origin, integrity and authenticity of requests and responses are established
+4. Sensitive data is protected both in transit and through encryption
+5. Each client can have its own encryption keys for maximum security
 
 ## Domain Names
 
