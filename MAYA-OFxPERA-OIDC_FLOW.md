@@ -201,6 +201,68 @@ Once the client has obtained an access token, it can access the protected resour
      - Lambda returns the customer data as JSON with Content-Type: application/json
    - The response is sent back to the client through the API Gateway
 
+### 4. PERA Arrangement Registration
+
+Once the PERA account onboarding has concluded, the results can be registered using the `/ofxpera/arrangements` endpoint:
+
+1. **API Request with mTLS and JWT**:
+   - Client establishes a TLS connection with the API Gateway using its client certificate
+   - Client includes the access token in the Authorization header:
+     ```http
+     POST /ofxpera/arrangements HTTP/1.1
+     Host: dev-ofph-api.mayabank.xyz
+     Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+     Content-Type: application/json
+     
+     {
+       "adminId": "PERA_ADMIN_001",
+       "arrangementId": "ARR12345",
+       "customerId": "123456",
+       "productId": "PERA_PRODUCT_001",
+       "status": "ACTIVE",
+       "createdAt": "2025-05-18T12:00:00Z",
+       "updatedAt": "2025-05-18T12:00:00Z",
+       "metadata": {
+         "contributionFrequency": "MONTHLY",
+         "initialContribution": 5000
+       }
+     }
+     ```
+
+2. **mTLS Authentication**:
+   - API Gateway validates the client certificate against its truststore
+   - If the certificate is invalid or not trusted, the request is rejected with a TLS error
+
+3. **JWT Authorization**:
+   - API Gateway's JWT Authorizer validates the token's signature, expiration, and claims
+   - If the token is invalid, the request is rejected with a 401 Unauthorized response
+
+4. **Lambda Function Processing**:
+   - The request is forwarded to the PeraArrangementRegistrationHandler Lambda function
+   - Lambda validates the request headers
+   - Lambda validates the request payload against the expected schema
+   - Lambda stores the PERA arrangement in DynamoDB
+
+5. **Response Delivery**:
+   - Lambda returns a success response with the created arrangement details:
+     ```json
+     {
+       "adminId": "PERA_ADMIN_001",
+       "arrangementId": "ARR12345",
+       "customerId": "123456",
+       "productId": "PERA_PRODUCT_001",
+       "status": "ACTIVE",
+       "createdAt": "2025-05-18T12:00:00Z",
+       "updatedAt": "2025-05-18T12:00:00Z",
+       "metadata": {
+         "contributionFrequency": "MONTHLY",
+         "initialContribution": 5000
+       }
+     }
+     ```
+   - If encryption is enabled, the response is encrypted using JWE with the client's public key
+   - The response is sent back to the client through the API Gateway
+
 ## Security Considerations
 
 1. **Multi-layered Security**:
