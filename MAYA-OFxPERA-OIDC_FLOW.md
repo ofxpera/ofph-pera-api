@@ -13,7 +13,7 @@ The flow involves two main components:
    - Private Endpoint: `dev-auth-server.mayabank.xyz` (mTLS-enabled)
 
 2. **Resource Server API**: Provides secure access to customer data
-   - API Endpoint: `dev-ofph-api.mayabank.xyz`
+   - API Endpoint: `dev-ofph-api.mayabank.xyz` (mTLS-enabled)
 
 ## Architecture Diagram
 
