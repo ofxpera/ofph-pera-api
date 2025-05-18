@@ -86,6 +86,22 @@ When a user needs to authorize the third-party application to access their data:
         ?client_id=client123
         &request=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InNlcnZpY2Utb25lX25nZmluX25ldC0yMDI1MDMzMCJ9.eyJjbGllbnRfaWQiOiJzZXJ2aWNlLW9uZS1uZ2ZpbiIsInN0YXRlIjoiODYwN2QzM2MtMzcwYi00NTRhLWI0MDAtMjkyNDcxNzBkM2U5IiwicmVzcG9uc2VfdHlwZSI6ImNvZGUiLCJyZXNwb25zZV9tb2RlIjoiand0Iiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBiYW5rX2FjY291bnQgYWRkcmVzcyIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vc2VydmljZS1vbmUubmdmaW4ubmV0L29hdXRoLXJlZGlyZWN0IiwiYXVkIjoiaHR0cHM6Ly9vcGVuZmluYW5jZS1waWxvdC1hdXRoLm1heWFiYW5rLnh5ei9yZWFsbXMvbWF5YWJhbmsiLCJpc3MiOiJzZXJ2aWNlLW9uZS1uZ2ZpbiIsImlhdCI6MTc0NzU0Nzk0OCwiZXhwIjoxNzQ3NTQ4MjQ4LCJqdGkiOiIxNzQ3NTQ3OTQ4NjI1LTNkYjFkZWJlMmQwNWIyM2YifQ.mvqMHCWKYvhCi5GLpsYNqMSE-bejvGUTaCC2kFEv0hjG4-9998KGDt8t3J1lFjjbcXikn1BEm0ZqJTNa3OLk5djUBDbee8MO9PclQQQTmrmPRAggsCE8LvO4A_0r_ExyKZnCEcYw8nS14RZ_cT631cqUhlLFrU8hNH1IGT1TMpZ85kb90MrhUpcJJd3Md9cpWOcyOUYViI0KO9jBcpO8WVfyQIcFBdmkaxHWSAGfdGT5KGKg5rUzGTkivJ9MNNoN6nF_7zauLum1huzbNBAUruZzbxMzuCqR25imR1-_bfi57YNRyFIJdcMK2eQSU0YxolPNu2v_xqpO-zXc2b0MfA
         ```
+     - Example JSON Payload embedded within the JAR request
+       ```json
+       {
+         "client_id": "service-one-ngfin",
+         "state": "44ef2727-6f88-43f4-94db-959321c550d3",
+         "response_type": "code",
+         "response_mode": "jwt",
+         "scope": "openid profile bank_account address",
+         "redirect_uri": "https://service-one.ngfin.net/oauth-redirect",
+         "aud": "https://openfinance-pilot-auth.mayabank.xyz/realms/mayabank",
+         "iss": "service-one-ngfin",
+         "iat": 1747548473,
+         "exp": 1747548773,
+         "jti": "1747548473117-b89986f48f584074"
+       }
+       ```
      - PKCE API Call
         ```
         https://dev-admin-server.mayabank.xyz/realms/mayabank/protocol/openid-connect/auth
