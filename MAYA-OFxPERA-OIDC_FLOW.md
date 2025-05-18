@@ -224,7 +224,7 @@ The GetCustomerDetailHandler Lambda function:
 - Dynamically determines the JWKS URL from the client definition
 - Encrypts the response using JWE if enabled
 
-## Conclusion
+## Summary
 
 This authorization flow provides a secure and standards-compliant method for third-party applications to access protected resources. By combining OAuth 2.0, OpenID Connect, mTLS, and JWE encryption, the system ensures that:
 
@@ -233,7 +233,7 @@ This authorization flow provides a secure and standards-compliant method for thi
 3. Sensitive data is protected both in transit and through encryption
 4. Each client can have its own encryption keys for maximum security
 
-## Domain Names Summary
+## Domain Names
 
 | Service | FQDN | Purpose |
 |---------|------|---------|
