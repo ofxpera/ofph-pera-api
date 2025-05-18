@@ -1,4 +1,6 @@
-# Admin-initiated Onboarding Authorization Flow
+# Admin-initiated OFxPERA Onboarding Authorization Flow
+
+_**(OAuth 2.0 and OpenID Connect Authorization Flow for Protected API Access)**_
 
 This document describes the end-to-end authorization flow using OAuth 2.0 and OpenID Connect (OIDC) to access protected resources in Maya's OFxPERA dev/test implementation, specifically focusing on the `GET /common/customers/{customer_id}/detail` and `POST /ofxpera/arrangements` endpoints.
 
