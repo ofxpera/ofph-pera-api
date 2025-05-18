@@ -59,7 +59,7 @@ Before a third-party client can access protected resources, it must be registere
 1. **Client Registration**:
    - The client registers with Keycloak through the admin console or registration API at `https://dev-admin-server.mayabank.xyz/admin/mayabank/console/`
    - Client provides redirect URIs, grant types, and other OAuth configuration
-   - Client generates or receives a public/private key pair for JWE encryption
+   - Client is configured to use the auth code flow, implicit flow and direct access grants are disabled.
 
 2. **Client Configuration**:
    - Keycloak clients are configured to use Signed JWT for authentication
