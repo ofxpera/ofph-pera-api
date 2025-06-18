@@ -2085,11 +2085,8 @@ components:
           type: string
           description: Trading name of the participant
         participantType:
-          type: array
-          items:
-            type: string
-            enum: ["oauth_client", "auth_server"]
-          minItems: 1
+          type: string
+          enum: ["oauth_client", "auth_server"]
           description: Types of roles this participant can perform
         participantDescription:
           type: string
@@ -2186,6 +2183,8 @@ components:
         - issuer
         - authorizationEndpoint
         - tokenEndpoint
+        - customerKycEndpoint
+        - peraArrangementEndpoint
       properties:
         issuer:
           type: string
@@ -2207,11 +2206,19 @@ components:
           type: string
           format: uri
           description: URL at the OP to which an RP can perform a redirect to
+        customerKycEndpoint:
+          type: string
+          format: uri
+          description: URL of the Customer KYC Endpoint
+        peraArrangementEndpoint:
+          type: string
+          format: uri
+          description: URL of the PERA Arrangement Endpoint
         registrationEndpoint:
           type: string
           format: uri
           description: URL of the OP's Dynamic Client Registration Endpoint
-
+        
     OAuthClientURIs:
       title: OAuthClient
       description: API Endpoints of the OFxPERA Participant as an OAuth client
