@@ -20,8 +20,7 @@ info:
 
 servers:
   # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/1.0.0
+  - url: https://virtserver.swaggerhub.com/maya-ph/OFxPERA-API/1.0.0
   - url: https://api.ofxpera.ph/v1
     description: OFxPERA API server
 
@@ -46,24 +45,28 @@ paths:
       tags:
         - PERA
       summary: "[PHASE 1] Registers the result of a PERA account opening"
-      description: API that allows PERA Admins to register the result of an FI-initiated PERA account opening
+      description: API that allows PERA Admins to notify the Financial Institution about the result of a PERA account opening
       security:
         - SignedJWT: []
       parameters:
+        - $ref: '#/components/parameters/AuthorizationSignedJWT'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
-        required: true
+        description: Entire JSON payload must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
+        required: true 
         content:
-          application/jwt:
+          application/jose:
             schema:
-              $ref: "#/components/schemas/PeraArrangement"
+              $ref: "#/components/schemas/PeraArrangement"             
+
       responses:
         "201":
-          description: Successfully registered the status of a PERA onboarding process.
+          description: Successfully registered the status of a PERA onboarding process. The Entire JSON payload response must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
+
           content:
-            application/json:
+            application/jose:
               schema:
                 type: object
                 required:
@@ -470,38 +473,45 @@ paths:
       operationId: authorizeOAuth
       tags:
         - OAuth
-      summary: "[PHASE 1] Authorization endpoint for Admin-initiated onboarding"
-      description: OpenID Connect authorization endpoint that initiates the authorization flow
+      summary: "[PHASE 1] Authorization endpoint implementing JARM(JWT Secured Authorization Response Mode) for admin-initiated onboarding."
+      description: OpenID Connect authorization endpoint that initiates the authorization flow. The request parameter must contain a signed JWT in compliance with JARM as specified in RFC 9101 (https://datatracker.ietf.org/doc/html/rfc9101). 
       parameters:
+        - $ref: '#/components/parameters/ApiVersion'
         - name: client_id
           in: query
           required: true
           description: Client identifier issued to the client during registration
           schema:
             type: string
-        - name: response_type
+        - name: request
           in: query
           required: true
-          description: Must be set to "code" for authorization code flow
+          description: |
+            A signed JWT containing the authorization request parameters. Must conform to JARM (RFC 9101).
+            
+            The JWT must include the following header and claims in its payload:
+
+            ** JWT Header **
+            - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+            - `type` (string) `*required` - Must be `JWT`. The type of the token
+            - `kid` (string) `*required` - The Key ID used to identify the signing key.
+
+            ** JWT Claim **
+            
+            - `iss` (string) `*Required`: Issuer (typically the client ID)
+            - `aud` (string) `*Required`: Audience (the authorization server token URL)
+            - `response_type` (string) `*Required`: Must be `code` for authorization code flow
+            - `response_mode` (string) `*Required`: Must be `jwt` for authorization code flow
+            - `client_id` (string) `*Required`:Client identifier issued to the client during registration
+            - `redirect_uri` (string) `*Required`: URI to return the user to after authorization is complete. 
+            - `scope` (string) `*Required`: Must be `openid`. Specifies the OpenID Connect Scope, which 
+            is necessary to request ID tokens.
+            - `state` (string) `*Required`:  Opaque value to maintain state between request and callback.
+            - `jti` (string) `*Required`: Unique identifier for the JWT, usually UUID, used to prevent replay attacks
+            - `iat` (integer)`*Required`: Issued-at time (UNIX timestamp)
+            - `exp` (integer)`*Required`: Expiration time (UNIX timestamp)
           schema:
             type: string
-            enum: [code]
-        - name: scope
-          in: query
-          required: true
-          description: Space-separated list of requested scope values, OFxPERA requires openid to be included to maintain compatibility with OIDC.
-          schema:
-            type: array
-            items:
-              type: string
-              enum: [openid, profile, email, address, phone]
-        - name: redirect_uri
-          in: query
-          required: true
-          description: URI to return the user to after authorization is complete
-          schema:
-            type: string
-            format: uri
         - name: code_challenge
           in: query
           required: false
@@ -515,36 +525,31 @@ paths:
           schema:
             type: string
             enum: [S256]
-        - name: state
-          in: query
-          required: true
-          description: Opaque value to maintain state between request and callback
-          schema:
-            type: string
-        - name: prompt
-          in: query
-          required: false
-          description: Prompt for the authorization request
-          schema:
-            type: string
-        - name: nonce
-          in: query
-          required: false
-          description: Random value used to prevent replay attacks
-          schema:
-            type: string
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiAuthDate'
       responses:
         "302":
-          description: Redirect to client with authorization code
+          description: |
+            Redirect to client with encrypted signed JWT response containing the authorization code and other parameters.
+
+            The JWT include the following header and claims in its payload:
+            
+            ** JWT Header **
+            - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+            - `type` (string) `*required` - Must be `JWT`. The type of the token
+            - `kid` (string) `*required` - The Key ID used to identify the signing key.
+            
+            ** JWT Claims ** 
+            - `iss` (string) `*required`: The entity that issues the JWT
+            - `aud` (string) `*required`: The client ID used in the authorization request.
+            - `state` (string) `*required`: The state used in the authorization request.  
+            - `code` (string) `*required`: The code returned by the authorization server that can be exchanged for an access token at the token endpoint.
+            - `exp` (integer) `*required`: The expiration time (UNIX timestamp) of the JWT. After this time, the JWT can no longer be used to exchange for an access token. 
           content:
             Location:
               schema:
                 type: string
                 format: uri
                 description: URI to redirect the user to, including the authorization code as a query parameter and JARM response
-              example: "https://client.example.org/cb?response=SplxlOBeZQQYbYS6WxSbIA&response=eyJhbGciOiJSUzI1NiIsImtpZCI6ImsyYmRjIn0.ew0KICJpc3MiOiAiczZCaGRSa3F0MyIsDQogImF1ZCI6ICJodHRwczovL2NsaWVudC5leGFtcGxlLm9yZyIsDQogImV4cCI6IDE1OTExMDUxODAsDQogIm5iZiI6IDE1OTExMDQ4ODAsDQogImlhdCI6IDE1OTExMDQ4ODAsDQogImp0aSI6ICJuLWp3dF9odE1qMm5vU3NnayIsDQogInJlc3BvbnNlX3R5cGUiOiAiY29kZSIsDQogImNvZGUiOiAiU3BseGxPQmVaUVFZYllTNld4U2JJQSIsDQogInN0YXRlIjogImVjb3VjaFpSZlRLUEY0NnYzakRMaTlsb3cySE03NlN1ejJZaTNwS1VudzQiDQp9.ER9HDBVZbR1Jtpoe_ow75mQhR6KkKhPz_0jE9ECY8nM4wCjbouMCOGnMkPHIZSWPu2zHja_WMpH30ILRxtJ8Ll8G_ocYYJzJYoAR-sEVmPfyR-NZLiWTDkgYoS7M3EvYMqmLIXlnXbHf-xNsGU_IG-r-1S51_9RDTjh8Y3JUvDQ"
+              example: "https://client.example.org/callback?response=SplxlOBeZQQYbYS6WxSbIA&response=eyJhbGciOiJSUzI1NiIsImtpZCI6ImsyYmRjIn0.ew0KICJpc3MiOiAiczZCaGRSa3F0MyIsDQogImF1ZCI6ICJodHRwczovL2NsaWVudC5leGFtcGxlLm9yZyIsDQogImV4cCI6IDE1OTExMDUxODAsDQogIm5iZiI6IDE1OTExMDQ4ODAsDQogImlhdCI6IDE1OTExMDQ4ODAsDQogImp0aSI6ICJuLWp3dF9odE1qMm5vU3NnayIsDQogInJlc3BvbnNlX3R5cGUiOiAiY29kZSIsDQogImNvZGUiOiAiU3BseGxPQmVaUVFZYllTNld4U2JJQSIsDQogInN0YXRlIjogImVjb3VjaFpSZlRLUEY0NnYzakRMaTlsb3cySE03NlN1ejJZaTNwS1VudzQiDQp9.ER9HDBVZbR1Jtpoe_ow75mQhR6KkKhPz_0jE9ECY8nM4wCjbouMCOGnMkPHIZSWPu2zHja_WMpH30ILRxtJ8Ll8G_ocYYJzJYoAR-sEVmPfyR-NZLiWTDkgYoS7M3EvYMqmLIXlnXbHf-xNsGU_IG-r-1S51_9RDTjh8Y3JUvDQ"
           
         "400":
           description: OAuth error response
@@ -609,10 +614,24 @@ paths:
                   description: Refresh token used to obtain a new access token.
                 client_assertion_type:
                   type: string
-                  description: value must be "urn:ietf:params:oauth:assertion-type:jwt-bearer"
+                  description: value must be `urn:ietf:params:oauth:assertion-type:jwt-bearer`
                 client_assertion:
                   type: string
-                  description: JWT assertion containing client credentials.
+                  description: |
+                    JWT assertion containing the client credentials.
+
+                    ** JWT Header **
+                    - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+                    - `type` (string) `*required` - Must be `JWT`. The type of the token
+                    - `kid` (string) `*required` - The Key ID used to identify the signing key.
+                    
+                    ** JWT Claims ** 
+                    - `jti` (string) `*Required`: Unique identifier for the JWT, usually UUID, used to prevent replay attacks 
+                    - `sub` (string) `*required`: The client id used in authorization request.
+                    - `iss` (string) `*required`: The client id used in authorization request. 
+                    - `aud` (string) `*required`: Audience (the authorization server token URL). 
+                    - `iat` (integer)`*Required`: Issued-at time (UNIX timestamp)
+                    - `exp` (integer)`*Required`: Expiration time (UNIX timestamp)
       responses:
         "200":
           description: Token successfully issued
@@ -810,16 +829,14 @@ paths:
             type: string
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/FapiAuthDate'
         - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/Digest'
       responses:
         "200":
-          description: Customer's Personal Information retrieved successfully
+          description: Customer's Personal Information retrieved successfully. The Entire JSON payload response must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
           content:
-            application/json:
+            application/jose:
               schema:
                 $ref: "#/components/schemas/CustomerInformation"
         "400":
@@ -1735,7 +1752,7 @@ components:
     ApiVersion:
       name: x-v
       in: header
-      required: false
+      required: true
       description: Version of the API endpoint requested by the client. Must be set to a positive integer. If the version requested is not supported then the holder must respond with a 406 Not Acceptable.
       schema:
         type: integer
@@ -1783,6 +1800,33 @@ components:
       in: header
       required: true
       description: Bearer token for authentication. Must be in the format 'Bearer <token>'
+      schema:
+        type: string
+        pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
+        example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+
+    AuthorizationSignedJWT:
+      name: Authorization
+      in: header
+      required: true
+      description: | 
+        Bearer token for authentication. Must be in the format 'Bearer <signedJWT>'. the token is a signed JWT issued by the PERA Admin.
+        
+        JWT carries the following payload.
+        
+        ** JWT Header **
+        - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+        - `type` (string) `*required` - Must be `JWT`. The type of the token
+        - `kid` (string) `*required` - The Key ID used to identify the signing key.
+        
+        ** JWT Claims ** 
+        - `jti` (string) `*Required`: Unique identifier for the JWT, usually UUID, used to prevent replay attacks 
+        - `sub` (string) `*required`: The client id used in authorization request.
+        - `iss` (string) `*required`: The client id used in authorization request. 
+        - `aud` (string) `*required`: Audience (the authorization server token URL). 
+        - `iat` (integer)`*Required`: Issued-at time (UNIX timestamp)
+        - `exp` (integer)`*Required`: Expiration time (UNIX timestamp)
+      
       schema:
         type: string
         pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
@@ -1853,15 +1897,15 @@ components:
     AddressString:
       type: object
       required:
-        - address_format
+        - addressFormat
         - region
         - province
-        - street_address
-        - city_municipality
+        - streetAddress
+        - cityMunicipality
         - country
-        - postal_code
+        - postalCode
       properties:
-        address_format:
+        addressFormat:
           type: string
           enum: ["TEXT"]
           maxLength: 4
@@ -1876,7 +1920,7 @@ components:
           maxLength: 140
           description: Province
           example: "Rizal"
-        city_municipality:
+        cityMunicipality:
           type: string
           maxLength: 140
           description: City
@@ -1886,13 +1930,13 @@ components:
           maxLength: 140
           description: Barangay
           example: "Santo Niño"
-        street_address:
+        streetAddress:
           $ref: "#/components/schemas/StreetAddress"
-        building_unit_number:
+        buildingUnitNumber:
           $ref: "#/components/schemas/BuildingUnitNumber"
         country:
           $ref: "#/components/schemas/CountryCode"
-        postal_code:
+        postalCode:
           $ref: "#/components/schemas/PostalCode"
 
     StreetAddress:
@@ -2084,6 +2128,9 @@ components:
         participantName:
           type: string
           description: Trading name of the participant
+        participantAbbreviation: 
+          type: string
+          description: Abbreviation of the participant
         participantType:
           type: string
           enum: ["oauth_client", "auth_server"]
@@ -2181,6 +2228,7 @@ components:
       description: Endpoints of the OFxPERA Participant as an Authorization Server
       required:
         - issuer
+        - clientAssertionAud
         - authorizationEndpoint
         - tokenEndpoint
         - customerKycEndpoint
@@ -2190,6 +2238,10 @@ components:
           type: string
           format: uri
           description: URL using the https scheme with no query or fragment component that the OP asserts as its Issuer Identifier
+        clientAssertionAud:
+          type: string
+          format: uri
+          description: URL of the OP's OAuth 2.0 Token Endpoint
         authorizationEndpoint:
           type: string
           format: uri
@@ -2242,11 +2294,17 @@ components:
       type: object
       required:
         - applicationType
+        - clientId
         - clientName
+        - clientUri
         - redirectUris
         - tokenEndpointAuthMethod
         - grantTypes
         - responseTypes
+        - scope
+        - jwks
+        - organizationName
+        - contacts
       properties:
         applicationType:
           type: string
@@ -2258,6 +2316,9 @@ components:
         clientName:
           type: string
           description: Name of the client
+        clientUri:
+          type: string
+          description: Home URI of the client
         redirectUris:
           type: array
           items:
@@ -2829,7 +2890,7 @@ components:
           enum: [invalid_tin,existing_account,incomplete_info,failed_dd,failed_cc, others]
           default: null
           description: Reason for the resulting status of the arrangement, mostly used for DECLINED status.
-        LastUpdateDate:
+        lastUpdateDate:
           type: string
           format: date-time
           description: Date and time when the PERA arrangement was updated
