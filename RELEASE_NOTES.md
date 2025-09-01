@@ -1,5 +1,37 @@
 # OFxPERA API Release Notes
 
+## Version 1.0.3 – Draft
+
+*Release Date: September 1, 2025*
+
+This draft release introduces enhancements to support FI-initiated onboarding and schema updates for improved integration with PERA Administrators.  
+
+---
+
+### Schema Updates
+
+- **OAuth Client Participant (PERA Admin) Schema**  
+  - Added new `webDeeplink` field  
+    - Enables financial institutions to redirect customers to the selected PERA Admin application after explicit consent is provided within the FI app.  
+
+### New APIs
+
+- **Common**  
+  - **POST `/common/customer/detail`**  
+    Allows the financial institution to submit the referred customer’s KYC information to the PERA Administrator for onboarding.  
+
+- **PERA**  
+  - **GET `/ofxpera/arrangements`**  
+    Enables the financial institution to retrieve the latest status of a referred customer regarding their PERA account opening.  
+
+### Updated PERA Arrangement Statuses
+
+- **received**  
+  KYC information received by the PERA Administrator. Some details may be incomplete (e.g., missing barangay information).
+
+- **pending**  
+  KYC information updated via the Admin Platform and submitted to the PERA Administrator for review.
+
 ## Version 1.0.0
 
 *Release Date: March 25, 2025*

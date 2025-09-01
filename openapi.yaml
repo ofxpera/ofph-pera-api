@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 1.0.2
+  version: 1.0.3 - DRAFT
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -16,7 +16,7 @@ info:
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
-    limitations under the License.
+    limitations under the License.                                   
 
 servers:
   # Added by API Auto Mocking Plugin
@@ -49,7 +49,7 @@ paths:
       security:
         - SignedJWT: []
       parameters:
-        - $ref: '#/components/parameters/AuthorizationSignedJWT'
+        - $ref: '#/components/parameters/AuthorizationSignedJWTPostArrangement'
         - $ref: '#/components/parameters/ApiVersion'
         - $ref: '#/components/parameters/FapiInteractionId'
         - $ref: '#/components/parameters/IdempotencyKey'
@@ -86,43 +86,44 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  #/ofxpera/arrangements/{arrangement_id}:
-  #  get:
-  #    operationId: getArrangementStatus
-  #    tags:
-  #      - PERA
-  #    summary: "[PHASE 2] Get the status of a PERA arrangement"
-  #    description: API that allows FIs to retrieve the status of one or more PERA Arrangements
-  #    security:
-  #      - SignedJWT: []
-  #    parameters:
-  #      - name: arrangement_id
-  #        in: path
-  #        required: true
-  #        description: The ID of the PERA Arrangement
-  #        schema:
-  #          type: string
-  #      - $ref: '#/components/parameters/ApiVersion'
-  #      - $ref: '#/components/parameters/FapiInteractionId'
-  #    responses:
-  #      "200":
-  #        description: Successfully retrieved the status of the PERA Arrangement
-  #        content:
-  #          application/json:
-  #            schema:
-  #              $ref: "#/components/schemas/PeraArrangement"
-  #      "400":
-  #        $ref: "#/components/responses/BadRequest"
-  #      "401":
-  #        $ref: "#/components/responses/Unauthorized"
-  #      "403":
-  #        $ref: "#/components/responses/Forbidden"
-  #      "404":
-  #        $ref: "#/components/responses/NotFound"
-  #      "429":
-  #        $ref: "#/components/responses/TooManyRequests"
-  #      "500":
-  #        $ref: "#/components/responses/InternalServerError"
+  /ofxpera/arrangements/{arrangement_id}:
+    get:
+      operationId: getArrangementStatus
+      tags:
+        - PERA
+      summary: "[PHASE 1] Get the status of a PERA arrangement"
+      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+      security:
+        - SignedJWT: []
+      parameters:
+        - name: arrangement_id
+          in: path
+          required: true
+          description: The ID of the PERA Arrangement
+          schema:
+            type: string
+        - $ref: '#/components/parameters/AuthorizationSignedJWTGetArrangement'    
+        - $ref: '#/components/parameters/ApiVersion'
+        - $ref: '#/components/parameters/FapiInteractionId'
+      responses:
+        "200":
+          description: Successfully retrieved the status of the PERA Arrangement. The Entire JSON payload response must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
+          content:
+            application/jose:
+              schema:
+                $ref: "#/components/schemas/PeraArrangement"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
   
      
   /ofxpera/participants:
@@ -852,6 +853,62 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /common/customers/detail:
+    post:
+      operationId: postCustomerDetail
+      tags:
+        - Common
+      summary: "[PHASE 1] Submit detailed customer information to PERA Administrator For FI Initiated Onboarding"
+      security:
+        - SignedJWT: []
+      parameters:
+      - $ref: '#/components/parameters/AuthorizationSignedJWTPostCustomerDetail'
+      - $ref: '#/components/parameters/ApiVersion'
+      - $ref: '#/components/parameters/FapiInteractionId'
+      - $ref: '#/components/parameters/FapiAuthDate'
+      - $ref: '#/components/parameters/FapiCustomerIpAddress' 
+      requestBody:
+        description: Entire JSON payload must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
+        required: true 
+        content:
+          application/jose:
+            schema:
+              $ref: "#/components/schemas/CustomerInformation"
+      responses:
+        "201":
+          description: Successfully transferred customer to a PERA Admin.  The Entire JSON payload response must be signed with `JWS (JSON web Signature)` and encrypted using `JWE (JSON Web Encryption)`. JWT carries the following payload.
+          content:
+            application/jose:
+              schema:
+                type: object
+                required:
+                  - customerId
+                  - adminId
+                  - referenceId
+                properties:
+                  customerId:
+                    type: string
+                    description: PERA Administrator's unique identifier of the customer
+                  adminId:
+                    type: string
+                    description:   Participant Identifier of the PERA Administrator
+                  referenceId:
+                    type: string
+                    description:   Unique identifier used for redirection to the Admin Platform. The Financial Institution appends this ID as a signed JWT in the Admin's deeplink URL:https://any.admin.com/kyc/review?response=signedJWT({referenceId})
+
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+          
   #/.well-known/openid-configuration:
   #  get:
   #    operationId: getOpenIdConfiguration
@@ -1805,7 +1862,7 @@ components:
         pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
         example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 
-    AuthorizationSignedJWT:
+    AuthorizationSignedJWTPostArrangement:
       name: Authorization
       in: header
       required: true
@@ -1831,7 +1888,63 @@ components:
         type: string
         pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
         example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    
+    AuthorizationSignedJWTGetArrangement:
+      name: Authorization
+      in: header
+      required: true
+      description: | 
+        Bearer token for authentication. Must be in the format 'Bearer <signedJWT>'. the token is a signed JWT issued by the Financial Institution.
+        
+        JWT carries the following payload.
+        
+        ** JWT Header **
+        - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+        - `type` (string) `*required` - Must be `JWT`. The type of the token
+        - `kid` (string) `*required` - The Key ID used to identify the signing key.
+        
+        ** JWT Claims ** 
+        - `jti` (string) `*Required`: Unique identifier for the JWT, usually UUID, used to prevent    replay attacks        
+        - `sub` (string) `*required`: Participant Identifier of the Financial Institution. 
+        - `aud` (string) `*required`: must be 'get-ofxpera-arrangement'
+        - `iat` (integer)`*Required`: Issued-at time (UNIX timestamp)
+        - `exp` (integer)`*Required`: Expiration time (UNIX timestamp)
+        - `arrangement-id` (string) `*required`: The unique identifier for the Consent Arrangement
 
+      schema:
+        type: string
+        pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
+        example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+        
+    AuthorizationSignedJWTPostCustomerDetail:
+      name: Authorization
+      in: header
+      required: true
+      description: | 
+        Bearer token for authentication. Must be in the format 'Bearer <signedJWT>'. the token is a signed JWT issued by the Financial Institution.
+        
+        JWT carries the following payload.
+        
+        ** JWT Header **
+        - `alg` (string) `*required` - Must be `RS256`. The algorithm used to sign the JWT 
+        - `type` (string) `*required` - Must be `JWT`. The type of the token
+        - `kid` (string) `*required` - The Key ID used to identify the signing key.
+        
+        ** JWT Claims ** 
+        - `jti` (string) `*required`: Unique identifier for the JWT, usually UUID, used to prevent    replay attacks        
+        - `sub` (string) `*required`: Participant Identifier of the Financial Institution.
+        - `aud` (string) `*required`: must be 'post-customer-detail'
+        - `iat` (integer)`*required`: Issued-at time (UNIX timestamp)
+        - `exp` (integer)`*required`: Expiration time (UNIX timestamp)
+        - `arrangement-id` (string) `*required`: The unique identifier for the Consent Arrangement
+
+      schema:
+        type: string
+        pattern: '^Bearer [A-Za-z0-9-._~+/]+=*$'
+        example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    
+
+        
     IdempotencyKey:
       name: x-idempotency-key
       in: header
@@ -2168,6 +2281,7 @@ components:
       required:
         - participant
         - clientConfig
+        - clientDeeplinkUris
       properties:
         participant:
           $ref: "#/components/schemas/Participant"
@@ -2177,7 +2291,9 @@ components:
             $ref: "#/components/schemas/ClientRegistration"
           minItems: 1
           description: Array of OAuth client configurations for this participant
-
+        clientDeeplinkUris:
+          $ref: "#/components/schemas/clientDeeplinkUris"
+          
     ClientRegistrationResponse:
       type: object
       required:
@@ -2289,7 +2405,20 @@ components:
       oneOf:
         - $ref: "#/components/schemas/OAuthClientURIs"
         - $ref: "#/components/schemas/AuthServerURIs"
-
+    
+    clientDeeplinkUris:
+      type: object 
+      properties:
+        mobileDeeplinkUri:
+          type: string
+          format: uri
+          description: redirects customer to a specific PERA Admin Mobile application.
+          example: test
+        webDeeplinkUri:
+          type: string
+          format: uri
+          description: redirects customer to a specific PERA Admin Web application. 
+          example: test
     ClientRegistration:
       type: object
       required:
@@ -2883,7 +3012,7 @@ components:
           description: Unique identifier of the consent provided by the Customer to the FI
         status:
           type: string
-          enum: [active, declined, closed]
+          enum: [received, pending, active, declined, closed]
           description: Current status of the PERA arrangement
         reason:
           type: string
