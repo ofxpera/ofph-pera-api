@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **redirectUris** | **List&lt;String&gt;** | Array of redirect URIs for use in OAuth flows | 
 **tokenEndpointAuthMethod** | [**TokenEndpointAuthMethodEnum**](#TokenEndpointAuthMethodEnum) | Authentication method for token endpoint, OFxPERA Phase 1 requires private_key_jwt | 
 **grantTypes** | [**List&lt;GrantTypesEnum&gt;**](#List&lt;GrantTypesEnum&gt;) |  | 
-**responseTypes** | [**List&lt;ResponseTypesEnum&gt;**](#List&lt;ResponseTypesEnum&gt;) | Allowed OAuth response types, OFxPERA requires code and id_token. | 
+**responseTypes** | [**List&lt;ResponseTypesEnum&gt;**](#List&lt;ResponseTypesEnum&gt;) | Allowed OAuth response types, OFxPERA requires code. | 
 **scope** | **String** | Space-separated list of requested scopes (e.g. openid profile email address phone) |  [optional]
 **softwareStatement** | **String** | JWT containing software statement from trusted authority |  [optional]
 **jwks** | [**JWKSet**](JWKSet.md) |  |  [optional]
@@ -43,4 +43,3 @@ REFRESH_TOKEN | &quot;refresh_token&quot;
 Name | Value
 ---- | -----
 CODE | &quot;code&quot;
-ID_TOKEN | &quot;id_token&quot;

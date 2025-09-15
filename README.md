@@ -12,7 +12,7 @@ This repository contains the OpenAPI 3.0 specification for the OFxPERA API, whic
 Production: `https://api.ofxpera.ph/v1`
 
 ### API Version
-Current Version: `0.0.6`
+Current Version: `1.0.0`
 
 ### Prerequisites
 - Valid participant registration with OFxPERA
@@ -29,6 +29,9 @@ Bootstrap APIs handle participant registration and management:
 - `PUT /ofxpera/participants` - Update participant registration
 - `GET /ofxpera/participants` - List all registered participants
 - `GET /ofxpera/participants/{participant_id}` - Get specific participant details
+- `POST /ofxpera/products` - Register a PERA Admin Product
+- `PUT /ofxpera/products/{product_id}` - Update a PERA Admin Product
+- `GET /ofxpera/products/{participant_id}` - Get a list of PERA products associated with PERA Admin
 
 ### PERA APIs
 Core PERA functionality endpoints:
@@ -40,11 +43,23 @@ Core PERA functionality endpoints:
 Authentication and authorization endpoints following FAPI security profile:
 - `GET /oauth/auth` - Authorization endpoint (302 redirect)
   - Supports PKCE (Proof Key for Code Exchange)
-  - Required parameters: client_id, response_type (code or endorsement), scope, redirect_uri, code_challenge
+  - Required parameters: client_id, response_type (code), scope, redirect_uri, code_challenge
+- `POST /oauth/auth` - PAR-based Authorization API for FI-initiated onboarding
 - `POST /oauth/token` - Token endpoint
   - Supports authorization_code and refresh_token grant types
-- `GET /oauth/introspect` - Token introspection (optional)
-- `GET /oauth/userinfo` - UserInfo endpoint (optional)
+- `GET /oauth/introspect` - Token introspection
+- `GET /oauth/userinfo` - UserInfo endpoint
+
+### Consent APIs
+Consent management endpoints:
+- `POST /consent/arrangements` - Create a consent arrangement
+- `GET /consent/arrangements/{arrangement_id}` - Get a specific consent arrangement
+- `PUT /consent/arrangements/{arrangement_id}` - Update consent arrangement status
+- `GET /consent/arrangements/{arrangement_id}/history` - Get consent arrangement history
+- `GET /consent/templates` - List consent templates
+- `GET /consent/customers/{customer_id}/arrangements` - Get customer consents
+- `POST /consent/customers/{customer_id}/arrangements/bulk-update` - Bulk update customer consents
+- `GET /consent/customers/{customer_id}/dashboard` - Get customer's consent dashboard
 
 ### Common APIs
 Standardized endpoints for common functionalities:
@@ -73,9 +88,15 @@ All API requests must include:
 - `participant-id`: Registered participant identifier
 - `x-v`: API version being used
 - `x-fapi-interaction-id`: Unique ID for request tracing
+
+Customer-triggered API endpoints (Common and OAuth tags) must additionally include:
+- `Authorization`: Bearer token for authentication
 - `x-fapi-auth-date`: Authentication timestamp
 - `x-fapi-customer-ip-address`: End-user IP address
 - `x-client-headers`: Additional client metadata
+- `x-client-user-agent`: Customer's original User-Agent header
+- `x-idempotency-key`: Unique idempotency key for the request
+- `x-fapi-customer-last-logged-time`: Time when the PSU last logged in
 
 ### Scopes
 Available OAuth scopes:

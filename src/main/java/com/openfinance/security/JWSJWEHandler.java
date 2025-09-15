@@ -185,12 +185,15 @@ public final class JWSJWEHandler implements AutoCloseable {
                 new CryptoOperation.DecryptAndVerify(),
                 Instant.now()
             );
-        } catch (ParseException | JOSEException e) {
-            throw switch (e) {
-                case ParseException pe -> new JOSEException("Failed to parse token", pe);
-                case JOSEException je -> je;
-                default -> new JOSEException("Unexpected error during decryption/verification", e);
-            };
+        } catch (ParseException e) {
+            throw new JOSEException("Unexpected error: Failed to parse token", e);
+        } catch (JOSEException e) {
+            if (e.getMessage().contains("JWS signature verification failed")) {
+                throw e;
+            }
+            throw new JOSEException("Unexpected error: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new JOSEException("Unexpected error during decryption/verification", e);
         }
     }
 

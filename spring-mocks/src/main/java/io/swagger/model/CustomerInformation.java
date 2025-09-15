@@ -15,15 +15,15 @@ import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * CustomerInformation
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class CustomerInformation   {
@@ -37,8 +37,6 @@ public class CustomerInformation   {
 
   @JsonProperty("personalInformation")
 
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private PersonalInformation personalInformation = null;
 
   @JsonProperty("presentedIds")
@@ -116,9 +114,10 @@ public class CustomerInformation   {
    * @return personalInformation
    **/
   
-  @Schema(description = "")
+  @Schema(required = true, description = "")
   
 @Valid
+  @NotNull
   public PersonalInformation getPersonalInformation() {  
     return personalInformation;
   }
@@ -126,6 +125,7 @@ public class CustomerInformation   {
 
 
   public void setPersonalInformation(PersonalInformation personalInformation) { 
+
     this.personalInformation = personalInformation;
   }
 

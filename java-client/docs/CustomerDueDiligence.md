@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **occupation** | **String** |  |  [optional]
 **natureOfWork** | **String** | PSIC Code |  [optional]
 **employerName** | **String** |  |  [optional]
-**employerAddress** | [**Address**](Address.md) |  |  [optional]
+**employerAddress** | **OneOfCustomerDueDiligenceEmployerAddress** |  |  [optional]
 **pepIndicator** | **Boolean** | Politically Exposed Person 1 - True; 0 - False | 
 **fundSource** | **String** | Source of Funds | 
 **cddIndicator** | [**CddIndicatorEnum**](#CddIndicatorEnum) | Customer Due Diligence Risk Level | 

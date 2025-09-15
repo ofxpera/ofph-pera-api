@@ -4,7 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.model.Address;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -12,15 +11,15 @@ import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * CustomerDueDiligence
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class CustomerDueDiligence   {
@@ -50,7 +49,7 @@ public class CustomerDueDiligence   {
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private Address employerAddress = null;
+  private OneOfCustomerDueDiligenceEmployerAddress employerAddress = null;
 
   @JsonProperty("pepIndicator")
 
@@ -191,7 +190,7 @@ public class CustomerDueDiligence   {
     this.employerName = employerName;
   }
 
-  public CustomerDueDiligence employerAddress(Address employerAddress) { 
+  public CustomerDueDiligence employerAddress(OneOfCustomerDueDiligenceEmployerAddress employerAddress) { 
 
     this.employerAddress = employerAddress;
     return this;
@@ -204,14 +203,13 @@ public class CustomerDueDiligence   {
   
   @Schema(description = "")
   
-@Valid
-  public Address getEmployerAddress() {  
+  public OneOfCustomerDueDiligenceEmployerAddress getEmployerAddress() {  
     return employerAddress;
   }
 
 
 
-  public void setEmployerAddress(Address employerAddress) { 
+  public void setEmployerAddress(OneOfCustomerDueDiligenceEmployerAddress employerAddress) { 
     this.employerAddress = employerAddress;
   }
 

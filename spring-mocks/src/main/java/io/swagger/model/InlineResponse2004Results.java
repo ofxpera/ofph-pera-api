@@ -12,18 +12,18 @@ import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
- * InlineResponse2006Results
+ * InlineResponse2004Results
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
-public class InlineResponse2006Results   {
+public class InlineResponse2004Results   {
   @JsonProperty("id")
 
   private String id = null;
@@ -69,7 +69,7 @@ public class InlineResponse2006Results   {
   private BulkConsentResponseError error = null;
 
 
-  public InlineResponse2006Results id(String id) { 
+  public InlineResponse2004Results id(String id) { 
 
     this.id = id;
     return this;
@@ -94,7 +94,7 @@ public class InlineResponse2006Results   {
     this.id = id;
   }
 
-  public InlineResponse2006Results status(StatusEnum status) { 
+  public InlineResponse2004Results status(StatusEnum status) { 
 
     this.status = status;
     return this;
@@ -119,7 +119,7 @@ public class InlineResponse2006Results   {
     this.status = status;
   }
 
-  public InlineResponse2006Results error(BulkConsentResponseError error) { 
+  public InlineResponse2004Results error(BulkConsentResponseError error) { 
 
     this.error = error;
     return this;
@@ -151,10 +151,10 @@ public class InlineResponse2006Results   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    InlineResponse2006Results inlineResponse2006Results = (InlineResponse2006Results) o;
-    return Objects.equals(this.id, inlineResponse2006Results.id) &&
-        Objects.equals(this.status, inlineResponse2006Results.status) &&
-        Objects.equals(this.error, inlineResponse2006Results.error);
+    InlineResponse2004Results inlineResponse2004Results = (InlineResponse2004Results) o;
+    return Objects.equals(this.id, inlineResponse2004Results.id) &&
+        Objects.equals(this.status, inlineResponse2004Results.status) &&
+        Objects.equals(this.error, inlineResponse2004Results.error);
   }
 
   @Override
@@ -165,7 +165,7 @@ public class InlineResponse2006Results   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class InlineResponse2006Results {\n");
+    sb.append("class InlineResponse2004Results {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");

@@ -13,15 +13,15 @@ import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * PeraAccount
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class PeraAccount   {
@@ -29,9 +29,9 @@ public class PeraAccount   {
 
   private String id = null;
 
-  @JsonProperty("customer_id")
+  @JsonProperty("account_id")
 
-  private String customerId = null;
+  private String accountId = null;
 
   @JsonProperty("creation_date")
 
@@ -75,29 +75,29 @@ public class PeraAccount   {
     this.id = id;
   }
 
-  public PeraAccount customerId(String customerId) { 
+  public PeraAccount accountId(String accountId) { 
 
-    this.customerId = customerId;
+    this.accountId = accountId;
     return this;
   }
 
   /**
-   * PERA Administrator's unique identifier of the customer who owns the PERA account
-   * @return customerId
+   * PERA Administrator's unique identifier for the customer's PERA account
+   * @return accountId
    **/
   
-  @Schema(required = true, description = "PERA Administrator's unique identifier of the customer who owns the PERA account")
+  @Schema(required = true, description = "PERA Administrator's unique identifier for the customer's PERA account")
   
   @NotNull
-  public String getCustomerId() {  
-    return customerId;
+  public String getAccountId() {  
+    return accountId;
   }
 
 
 
-  public void setCustomerId(String customerId) { 
+  public void setAccountId(String accountId) { 
 
-    this.customerId = customerId;
+    this.accountId = accountId;
   }
 
   public PeraAccount creationDate(OffsetDateTime creationDate) { 
@@ -184,7 +184,7 @@ public class PeraAccount   {
     }
     PeraAccount peraAccount = (PeraAccount) o;
     return Objects.equals(this.id, peraAccount.id) &&
-        Objects.equals(this.customerId, peraAccount.customerId) &&
+        Objects.equals(this.accountId, peraAccount.accountId) &&
         Objects.equals(this.creationDate, peraAccount.creationDate) &&
         Objects.equals(this.product, peraAccount.product) &&
         Objects.equals(this.balance, peraAccount.balance);
@@ -192,7 +192,7 @@ public class PeraAccount   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, customerId, creationDate, product, balance);
+    return Objects.hash(id, accountId, creationDate, product, balance);
   }
 
   @Override
@@ -201,7 +201,7 @@ public class PeraAccount   {
     sb.append("class PeraAccount {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    customerId: ").append(toIndentedString(customerId)).append("\n");
+    sb.append("    accountId: ").append(toIndentedString(accountId)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
     sb.append("    product: ").append(toIndentedString(product)).append("\n");
     sb.append("    balance: ").append(toIndentedString(balance)).append("\n");

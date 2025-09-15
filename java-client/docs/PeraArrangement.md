@@ -9,13 +9,24 @@ Name | Type | Description | Notes
 **sub** | **String** | Subject – FI&#x27;s unique identifier for the End-User | 
 **consentId** | **String** | Unique identifier of the consent provided by the Customer to the FI | 
 **status** | [**StatusEnum**](#StatusEnum) | Current status of the PERA arrangement | 
+**reason** | [**ReasonEnum**](#ReasonEnum) | Reason for the resulting status of the arrangement, mostly used for DECLINED status. |  [optional]
 **creationDate** | [**OffsetDateTime**](OffsetDateTime.md) | Date and time when the PERA arrangement was created | 
-**account** | [**PeraAccount**](PeraAccount.md) |  |  [optional]
 
 <a name="StatusEnum"></a>
 ## Enum: StatusEnum
 Name | Value
 ---- | -----
-ACTIVE | &quot;ACTIVE&quot;
-SUSPENDED | &quot;SUSPENDED&quot;
-CLOSED | &quot;CLOSED&quot;
+ACTIVE | &quot;active&quot;
+DECLINED | &quot;declined&quot;
+CLOSED | &quot;closed&quot;
+
+<a name="ReasonEnum"></a>
+## Enum: ReasonEnum
+Name | Value
+---- | -----
+INVALID_TIN | &quot;invalid_tin&quot;
+EXISTING_ACCOUNT | &quot;existing_account&quot;
+INCOMPLETE_INFO | &quot;incomplete_info&quot;
+FAILED_DD | &quot;failed_dd&quot;
+FAILED_CC | &quot;failed_cc&quot;
+OTHERS | &quot;others&quot;

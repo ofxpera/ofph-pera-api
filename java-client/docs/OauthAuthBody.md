@@ -20,6 +20,7 @@ Name | Type | Description | Notes
 Name | Value
 ---- | -----
 CODE | &quot;code&quot;
+ENDORSEMENT | &quot;endorsement&quot;
 
 <a name="List<ScopeEnum>"></a>
 ## Enum: List&lt;ScopeEnum&gt;

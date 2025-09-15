@@ -11,15 +11,15 @@ import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * OauthTokenBody
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class OauthTokenBody   {
@@ -74,6 +74,42 @@ public class OauthTokenBody   {
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
   private String refreshToken = null;
+
+  /**
+   * value must be \"urn:ietf:params:oauth:assertion-type:jwt-bearer\"
+   */
+  public enum ClientAssertionTypeEnum {
+    URN_IETF_PARAMS_OAUTH_ASSERTION_TYPE_JWT_BEARER("urn:ietf:params:oauth:assertion-type:jwt-bearer");
+
+    private String value;
+
+    ClientAssertionTypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static ClientAssertionTypeEnum fromValue(String text) {
+      for (ClientAssertionTypeEnum b : ClientAssertionTypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("client_assertion_type")
+
+  private ClientAssertionTypeEnum clientAssertionType = null;
+
+  @JsonProperty("client_assertion")
+
+  private String clientAssertion = null;
 
 
   public OauthTokenBody grantType(GrantTypeEnum grantType) { 
@@ -199,6 +235,56 @@ public class OauthTokenBody   {
     this.refreshToken = refreshToken;
   }
 
+  public OauthTokenBody clientAssertionType(ClientAssertionTypeEnum clientAssertionType) { 
+
+    this.clientAssertionType = clientAssertionType;
+    return this;
+  }
+
+  /**
+   * value must be \"urn:ietf:params:oauth:assertion-type:jwt-bearer\"
+   * @return clientAssertionType
+   **/
+  
+  @Schema(required = true, description = "value must be \"urn:ietf:params:oauth:assertion-type:jwt-bearer\"")
+  
+  @NotNull
+  public ClientAssertionTypeEnum getClientAssertionType() {  
+    return clientAssertionType;
+  }
+
+
+
+  public void setClientAssertionType(ClientAssertionTypeEnum clientAssertionType) { 
+
+    this.clientAssertionType = clientAssertionType;
+  }
+
+  public OauthTokenBody clientAssertion(String clientAssertion) { 
+
+    this.clientAssertion = clientAssertion;
+    return this;
+  }
+
+  /**
+   * JWT assertion containing client credentials.
+   * @return clientAssertion
+   **/
+  
+  @Schema(required = true, description = "JWT assertion containing client credentials.")
+  
+  @NotNull
+  public String getClientAssertion() {  
+    return clientAssertion;
+  }
+
+
+
+  public void setClientAssertion(String clientAssertion) { 
+
+    this.clientAssertion = clientAssertion;
+  }
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -212,12 +298,14 @@ public class OauthTokenBody   {
         Objects.equals(this.code, oauthTokenBody.code) &&
         Objects.equals(this.redirectUri, oauthTokenBody.redirectUri) &&
         Objects.equals(this.clientId, oauthTokenBody.clientId) &&
-        Objects.equals(this.refreshToken, oauthTokenBody.refreshToken);
+        Objects.equals(this.refreshToken, oauthTokenBody.refreshToken) &&
+        Objects.equals(this.clientAssertionType, oauthTokenBody.clientAssertionType) &&
+        Objects.equals(this.clientAssertion, oauthTokenBody.clientAssertion);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(grantType, code, redirectUri, clientId, refreshToken);
+    return Objects.hash(grantType, code, redirectUri, clientId, refreshToken, clientAssertionType, clientAssertion);
   }
 
   @Override
@@ -230,6 +318,8 @@ public class OauthTokenBody   {
     sb.append("    redirectUri: ").append(toIndentedString(redirectUri)).append("\n");
     sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
     sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
+    sb.append("    clientAssertionType: ").append(toIndentedString(clientAssertionType)).append("\n");
+    sb.append("    clientAssertion: ").append(toIndentedString(clientAssertion)).append("\n");
     sb.append("}");
     return sb.toString();
   }

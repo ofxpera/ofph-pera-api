@@ -3,256 +3,148 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.model.ConsentArrangementResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.openapitools.jackson.nullable.JsonNullable;
 import io.swagger.configuration.NotUndefined;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * InlineResponse2003
  */
 @Validated
 @NotUndefined
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-03T23:29:47.351872174Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2025-03-24T23:14:39.487511291Z[GMT]")
 
 
 public class InlineResponse2003   {
-  @JsonProperty("sub")
+  @JsonProperty("customer_id")
+
+  private String customerId = null;
+
+  @JsonProperty("total_arrangements")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String sub = null;
+  private Integer totalArrangements = null;
 
-  @JsonProperty("name")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String name = null;
-
-  @JsonProperty("given_name")
+  @JsonProperty("active_arrangements")
 
   @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
   @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String givenName = null;
+  private Integer activeArrangements = null;
 
-  @JsonProperty("family_name")
+  @JsonProperty("arrangements")
+  @Valid
+  private List<ConsentArrangementResponse> arrangements = new ArrayList<ConsentArrangementResponse>();
 
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String familyName = null;
+  public InlineResponse2003 customerId(String customerId) { 
 
-  @JsonProperty("email")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String email = null;
-
-  @JsonProperty("email_verified")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private Boolean emailVerified = null;
-
-  @JsonProperty("phone_number")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private String phoneNumber = null;
-
-  @JsonProperty("phone_number_verified")
-
-  @JsonInclude(JsonInclude.Include.NON_ABSENT)  // Exclude from JSON if absent
-  @JsonSetter(nulls = Nulls.FAIL)    // FAIL setting if the value is null
-  private Boolean phoneNumberVerified = null;
-
-
-  public InlineResponse2003 sub(String sub) { 
-
-    this.sub = sub;
+    this.customerId = customerId;
     return this;
   }
 
   /**
-   * Unique identifier for the user from the authentication provider's perspective.
-   * @return sub
+   * Get customerId
+   * @return customerId
    **/
   
-  @Schema(description = "Unique identifier for the user from the authentication provider's perspective.")
+  @Schema(required = true, description = "")
   
-  public String getSub() {  
-    return sub;
+  @NotNull
+  public String getCustomerId() {  
+    return customerId;
   }
 
 
 
-  public void setSub(String sub) { 
-    this.sub = sub;
+  public void setCustomerId(String customerId) { 
+
+    this.customerId = customerId;
   }
 
-  public InlineResponse2003 name(String name) { 
+  public InlineResponse2003 totalArrangements(Integer totalArrangements) { 
 
-    this.name = name;
+    this.totalArrangements = totalArrangements;
     return this;
   }
 
   /**
-   * Full name of the user.
-   * @return name
+   * Get totalArrangements
+   * @return totalArrangements
    **/
   
-  @Schema(description = "Full name of the user.")
+  @Schema(description = "")
   
-  public String getName() {  
-    return name;
+  public Integer getTotalArrangements() {  
+    return totalArrangements;
   }
 
 
 
-  public void setName(String name) { 
-    this.name = name;
+  public void setTotalArrangements(Integer totalArrangements) { 
+    this.totalArrangements = totalArrangements;
   }
 
-  public InlineResponse2003 givenName(String givenName) { 
+  public InlineResponse2003 activeArrangements(Integer activeArrangements) { 
 
-    this.givenName = givenName;
+    this.activeArrangements = activeArrangements;
     return this;
   }
 
   /**
-   * Given name of the user.
-   * @return givenName
+   * Get activeArrangements
+   * @return activeArrangements
    **/
   
-  @Schema(description = "Given name of the user.")
+  @Schema(description = "")
   
-  public String getGivenName() {  
-    return givenName;
+  public Integer getActiveArrangements() {  
+    return activeArrangements;
   }
 
 
 
-  public void setGivenName(String givenName) { 
-    this.givenName = givenName;
+  public void setActiveArrangements(Integer activeArrangements) { 
+    this.activeArrangements = activeArrangements;
   }
 
-  public InlineResponse2003 familyName(String familyName) { 
+  public InlineResponse2003 arrangements(List<ConsentArrangementResponse> arrangements) { 
 
-    this.familyName = familyName;
+    this.arrangements = arrangements;
+    return this;
+  }
+
+  public InlineResponse2003 addArrangementsItem(ConsentArrangementResponse arrangementsItem) {
+    this.arrangements.add(arrangementsItem);
     return this;
   }
 
   /**
-   * Family name of the user.
-   * @return familyName
+   * Get arrangements
+   * @return arrangements
    **/
   
-  @Schema(description = "Family name of the user.")
+  @Schema(required = true, description = "")
   
-  public String getFamilyName() {  
-    return familyName;
+@Valid
+  @NotNull
+  public List<ConsentArrangementResponse> getArrangements() {  
+    return arrangements;
   }
 
 
 
-  public void setFamilyName(String familyName) { 
-    this.familyName = familyName;
-  }
+  public void setArrangements(List<ConsentArrangementResponse> arrangements) { 
 
-  public InlineResponse2003 email(String email) { 
-
-    this.email = email;
-    return this;
-  }
-
-  /**
-   * Email address of the user.
-   * @return email
-   **/
-  
-  @Schema(description = "Email address of the user.")
-  
-  public String getEmail() {  
-    return email;
-  }
-
-
-
-  public void setEmail(String email) { 
-    this.email = email;
-  }
-
-  public InlineResponse2003 emailVerified(Boolean emailVerified) { 
-
-    this.emailVerified = emailVerified;
-    return this;
-  }
-
-  /**
-   * Indicates whether the user's email address has been verified.
-   * @return emailVerified
-   **/
-  
-  @Schema(description = "Indicates whether the user's email address has been verified.")
-  
-  public Boolean isEmailVerified() {  
-    return emailVerified;
-  }
-
-
-
-  public void setEmailVerified(Boolean emailVerified) { 
-    this.emailVerified = emailVerified;
-  }
-
-  public InlineResponse2003 phoneNumber(String phoneNumber) { 
-
-    this.phoneNumber = phoneNumber;
-    return this;
-  }
-
-  /**
-   * Phone number of the user.
-   * @return phoneNumber
-   **/
-  
-  @Schema(description = "Phone number of the user.")
-  
-  public String getPhoneNumber() {  
-    return phoneNumber;
-  }
-
-
-
-  public void setPhoneNumber(String phoneNumber) { 
-    this.phoneNumber = phoneNumber;
-  }
-
-  public InlineResponse2003 phoneNumberVerified(Boolean phoneNumberVerified) { 
-
-    this.phoneNumberVerified = phoneNumberVerified;
-    return this;
-  }
-
-  /**
-   * Indicates whether the user's phone number has been verified.
-   * @return phoneNumberVerified
-   **/
-  
-  @Schema(description = "Indicates whether the user's phone number has been verified.")
-  
-  public Boolean isPhoneNumberVerified() {  
-    return phoneNumberVerified;
-  }
-
-
-
-  public void setPhoneNumberVerified(Boolean phoneNumberVerified) { 
-    this.phoneNumberVerified = phoneNumberVerified;
+    this.arrangements = arrangements;
   }
 
   @Override
@@ -264,19 +156,15 @@ public class InlineResponse2003   {
       return false;
     }
     InlineResponse2003 inlineResponse2003 = (InlineResponse2003) o;
-    return Objects.equals(this.sub, inlineResponse2003.sub) &&
-        Objects.equals(this.name, inlineResponse2003.name) &&
-        Objects.equals(this.givenName, inlineResponse2003.givenName) &&
-        Objects.equals(this.familyName, inlineResponse2003.familyName) &&
-        Objects.equals(this.email, inlineResponse2003.email) &&
-        Objects.equals(this.emailVerified, inlineResponse2003.emailVerified) &&
-        Objects.equals(this.phoneNumber, inlineResponse2003.phoneNumber) &&
-        Objects.equals(this.phoneNumberVerified, inlineResponse2003.phoneNumberVerified);
+    return Objects.equals(this.customerId, inlineResponse2003.customerId) &&
+        Objects.equals(this.totalArrangements, inlineResponse2003.totalArrangements) &&
+        Objects.equals(this.activeArrangements, inlineResponse2003.activeArrangements) &&
+        Objects.equals(this.arrangements, inlineResponse2003.arrangements);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sub, name, givenName, familyName, email, emailVerified, phoneNumber, phoneNumberVerified);
+    return Objects.hash(customerId, totalArrangements, activeArrangements, arrangements);
   }
 
   @Override
@@ -284,14 +172,10 @@ public class InlineResponse2003   {
     StringBuilder sb = new StringBuilder();
     sb.append("class InlineResponse2003 {\n");
     
-    sb.append("    sub: ").append(toIndentedString(sub)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    givenName: ").append(toIndentedString(givenName)).append("\n");
-    sb.append("    familyName: ").append(toIndentedString(familyName)).append("\n");
-    sb.append("    email: ").append(toIndentedString(email)).append("\n");
-    sb.append("    emailVerified: ").append(toIndentedString(emailVerified)).append("\n");
-    sb.append("    phoneNumber: ").append(toIndentedString(phoneNumber)).append("\n");
-    sb.append("    phoneNumberVerified: ").append(toIndentedString(phoneNumberVerified)).append("\n");
+    sb.append("    customerId: ").append(toIndentedString(customerId)).append("\n");
+    sb.append("    totalArrangements: ").append(toIndentedString(totalArrangements)).append("\n");
+    sb.append("    activeArrangements: ").append(toIndentedString(activeArrangements)).append("\n");
+    sb.append("    arrangements: ").append(toIndentedString(arrangements)).append("\n");
     sb.append("}");
     return sb.toString();
   }
