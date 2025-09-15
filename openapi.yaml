@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: OFxPERA API
   description: Philippines Open Finance API Implementation for PERA
-  version: 1.0.3-Draft
+  version: 1.0.3
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -30,11 +30,11 @@ tags:
   - name: Bootstrap
     description: Core bootstrapping endpoints for OFxPERA Participant registration and management
   - name: OAuth
-    description: OpenID Connect authentication, authorization and consent management
+    description: OpenID Connect authentication, authorization and consent management for Admin Initiated initiated onboarding only
   - name: Common
     description: Common APIs used across different use cases
   - name: PERA
-    description: APIs specific to PERA operations (Philippine Equity and Retirement Account)
+    description: APIs specific to PERA operations (Personal Equity and Retirement Account)
   #- name: Consent
   #  description: Consent management endpoints
   - name: Discovery
@@ -94,7 +94,7 @@ paths:
       tags:
         - PERA
       summary: "[PHASE 1] Get the status of a PERA arrangement"
-      description: API that allows FIs to retrieve the status of one or more PERA Arrangements
+      description: API that allows FIs to retrieve the status of PERA Arrangements
       security:
         - SignedJWT: []
       parameters:
@@ -380,98 +380,99 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
   /oauth/auth:
-    post:
-      operationId: OAuthPAR
-      tags:
-        - OAuth
-      summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
-      description: POST version of the authorization API that initiates the authorization flow
-      parameters:
-        - $ref: '#/components/parameters/ApiVersion'
-        - $ref: '#/components/parameters/FapiInteractionId'
-        - $ref: '#/components/parameters/FapiAuthDate'
-        - $ref: '#/components/parameters/FapiCustomerIpAddress'
-        - $ref: '#/components/parameters/CustomerUserAgent'
-        - $ref: '#/components/parameters/IdempotencyKey'
-        - $ref: '#/components/parameters/Digest'
-        - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - participant_id
-                - response_type
-                - client_id
-                - redirect_uri
-              properties:
-                participant_id:
-                  type: string
-                  description: Participant identifier of the FI issued during registration
-                authorization_code:
-                  type: string
-                  description: Authorization code
-                response_type:
-                  type: string
-                  enum: [code, endorsement]
-                  description: Must be set to "code" for authorization code flow
-                scope:
-                  type: array
-                  items:
-                    type: string
-                    enum: [openid, profile, email, address, phone]
-                  description: Space-separated list of requested scope values, OFxPERA requires openid to be included to maintain compatibility with OIDC.
-                token_endpoint:
-                  type: string
-                  format: uri
-                  description: URI of the token endpoint for retrieving access tokens
-                code_challenge:
-                  type: string
-                  description: Code challenge for PKCE
-                code_challenge_method:
-                  type: string
-                  enum: [S256]
-                  description: Code challenge method for PKCE
-                state:
-                  type: string
-                  description: Opaque value to maintain state between request and callback
-                prompt:
-                  type: string
-                  description: Prompt for the authorization request
-                nonce:
-                  type: string
-                  description: Random value used to prevent replay attacks
-      responses:
-        "302":
-          description: Redirect to authorization page
-          headers:
-            Location:
-              schema:
-                type: string
-                format: uri
-              description: URI to redirect the user to for authorization
-        "400":
-          description: OAuth error response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OAuthError"
-        "401":
-          description: Client authentication failed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OAuthError"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "429":
-          $ref: "#/components/responses/TooManyRequests"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
+  #  post:
+  #    operationId: OAuthPAR
+  #    tags:
+  #      - OAuth
+  #    summary: "[PHASE 1] PAR-based Authorization API for FI-initiated onboarding"
+  #    description: POST version of the authorization API that initiates the authorization flow
+  #    parameters:
+  #      - $ref: '#/components/parameters/ApiVersion'
+  #      - $ref: '#/components/parameters/FapiInteractionId'
+  #      - $ref: '#/components/parameters/FapiAuthDate'
+  #      - $ref: '#/components/parameters/FapiCustomerIpAddress'
+  #      - $ref: '#/components/parameters/CustomerUserAgent'
+  #      - $ref: '#/components/parameters/IdempotencyKey'
+  #      - $ref: '#/components/parameters/Digest'
+  #      - $ref: '#/components/parameters/FapiCustomerLastLoggedTime'
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        application/json:
+  #          schema:
+  #            type: object
+  #            required:
+  #              - participant_id
+  #              - response_type
+  #              - client_id
+  #              - redirect_uri
+  #            properties:
+  #              participant_id:
+  #                type: string
+  #                description: Participant identifier of the FI issued during registration
+  #              authorization_code:
+  #                type: string
+  #                description: Authorization code
+  #              response_type:
+  #                type: string
+  #                enum: [code, endorsement]
+  #                description: Must be set to "code" for authorization code flow
+  #              scope:
+  #                type: array
+  #                items:
+  #                  type: string
+  #                  enum: [openid, profile, email, address, phone]
+  #                description: Space-separated list of requested scope values, OFxPERA requires openid to be included to maintain compatibility with OIDC.
+  #              token_endpoint:
+  #                type: string
+  #                format: uri
+  #                description: URI of the token endpoint for retrieving access tokens
+  #              code_challenge:
+  #                type: string
+  #                description: Code challenge for PKCE
+  #              code_challenge_method:
+  #                type: string
+  #                enum: [S256]
+  #                description: Code challenge method for PKCE
+  #              state:
+  #                type: string
+  #                description: Opaque value to maintain state between request and callback
+  #              prompt:
+  #                type: string
+  #                description: Prompt for the authorization request
+  #              nonce:
+  #                type: string
+  #                description: Random value used to prevent replay attacks
+  #    responses:
+  #      "302":
+  #        description: Redirect to authorization page
+  #        headers:
+  #          Location:
+  #            schema:
+  #              type: string
+  #              format: uri
+  #            description: URI to redirect the user to for authorization
+  #      "400":
+  #        description: OAuth error response
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/OAuthError"
+  #      "401":
+  #        description: Client authentication failed
+  #        content:
+  #          application/json:
+  #            schema:
+  #              $ref: "#/components/schemas/OAuthError"
+  #      "403":
+  #        $ref: "#/components/responses/Forbidden"
+  #      "404":
+  #        $ref: "#/components/responses/NotFound"
+  #      "429":
+  #        $ref: "#/components/responses/TooManyRequests"
+  #      "500":
+  #        $ref: "#/components/responses/InternalServerError"
+  
     get:
       operationId: authorizeOAuth
       tags:
@@ -2256,6 +2257,10 @@ components:
         participantLogoUri:
           type: string
           description: logo uri of the participant
+        participantConsentFlowSupported:
+          type: string
+          enum: ["admin_initiated", "fi_initiated", "both"]
+          default: "admin_initiated"
         status:
           type: string
           enum: ["active", "inactive", "suspended"]
@@ -2294,7 +2299,9 @@ components:
           minItems: 1
           description: Array of OAuth client configurations for this participant
         clientDeeplinkUris:
-          $ref: "#/components/schemas/clientDeeplinkUris"
+          $ref: "#/components/schemas/ClientDeeplinkUris"
+        clientServerConfig: 
+          $ref: "#/components/schemas/ClientServerConfig"
           
     ClientRegistrationResponse:
       type: object
@@ -2408,19 +2415,33 @@ components:
         - $ref: "#/components/schemas/OAuthClientURIs"
         - $ref: "#/components/schemas/AuthServerURIs"
     
-    clientDeeplinkUris:
+    ClientServerConfig:
+      title: ClientServerConfig
+      description: PERA Administrator API Endpoints for FI-Initiated Onboarding
+      required:
+        - customerKycEndpoint
+        - peraArrangementEndpoint
+      properties:
+        customerKycEndpoint:
+          type: string
+          format: uri
+          description: URL of the Customer KYC Endpoint
+        peraArrangementEndpoint:
+          type: string
+          format: uri
+          description: URL of the PERA Arrangement Endpoint
+
+    ClientDeeplinkUris:
       type: object 
       properties:
         mobileDeeplinkUri:
           type: string
           format: uri
           description: redirects customer to a specific PERA Admin Mobile application.
-          example: test
         webDeeplinkUri:
           type: string
           format: uri
           description: redirects customer to a specific PERA Admin Web application. 
-          example: test
     ClientRegistration:
       type: object
       required:
